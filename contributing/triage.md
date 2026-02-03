@@ -4,7 +4,7 @@ Process for evaluating and importing components into nteract-elements.
 
 ## What already exists in this repo
 
-The `registry/outputs/` directory already has Jupyter output renderers:
+### Output renderers (`registry/outputs/`)
 
 | Component | Description |
 |-----------|-------------|
@@ -16,38 +16,87 @@ The `registry/outputs/` directory already has Jupyter output renderers:
 | `svg-output` | Vector graphics |
 | `media-router` | MIME-type dispatcher that routes to the above |
 
-These are registered in `registry.json` and can be installed via `shadcn add`.
+### UI primitives (`components/ui/`)
+
+| Component | Description |
+|-----------|-------------|
+| `button` | Button with variants and sizes |
+| `input` | Text input with focus and validation states |
 
 ## Priority order for new components
 
-1. **Atomic primitives** — Button, Input, Badge, Avatar, Kbd, Spinner, Separator
+1. **Atomic primitives** — Badge, Kbd, Spinner, Separator, Label, Textarea
 2. **Layout utilities** — Card, Popover, Tooltip, Sidebar, Tabs, Dialog, Sheet
 3. **Notebook primitives** — Cell, CellAdder, CellToolbar, ExecutionCount
 4. **Higher-level notebook UI** — NotebookContent, NotebookSidebar, RuntimeHealthIndicator
 
+## Workflow
+
+### For shadcn/ui primitives (Button, Input, Card, etc.)
+
+**Use the shadcn CLI.** Do not manually copy component code.
+
+```bash
+# Add a single component
+pnpm dlx shadcn@latest add badge
+
+# Add multiple components
+pnpm dlx shadcn@latest add card popover tooltip
+```
+
+This ensures:
+- Latest component versions
+- Correct dependency installation
+- Proper file placement in `components/ui/`
+
+After adding via CLI:
+
+1. Verify the build works: `pnpm run types:check`
+2. Add MDX documentation under `content/docs/ui/<component>.mdx`
+3. Update `content/docs/ui/meta.json` to include the new component
+4. Open PR with commit message referencing the issue (e.g., `Closes #5`)
+
+### For notebook-specific components
+
+These aren't available via shadcn CLI. Copy from `runtimed/intheloop`:
+
+1. Copy source file(s) from intheloop
+2. Update imports to use `@/lib/utils` for `cn()` 
+3. Place in appropriate directory:
+   - `components/notebook/` for notebook UI
+   - `registry/` for components we distribute via our registry
+4. Verify the build works
+5. Add to `registry.json` if distributing via nteract registry
+6. Add MDX documentation
+7. Open PR
+
+## Directory structure
+
+| Path | Purpose |
+|------|---------|
+| `components/ui/` | shadcn/ui primitives (added via CLI) |
+| `components/notebook/` | Notebook-specific components |
+| `registry/outputs/` | Output renderers (distributed via nteract registry) |
+| `content/docs/ui/` | MDX docs for UI primitives |
+| `content/docs/outputs/` | MDX docs for output renderers |
+
+## Intake checklist
+
+Before merging a component PR:
+
+- [ ] Component added via shadcn CLI (for shadcn primitives) or properly adapted
+- [ ] TypeScript props exported (no `any`)
+- [ ] Uses `cn()` from `@/lib/utils` for class merging
+- [ ] Build passes: `pnpm run types:check`
+- [ ] MDX documentation with interactive examples
+- [ ] Docs navigation updated (`meta.json`)
+- [ ] Commit message references the issue
+
 ## Source inventory (intheloop)
 
-Components available in `runtimed/intheloop`:
+For notebook-specific components not available via shadcn:
 
-### `src/components/ui/` — shadcn primitives (low effort)
-
-These are standard shadcn components, mostly copy-paste:
-
-- `button.tsx`, `button-group.tsx`
-- `input.tsx`, `textarea.tsx`, `label.tsx`
-- `badge.tsx`, `avatar.tsx`
-- `card.tsx`, `accordion.tsx`, `collapsible.tsx`
-- `dialog.tsx`, `alert-dialog.tsx`, `sheet.tsx`
-- `popover.tsx`, `hover-card.tsx`, `tooltip.tsx`
-- `dropdown-menu.tsx`, `command.tsx`
-- `tabs.tsx`, `separator.tsx`, `skeleton.tsx`
-- `switch.tsx`, `slider.tsx`
-- `sidebar.tsx` (~24KB, large)
-- `kbd.tsx`, `Spinner.tsx`, `sonner.tsx`
-- `confirm.tsx`, `empty.tsx`
-- Custom: `AvatarWithDetails.tsx`, `DateDisplay.tsx`, `SidebarSwitch.tsx`, `TerminalPlay.tsx`
-
-### `src/components/notebook/` — notebook-specific (medium effort)
+### `src/components/notebook/` — notebook-specific
 
 - `NotebookContent.tsx` — main notebook layout
 - `NotebookSidebar.tsx` — sidebar with panels
@@ -56,7 +105,7 @@ These are standard shadcn components, mostly copy-paste:
 - `RuntimeHealthIndicator.tsx` — kernel status indicator
 - `EmptyStateCellAdder.tsx` — empty notebook state
 
-### `src/components/notebook/cell/` — cell components (medium-high effort)
+### `src/components/notebook/cell/` — cell components
 
 - `Cell.tsx` — base cell wrapper
 - `ExecutableCell.tsx` — code cell (~25KB, complex)
@@ -66,64 +115,16 @@ These are standard shadcn components, mostly copy-paste:
 - `shared/` — shared cell utilities
 - `toolbars/` — cell action toolbars
 
-### `src/components/outputs/` — output rendering (medium effort)
+## Dependencies
 
-Note: We already have output renderers in `registry/outputs/`. These may overlap or provide additional functionality:
+Already in this repo:
+- `lucide-react` — icons
+- `tailwind-merge` — class merging
+- `class-variance-authority` — variant props (cva)
+- `@radix-ui/react-slot` — polymorphic components
+- `clsx` — class composition
 
-- `MaybeCellOutputs.tsx` — output container with routing
-- `IframeOutput.tsx` — sandboxed HTML output
-- `MaybeFixCodeButton.tsx` — error action button
-
-## Intake checklist
-
-Before merging a component:
-
-- [ ] TypeScript props exported (no `any`)
-- [ ] Uses `cn()` for class merging
-- [ ] Tailwind 4 classes
-- [ ] Keyboard accessible where applicable
-- [ ] ARIA attributes where applicable
-- [ ] Registered in `registry.json` if it's a user-facing component
-- [ ] MDX documentation under `content/docs/components/`
-
-## Recommended first batch
-
-Start with these — low complexity, high reuse:
-
-1. `button.tsx` + `button-group.tsx`
-2. `input.tsx` + `textarea.tsx` + `label.tsx`
-3. `badge.tsx`
-4. `kbd.tsx`
-5. `Spinner.tsx`
-6. `card.tsx`
-7. `tooltip.tsx`
-8. `popover.tsx`
-
-## Second batch (notebook primitives)
-
-1. `Cell.tsx` + cell shared utilities
-2. `CellAdder.tsx` + `CellBetweener.tsx`
-3. `RuntimeHealthIndicator.tsx`
-4. `NotebookTitle.tsx`
-
-## Dependencies to track
-
-Components from intheloop may depend on:
-
-- `@radix-ui/*` — expected, shadcn uses Radix
-- `lucide-react` — already in this repo
-- `tailwind-merge` — already in this repo
-- `class-variance-authority` — may need to add for variant props (cva)
-- `cmdk` — for command palette
-- `sonner` — for toasts
-- `@codemirror/*` — for editor integration (defer to later phase)
-
-## Workflow
-
-1. Pick a component from the priority list
-2. Copy source file(s) from intheloop
-3. Update imports to match this repo's structure
-4. Verify it builds (`pnpm dev`)
-5. Add to `registry.json` with name, description, dependencies
-6. Add MDX documentation under `content/docs/components/`
-7. Open PR with component + docs + registry entry
+May need to add for specific components:
+- `cmdk` — command palette
+- `sonner` — toast notifications
+- `@codemirror/*` — editor integration (defer to later phase)
