@@ -105,6 +105,32 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A keyboard key component for displaying keyboard shortcuts and hotkeys. Essential for notebook interfaces.",
+      "dependencies": ["class-variance-authority"],
+      "files": [
+        {
+          "path": "components/ui/kbd.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A loading spinner component for indicating async operations like kernel execution and cell running status.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "components/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
