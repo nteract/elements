@@ -107,13 +107,56 @@ For notebook-specific components not available via shadcn:
 
 ### `src/components/notebook/cell/` — cell components
 
-- `Cell.tsx` — base cell wrapper
-- `ExecutableCell.tsx` — code cell (~25KB, complex)
-- `MarkdownCell.tsx` — markdown cell (~12KB)
-- `CellAdder.tsx`, `CellBetweener.tsx` — add cell UI
-- `CellTypeButtons.tsx` — code/markdown toggle
-- `shared/` — shared cell utilities
-- `toolbars/` — cell action toolbars
+**Import as primitives (see #8 sub-issues):**
+
+| File | Size | Issue | Notes |
+|------|------|-------|-------|
+| `shared/PlayButton.tsx` | 1.8KB | #15 | Pure — execute/interrupt button |
+| `shared/ExecutionStatus.tsx` | 1KB | #16 | Pure — needs Badge |
+| `CellTypeButtons.tsx` | 2.6KB | #17 | Pure — code/markdown/sql/ai buttons |
+| `shared/CellControls.tsx` | 5.4KB | #18 | Needs DropdownMenu |
+| `shared/CellContainer.tsx` | 3.2KB | #19 | Refactor — strip hooks |
+| `shared/CellHeader.tsx` | 1KB | #20 | Refactor — strip hooks |
+
+**Do NOT import (too coupled):**
+
+| File | Size | Reason |
+|------|------|--------|
+| `Cell.tsx` | 1KB | Router to ExecutableCell/MarkdownCell |
+| `ExecutableCell.tsx` | 25KB | Coupled to signals, livestore, auth |
+| `MarkdownCell.tsx` | 12KB | Coupled to editor integration |
+| `CellAdder.tsx` | 1.3KB | Depends on `useAddCell` hook |
+| `CellBetweener.tsx` | 1.8KB | Depends on `useAddCell` hook |
+| `shared/Editor.tsx` | 5.4KB | CodeMirror integration — separate concern |
+| `toolbars/AiToolbar.tsx` | 13KB | AI streaming, model selection |
+| `toolbars/SqlToolbar.tsx` | 1.7KB | Feature-flagged, SQL-specific |
+
+**App-specific patterns to strip when importing:**
+
+| Pattern | Found in | Replace with |
+|---------|----------|--------------|
+| `@runtimed/schema` types | CellContainer, CellTypeSelector | Local `CellType` interface |
+| `useDragDropCellSort` | CellContainer, CellHeader | Optional `onDragStart`, `onDrop` props |
+| `useFeatureFlag` | CellTypeSelector | `enabledCellTypes?: CellType[]` prop |
+| `useAddCell` | CellAdder, CellBetweener | `onAddCell` callback prop |
+
+## Dependency graph for cell primitives
+
+```
+DropdownMenu (#14)
+    └── CellControls (#18)
+
+Badge (#6)
+    └── ExecutionStatus (#16)
+
+Button (done)
+    └── CellTypeButton (#17)
+
+No deps:
+    ├── PlayButton (#15)
+    ├── CellContainer (#19) — refactor only
+    └── CellHeader (#20) — refactor only
+```
 
 ## Dependencies
 
