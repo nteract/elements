@@ -5,28 +5,12 @@ icon: Play
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { PlayButton } from '@/components/notebook/cell/PlayButton';
+import { PlayButtonDemo } from '@/components/notebook/cell/PlayButtonDemo';
 
 <div className="my-8 flex gap-4 items-center">
-  <PlayButton
-    executionState="idle"
-    cellType="code"
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-  />
-  <PlayButton
-    executionState="running"
-    cellType="code"
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-  />
-  <PlayButton
-    executionState="idle"
-    cellType="code"
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-    isAutoLaunching
-  />
+  <PlayButtonDemo executionState="idle" cellType="code" />
+  <PlayButtonDemo executionState="running" cellType="code" />
+  <PlayButtonDemo executionState="idle" cellType="code" isAutoLaunching />
 </div>
 
 A button component for executing notebook cells. Shows different icons based on the current execution state:
@@ -39,7 +23,7 @@ A button component for executing notebook cells. Shows different icons based on 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://elements.nteract.io/r/play-button
+    npx shadcn@latest add https://elements.nteract.io/r/play-button.json
     ```
   </Tab>
   <Tab value="Manual">
@@ -69,12 +53,7 @@ export function CellToolbar() {
 ### Idle State
 
 <div className="my-4">
-  <PlayButton
-    executionState="idle"
-    cellType="code"
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-  />
+  <PlayButtonDemo executionState="idle" cellType="code" />
 </div>
 
 ```tsx
@@ -89,12 +68,7 @@ export function CellToolbar() {
 ### Running State
 
 <div className="my-4">
-  <PlayButton
-    executionState="running"
-    cellType="code"
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-  />
+  <PlayButtonDemo executionState="running" cellType="code" />
 </div>
 
 ```tsx
@@ -109,13 +83,7 @@ export function CellToolbar() {
 ### Auto-launching
 
 <div className="my-4">
-  <PlayButton
-    executionState="idle"
-    cellType="code"
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-    isAutoLaunching
-  />
+  <PlayButtonDemo executionState="idle" cellType="code" isAutoLaunching />
 </div>
 
 ```tsx
@@ -131,13 +99,7 @@ export function CellToolbar() {
 ### Focused State
 
 <div className="my-4">
-  <PlayButton
-    executionState="idle"
-    cellType="code"
-    isFocused
-    onExecute={() => {}}
-    onInterrupt={() => {}}
-  />
+  <PlayButtonDemo executionState="idle" cellType="code" isFocused />
 </div>
 
 ```tsx
