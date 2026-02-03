@@ -6,9 +6,29 @@ This document provides guidance for AI agents working on component intake and de
 
 nteract-elements is a design system for Jupyter frontends. It provides:
 
-- **UI primitives** (`components/ui/`) — shadcn/ui components
+- **UI primitives** (`registry/primitives/`) — shadcn/ui components
+- **Cell components** (`registry/cell/`) — Notebook cell UI components
 - **Output renderers** (`registry/outputs/`) — Jupyter cell output components
 - **Documentation** (`content/docs/`) — MDX documentation with live examples
+
+The `components/` folder is for fumadocs site internals only — **not** for published components.
+
+## Directory Structure
+
+```
+registry/
+├── primitives/      # shadcn/ui primitives (via CLI)
+├── cell/            # Notebook cell components
+└── outputs/         # Jupyter output renderers
+
+components/
+└── ai/              # Fumadocs site internals only (not published)
+
+content/docs/
+├── ui/              # UI primitive docs
+├── cell/            # Cell component docs
+└── outputs/         # Output renderer docs
+```
 
 ## Adding shadcn/ui Components
 
@@ -26,25 +46,24 @@ nteract-elements is a design system for Jupyter frontends. It provides:
    pnpm dlx shadcn@latest add <component-name>
    ```
    
-   For multiple components:
-   ```bash
-   pnpm dlx shadcn@latest add badge card tooltip
-   ```
+   The CLI places components in `registry/primitives/` (configured via `components.json`).
 
 3. **Verify the build:**
    ```bash
    pnpm run types:check
    ```
 
-4. **Add MDX documentation** at `content/docs/ui/<component-name>.mdx`:
-   - Import the component from `@/components/ui/<component-name>`
+4. **Add entry to `registry.json`** with correct path in `registry/primitives/`
+
+5. **Add MDX documentation** at `content/docs/ui/<component-name>.mdx`:
+   - Import the component from `@/registry/primitives/<component-name>`
    - Include interactive examples
    - Document all props
-   - Show installation instructions (CLI tab)
+   - Show installation instructions
 
-5. **Update navigation** in `content/docs/ui/meta.json`
+6. **Update navigation** in `content/docs/ui/meta.json`
 
-6. **Commit with issue reference:**
+7. **Commit with issue reference:**
    ```bash
    git add -A
    git commit -m "Add <ComponentName> component
@@ -55,47 +74,31 @@ nteract-elements is a design system for Jupyter frontends. It provides:
    Closes #<issue-number>"
    ```
 
-7. **Push and create PR:**
+8. **Push and create PR:**
    ```bash
    git push -u origin component/<component-name>
    ```
 
-## Adding Notebook-specific Components
+## Adding Notebook Cell Components
 
 For components from `intheloop` that aren't standard shadcn:
 
-1. Review source at `runtimed/intheloop/src/components/...`
-2. Copy and adapt — update imports to use `@/lib/utils` for `cn()`
-3. Remove app-specific dependencies (trpc, auth, signals)
-4. Place in `components/notebook/` or `registry/` as appropriate
-5. Add to `registry.json` if distributing via nteract registry
-6. Add MDX documentation
-7. Create PR
-
-## Directory Structure
-
-```
-components/
-├── ui/              # shadcn/ui primitives (via CLI)
-└── notebook/        # Notebook-specific components
-
-registry/
-└── outputs/         # Jupyter output renderers
-
-content/docs/
-├── ui/              # UI component docs
-└── outputs/         # Output renderer docs
-
-lib/
-├── utils.ts         # cn() utility (shadcn standard)
-└── cn.ts            # Re-export for backward compatibility
-```
+1. Review source at `runtimed/intheloop/src/components/notebook/cell/...`
+2. Copy and adapt:
+   - Update imports to use `@/lib/utils` for `cn()`
+   - Update imports to use `@/registry/primitives/<component>` for UI primitives
+   - Remove app-specific dependencies (trpc, auth, signals, `@runtimed/schema`)
+3. Place in `registry/cell/`
+4. Add entry to `registry.json`
+5. Add MDX documentation at `content/docs/cell/<component>.mdx`
+6. Create PR
 
 ## Key Files
 
-- `components.json` — shadcn configuration
+- `components.json` — shadcn configuration (ui alias points to `registry/primitives`)
 - `registry.json` — nteract registry for distributable components
 - `content/docs/ui/meta.json` — UI docs navigation
+- `content/docs/cell/meta.json` — Cell docs navigation
 - `content/docs/outputs/meta.json` — Output docs navigation
 
 ## MDX Documentation Template
@@ -108,7 +111,7 @@ icon: LucideIconName
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { ComponentName } from '@/components/ui/component-name';
+import { ComponentName } from '@/registry/primitives/component-name';
 
 <div className="my-8">
   <ComponentName>Live Example</ComponentName>
@@ -132,7 +135,7 @@ Brief description paragraph.
 ## Usage
 
 ```tsx
-import { ComponentName } from "@/components/ui/component-name"
+import { ComponentName } from "@/registry/primitives/component-name"
 
 export function Example() {
   return <ComponentName>Example</ComponentName>
@@ -161,7 +164,9 @@ export function Example() {
 
 ## Checklist Before Creating PR
 
-- [ ] Used shadcn CLI for shadcn components (not manual copy)
+- [ ] Component placed in correct `registry/` subfolder
+- [ ] Entry added to `registry.json` with correct path
+- [ ] Imports use `@/registry/primitives/` for UI dependencies
 - [ ] Build passes: `pnpm run types:check`
 - [ ] MDX documentation created with interactive examples
 - [ ] Navigation updated in appropriate `meta.json`
@@ -173,15 +178,29 @@ export function Example() {
 - **Icons:** Use `lucide-react` (already installed)
 - **Variants:** Use `class-variance-authority` for component variants
 
-## Related Issues
+## Issue Status
 
-Component intake is tracked in issue #4. Individual component issues:
+Component intake is tracked in issue #4.
+
+### Completed
 
 - #5 — Button and Input ✅
-- #6 — Badge, Kbd, Spinner
-- #7 — Card, Popover, Tooltip
-- #8 — Cell component
+- #6 — Badge, Kbd, Spinner ✅
+- #7 — Card, Popover, Tooltip ✅
+- #14 — DropdownMenu ✅
+- #15 — PlayButton ✅
+- #16 — ExecutionStatus ✅
+- #17 — CellTypeButton ✅
+
+### In Progress
+
+- #18 — CellControls (needs DropdownMenu ✅)
+- #19 — CellContainer (refactor needed)
+- #20 — CellHeader (refactor needed)
 - #9 — RuntimeHealthIndicator
+
+### Deferred
+
 - #10 — Dynamic registry API route
 
 ## Questions?

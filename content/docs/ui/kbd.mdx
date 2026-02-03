@@ -5,7 +5,7 @@ icon: Keyboard
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Kbd, KbdGroup } from '@/components/ui/kbd';
+import { Kbd, KbdGroup } from '@/registry/primitives/kbd';
 
 <div className="my-8 flex flex-wrap items-center gap-4">
   <Kbd>Shift</Kbd>
@@ -34,7 +34,7 @@ A keyboard key component for displaying keyboard shortcuts and hotkeys. Essentia
 ## Usage
 
 ```tsx
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import { Kbd, KbdGroup } from "@/registry/primitives/kbd"
 
 export function Example() {
   return (

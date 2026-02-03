@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/registry/primitives/badge";
 
 interface ExecutionStatusProps {
   executionState: string;

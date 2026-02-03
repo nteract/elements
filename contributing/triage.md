@@ -16,19 +16,46 @@ Process for evaluating and importing components into nteract-elements.
 | `svg-output` | Vector graphics |
 | `media-router` | MIME-type dispatcher that routes to the above |
 
-### UI primitives (`components/ui/`)
+### UI primitives (`registry/primitives/`)
 
 | Component | Description |
 |-----------|-------------|
+| `badge` | Status labels and counts |
 | `button` | Button with variants and sizes |
+| `card` | Content grouping container |
+| `dropdown-menu` | Action list menu |
 | `input` | Text input with focus and validation states |
+| `kbd` | Keyboard shortcut display |
+| `popover` | Floating content panel |
+| `spinner` | Loading indicator |
+| `tooltip` | Hover information |
+
+### Cell primitives (`registry/cell/`)
+
+| Component | Description |
+|-----------|-------------|
+| `CellTypeButton` | Code/Markdown/SQL/AI cell type buttons |
+| `ExecutionStatus` | Queued/Running/Error badges |
+| `PlayButton` | Execute/interrupt button |
 
 ## Priority order for new components
 
-1. **Atomic primitives** — Badge, Kbd, Spinner, Separator, Label, Textarea
-2. **Layout utilities** — Card, Popover, Tooltip, Sidebar, Tabs, Dialog, Sheet
-3. **Notebook primitives** — Cell, CellAdder, CellToolbar, ExecutionCount
-4. **Higher-level notebook UI** — NotebookContent, NotebookSidebar, RuntimeHealthIndicator
+1. **Atomic primitives** — Separator, Label, Textarea
+2. **Layout utilities** — Sidebar, Tabs, Dialog, Sheet
+3. **Notebook primitives** — CellControls, CellContainer, CellHeader
+4. **Higher-level notebook UI** — RuntimeHealthIndicator
+
+## Directory structure
+
+| Path | Purpose |
+|------|---------|
+| `registry/primitives/` | shadcn/ui primitives (published via nteract registry) |
+| `registry/cell/` | Notebook cell components (published via nteract registry) |
+| `registry/outputs/` | Output renderers (published via nteract registry) |
+| `components/` | Fumadocs site internals only (not published) |
+| `content/docs/ui/` | MDX docs for UI primitives |
+| `content/docs/cell/` | MDX docs for cell components |
+| `content/docs/outputs/` | MDX docs for output renderers |
 
 ## Workflow
 
@@ -44,49 +71,39 @@ pnpm dlx shadcn@latest add badge
 pnpm dlx shadcn@latest add card popover tooltip
 ```
 
-This ensures:
-- Latest component versions
-- Correct dependency installation
-- Proper file placement in `components/ui/`
+The CLI places components in `registry/primitives/` (configured via `components.json`).
 
 After adding via CLI:
 
 1. Verify the build works: `pnpm run types:check`
-2. Add MDX documentation under `content/docs/ui/<component>.mdx`
-3. Update `content/docs/ui/meta.json` to include the new component
-4. Open PR with commit message referencing the issue (e.g., `Closes #5`)
+2. Add entry to `registry.json` with correct path
+3. Add MDX documentation under `content/docs/ui/<component>.mdx`
+4. Update `content/docs/ui/meta.json` to include the new component
+5. Open PR with commit message referencing the issue (e.g., `Closes #5`)
 
 ### For notebook-specific components
 
 These aren't available via shadcn CLI. Copy from `runtimed/intheloop`:
 
 1. Copy source file(s) from intheloop
-2. Update imports to use `@/lib/utils` for `cn()` 
-3. Place in appropriate directory:
-   - `components/notebook/` for notebook UI
-   - `registry/` for components we distribute via our registry
-4. Verify the build works
-5. Add to `registry.json` if distributing via nteract registry
-6. Add MDX documentation
+2. Update imports:
+   - Use `@/lib/utils` for `cn()`
+   - Use `@/registry/primitives/<component>` for UI primitives
+3. Place in `registry/cell/` for cell components
+4. Verify the build works: `pnpm run types:check`
+5. Add entry to `registry.json`
+6. Add MDX documentation under `content/docs/cell/<component>.mdx`
 7. Open PR
-
-## Directory structure
-
-| Path | Purpose |
-|------|---------|
-| `components/ui/` | shadcn/ui primitives (added via CLI) |
-| `components/notebook/` | Notebook-specific components |
-| `registry/outputs/` | Output renderers (distributed via nteract registry) |
-| `content/docs/ui/` | MDX docs for UI primitives |
-| `content/docs/outputs/` | MDX docs for output renderers |
 
 ## Intake checklist
 
 Before merging a component PR:
 
-- [ ] Component added via shadcn CLI (for shadcn primitives) or properly adapted
+- [ ] Component placed in correct `registry/` subfolder
 - [ ] TypeScript props exported (no `any`)
 - [ ] Uses `cn()` from `@/lib/utils` for class merging
+- [ ] Imports use `@/registry/primitives/` for UI dependencies
+- [ ] Entry added to `registry.json` with correct path
 - [ ] Build passes: `pnpm run types:check`
 - [ ] MDX documentation with interactive examples
 - [ ] Docs navigation updated (`meta.json`)
@@ -111,9 +128,9 @@ For notebook-specific components not available via shadcn:
 
 | File | Size | Issue | Notes |
 |------|------|-------|-------|
-| `shared/PlayButton.tsx` | 1.8KB | #15 | Pure — execute/interrupt button |
-| `shared/ExecutionStatus.tsx` | 1KB | #16 | Pure — needs Badge |
-| `CellTypeButtons.tsx` | 2.6KB | #17 | Pure — code/markdown/sql/ai buttons |
+| `shared/PlayButton.tsx` | 1.8KB | #15 | ✅ Done |
+| `shared/ExecutionStatus.tsx` | 1KB | #16 | ✅ Done |
+| `CellTypeButtons.tsx` | 2.6KB | #17 | ✅ Done |
 | `shared/CellControls.tsx` | 5.4KB | #18 | Needs DropdownMenu |
 | `shared/CellContainer.tsx` | 3.2KB | #19 | Refactor — strip hooks |
 | `shared/CellHeader.tsx` | 1KB | #20 | Refactor — strip hooks |
@@ -143,17 +160,17 @@ For notebook-specific components not available via shadcn:
 ## Dependency graph for cell primitives
 
 ```
-DropdownMenu (#14)
+DropdownMenu (#14) ✅
     └── CellControls (#18)
 
-Badge (#6)
-    └── ExecutionStatus (#16)
+Badge (#6) ✅
+    └── ExecutionStatus (#16) ✅
 
-Button (done)
-    └── CellTypeButton (#17)
+Button (#5) ✅
+    └── CellTypeButton (#17) ✅
 
 No deps:
-    ├── PlayButton (#15)
+    ├── PlayButton (#15) ✅
     ├── CellContainer (#19) — refactor only
     └── CellHeader (#20) — refactor only
 ```
@@ -165,6 +182,9 @@ Already in this repo:
 - `tailwind-merge` — class merging
 - `class-variance-authority` — variant props (cva)
 - `@radix-ui/react-slot` — polymorphic components
+- `@radix-ui/react-dropdown-menu` — dropdown menu primitive
+- `@radix-ui/react-popover` — popover primitive
+- `@radix-ui/react-tooltip` — tooltip primitive
 - `clsx` — class composition
 
 May need to add for specific components:

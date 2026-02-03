@@ -5,8 +5,8 @@ icon: Info
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/registry/primitives/tooltip';
+import { Button } from '@/registry/primitives/button';
 
 <div className="my-8">
   <Tooltip>
@@ -41,7 +41,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip"
+} from "@/registry/primitives/tooltip"
 
 export function Example() {
   return (
@@ -110,7 +110,7 @@ export function Example() {
 When using multiple tooltips, wrap them in a single `TooltipProvider` to share delay settings:
 
 ```tsx
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/registry/primitives/tooltip"
 
 export function Example() {
   return (

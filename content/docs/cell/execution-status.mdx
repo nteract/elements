@@ -5,7 +5,7 @@ icon: Play
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { ExecutionStatus } from '@/components/notebook/cell/ExecutionStatus';
+import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
 
 <div className="my-8 flex flex-wrap gap-4">
   <ExecutionStatus executionState="idle" />
@@ -32,7 +32,7 @@ A cell primitive that displays the current execution state of a notebook cell. R
 ## Usage
 
 ```tsx
-import { ExecutionStatus } from "@/components/notebook/cell/ExecutionStatus"
+import { ExecutionStatus } from "@/registry/cell/ExecutionStatus"
 
 export function CellHeader() {
   return (
