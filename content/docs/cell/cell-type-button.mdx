@@ -1,0 +1,197 @@
+---
+title: CellTypeButton
+description: Styled buttons for different notebook cell types with color coding
+icon: SquareStack
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CellTypeButton, CodeCellButton, MarkdownCellButton, SqlCellButton, AiCellButton } from '@/components/notebook/cell/CellTypeButton';
+
+<div className="my-8 flex flex-wrap gap-4">
+  <CodeCellButton />
+  <MarkdownCellButton />
+  <SqlCellButton />
+  <AiCellButton />
+</div>
+
+Styled buttons for different notebook cell types. Each cell type has a distinct color scheme for visual differentiation. Includes convenience components for each cell type.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://elements.nteract.io/r/cell-type-button.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from [nteract/elements](https://github.com/nteract/elements/blob/main/components/notebook/cell/CellTypeButton.tsx).
+
+    Requires the `Button` component from shadcn/ui.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CellTypeButton, CodeCellButton, MarkdownCellButton } from "@/components/notebook/cell/CellTypeButton"
+
+export function Example() {
+  return (
+    <div className="flex gap-2">
+      <CellTypeButton cellType="code" />
+      <CodeCellButton />
+      <MarkdownCellButton />
+    </div>
+  )
+}
+```
+
+## All Cell Types
+
+Each cell type has a distinct color scheme:
+
+<div className="my-4 flex flex-wrap gap-4">
+  <CellTypeButton cellType="code" />
+  <CellTypeButton cellType="markdown" />
+  <CellTypeButton cellType="sql" />
+  <CellTypeButton cellType="ai" />
+</div>
+
+```tsx
+<CellTypeButton cellType="code" />     // Gray
+<CellTypeButton cellType="markdown" /> // Yellow
+<CellTypeButton cellType="sql" />      // Blue
+<CellTypeButton cellType="ai" />       // Purple
+```
+
+## Convenience Components
+
+Pre-configured components for each cell type:
+
+### CodeCellButton
+
+<div className="my-4">
+  <CodeCellButton />
+</div>
+
+```tsx
+<CodeCellButton />
+```
+
+### MarkdownCellButton
+
+<div className="my-4">
+  <MarkdownCellButton />
+</div>
+
+```tsx
+<MarkdownCellButton />
+```
+
+### SqlCellButton
+
+<div className="my-4">
+  <SqlCellButton />
+</div>
+
+```tsx
+<SqlCellButton />
+```
+
+### AiCellButton
+
+<div className="my-4">
+  <AiCellButton />
+</div>
+
+```tsx
+<AiCellButton />
+```
+
+## With Plus Icon
+
+Show a plus icon for "add cell" actions:
+
+<div className="my-4 flex flex-wrap gap-4">
+  <CodeCellButton showPlus />
+  <MarkdownCellButton showPlus />
+  <SqlCellButton showPlus />
+  <AiCellButton showPlus />
+</div>
+
+```tsx
+<CodeCellButton showPlus />
+<MarkdownCellButton showPlus />
+```
+
+## Without Icon
+
+Hide the cell type icon:
+
+<div className="my-4 flex flex-wrap gap-4">
+  <CodeCellButton showIcon={false} />
+  <MarkdownCellButton showIcon={false} />
+</div>
+
+```tsx
+<CodeCellButton showIcon={false} />
+<MarkdownCellButton showIcon={false} />
+```
+
+## Custom Labels
+
+Override the default label:
+
+<div className="my-4 flex flex-wrap gap-4">
+  <CellTypeButton cellType="code" label="Python" />
+  <CellTypeButton cellType="ai" label="GPT-4" />
+</div>
+
+```tsx
+<CellTypeButton cellType="code" label="Python" />
+<CellTypeButton cellType="ai" label="GPT-4" />
+```
+
+## Sizes
+
+Supports all Button sizes:
+
+<div className="my-4 flex flex-wrap items-center gap-4">
+  <CodeCellButton size="xs" />
+  <CodeCellButton size="sm" />
+  <CodeCellButton size="default" />
+  <CodeCellButton size="lg" />
+</div>
+
+```tsx
+<CodeCellButton size="xs" />
+<CodeCellButton size="sm" />
+<CodeCellButton size="default" />
+<CodeCellButton size="lg" />
+```
+
+## Props
+
+### CellTypeButton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `cellType` | `"code" \| "markdown" \| "sql" \| "ai"` | Required | The type of cell |
+| `showIcon` | `boolean` | `true` | Show the cell type icon |
+| `showPlus` | `boolean` | `false` | Show a plus icon (for add actions) |
+| `label` | `string` | Cell type name | Custom button label |
+| `size` | `"default" \| "xs" \| "sm" \| "lg"` | `"default"` | Button size |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `ButtonProps` | — | All standard Button props |
+
+### Convenience Components
+
+`CodeCellButton`, `MarkdownCellButton`, `SqlCellButton`, and `AiCellButton` accept all props except `cellType`.
+
+## Exported Types
+
+```tsx
+export type CellType = "code" | "markdown" | "sql" | "ai";
+export const cellTypeStyles: Record<CellType, string>;
+```
