@@ -1,0 +1,242 @@
+---
+title: Dropdown Menu
+description: A menu component for displaying a list of actions or options triggered by a button
+icon: ChevronDown
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+<div className="my-8">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline">Open Menu</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <DropdownMenuItem>
+          Profile
+          <DropdownMenuShortcut>Shift+P</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          Settings
+          <DropdownMenuShortcut>Shift+S</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem variant="destructive">
+        Log out
+        <DropdownMenuShortcut>Shift+Q</DropdownMenuShortcut>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+
+A dropdown menu component built on [Radix UI](https://www.radix-ui.com/primitives/docs/components/dropdown-menu) primitives. Provides accessible menus for actions, navigation, and selections.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add dropdown-menu
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui
+    ```
+
+    Copy the component from [shadcn/ui dropdown-menu](https://ui.shadcn.com/docs/components/dropdown-menu).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+export function Example() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuItem>Log out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+```
+
+## Examples
+
+### With Shortcuts
+
+<div className="my-4">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline">Actions</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuItem>
+        New Cell
+        <DropdownMenuShortcut>B</DropdownMenuShortcut>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        Run Cell
+        <DropdownMenuShortcut>Shift+Enter</DropdownMenuShortcut>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        Run All
+        <DropdownMenuShortcut>Shift+Ctrl+Enter</DropdownMenuShortcut>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline">Actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className="w-56">
+    <DropdownMenuItem>
+      New Cell
+      <DropdownMenuShortcut>B</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Run Cell
+      <DropdownMenuShortcut>Shift+Enter</DropdownMenuShortcut>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+### Destructive Items
+
+<div className="my-4">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline">Cell Options</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent>
+      <DropdownMenuItem>Copy Cell</DropdownMenuItem>
+      <DropdownMenuItem>Cut Cell</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem variant="destructive">Delete Cell</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline">Cell Options</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>Copy Cell</DropdownMenuItem>
+    <DropdownMenuItem>Cut Cell</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem variant="destructive">Delete Cell</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+### With Groups
+
+<div className="my-4">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline">Insert</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-48">
+      <DropdownMenuLabel>Cell Type</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <DropdownMenuItem>Code Cell</DropdownMenuItem>
+        <DropdownMenuItem>Markdown Cell</DropdownMenuItem>
+        <DropdownMenuItem>Raw Cell</DropdownMenuItem>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuLabel>Position</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <DropdownMenuItem>Insert Above</DropdownMenuItem>
+        <DropdownMenuItem>Insert Below</DropdownMenuItem>
+      </DropdownMenuGroup>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline">Insert</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className="w-48">
+    <DropdownMenuLabel>Cell Type</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuGroup>
+      <DropdownMenuItem>Code Cell</DropdownMenuItem>
+      <DropdownMenuItem>Markdown Cell</DropdownMenuItem>
+      <DropdownMenuItem>Raw Cell</DropdownMenuItem>
+    </DropdownMenuGroup>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Components
+
+The dropdown menu is composed of several components:
+
+| Component | Description |
+| --- | --- |
+| `DropdownMenu` | Root component that manages state |
+| `DropdownMenuTrigger` | Element that opens the menu |
+| `DropdownMenuContent` | Container for menu items |
+| `DropdownMenuItem` | Individual menu item |
+| `DropdownMenuCheckboxItem` | Menu item with checkbox |
+| `DropdownMenuRadioGroup` | Group for radio items |
+| `DropdownMenuRadioItem` | Menu item with radio selection |
+| `DropdownMenuLabel` | Non-interactive label |
+| `DropdownMenuSeparator` | Visual separator |
+| `DropdownMenuShortcut` | Keyboard shortcut hint |
+| `DropdownMenuGroup` | Groups related items |
+| `DropdownMenuSub` | Submenu container |
+| `DropdownMenuSubTrigger` | Element that opens submenu |
+| `DropdownMenuSubContent` | Submenu content |
+
+## Props
+
+### DropdownMenuItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "destructive"` | `"default"` | Visual variant |
+| `inset` | `boolean` | `false` | Add left padding for alignment with icons |
+| `disabled` | `boolean` | `false` | Disable the item |
+| `className` | `string` | — | Additional CSS classes |
