@@ -1,45 +1,57 @@
 # nteract-elements
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+An opinionated starting point for building Jupyter frontends. A design system and component library for notebooks, cells, outputs, terminals, sidecars, and the broader interactive computing ecosystem.
 
-Run development server:
+We follow shadcn/ui conventions (copy-into-repo, Tailwind + CSS variables, composable primitives) so you can adopt upstream UI primitives while building Jupyter-specific components on top.
+
+## Prerequisites
+
+Before installing nteract Elements, make sure your environment meets the following requirements:
+
+- Node.js 18 or later
+- shadcn/ui installed in your project. If you don't have it installed, running any install command will automatically install it for you.
+
+nteract Elements is built targeting React 19 (no `forwardRef` usage) and Tailwind CSS 4.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
+pnpm install
 pnpm dev
-# or
-yarn dev
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Open http://localhost:3000 to see the docs site.
 
-## Explore
+## What this repo provides
 
-In the project, you can see:
+- **Documentation site** — Fumadocs-powered docs and component examples
+- **Component area** — `components/` for in-repo UI components following shadcn patterns
+- **Registry integration** — `shadcn build` in prebuild for shadcn-style component distribution
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+## Component priority
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+We're actively building out the component library. Priority order:
 
-### Fumadocs MDX
+1. **Atomic primitives** — Button, Input, Badge, Avatar, Kbd, Spinner
+2. **Layout utilities** — Card, Popover, Tooltip, Sidebar, Tabs, Dialog
+3. **Notebook primitives** — Cell, CellAdder, CellToolbar, ExecutionCount
+4. **Output renderers** — ANSI, JSON, Markdown, HTML, Images, Plots, DataFrames
+5. **Higher-level notebook UI** — NotebookContent, NotebookSidebar, RuntimeHealthIndicator
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+See `contributing/triage.md` for the component intake process.
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+## Project structure
 
-## Learn More
+| Path | Purpose |
+|------|---------|
+| `components/` | In-repo UI components |
+| `registry/` | shadcn registry definitions |
+| `app/docs/` | Documentation pages |
+| `content/docs/` | MDX documentation source |
+| `contributing/` | Contributor docs (triage process, prerequisites) |
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
+## Learn more
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+- [nteract](https://nteract.io) — the nteract project
+- [Fumadocs](https://fumadocs.dev) — documentation framework
+- [shadcn/ui](https://ui.shadcn.com) — component patterns we follow
