@@ -6,6 +6,7 @@
     "image-output",
     "html-output",
     "svg-output",
-    "markdown-output"
+    "markdown-output",
+    "json-output"
   ]
 }

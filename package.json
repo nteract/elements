@@ -13,6 +13,7 @@
     "registry:build": "shadcn build"
   },
   "dependencies": {
+    "@uiw/react-json-view": "^2.0.0-alpha.27",
     "ansi-to-react": "^6.1.1",
     "fumadocs-core": "16.5.0",
     "fumadocs-mdx": "14.2.6",
