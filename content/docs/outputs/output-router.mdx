@@ -43,15 +43,40 @@ export function Example() {
 }
 ```
 
+### With Metadata
+
+Metadata is keyed by MIME type, same as data. Used for image dimensions, JSON display settings, etc:
+
+```tsx
+<OutputRouter
+  data={{
+    "image/png": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB..."
+  }}
+  metadata={{
+    "image/png": { width: 400, height: 300 }
+  }}
+/>
+```
+
 ## Props
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | `Record<string, unknown>` | — | Output data mapping MIME types to content |
+| `metadata` | `Record<string, object>` | `{}` | Metadata mapping MIME types to their settings |
 | `unsafe` | `boolean` | `false` | Allow unsafe HTML rendering (requires iframe) |
 | `fallback` | `ReactNode` | — | Custom fallback when no MIME type is supported |
 | `loading` | `ReactNode` | — | Custom loading component while lazy-loading |
 | `className` | `string` | `""` | Additional CSS classes |
+
+## Metadata
+
+Metadata is passed through to the appropriate output component:
+
+| MIME Type | Metadata | Usage |
+| --- | --- | --- |
+| `image/*` | `{ width, height }` | Image dimensions |
+| `application/json` | `{ collapsed }` | JSON tree collapse depth |
 
 ## MIME Type Priority
 
@@ -81,7 +106,7 @@ function CellOutput({ output }) {
   // execute_result and display_data outputs
   if (output.output_type === "execute_result" || 
       output.output_type === "display_data") {
-    return <OutputRouter data={output.data} />
+    return <OutputRouter data={output.data} metadata={output.metadata} />
   }
   
   // stream outputs (stdout/stderr)

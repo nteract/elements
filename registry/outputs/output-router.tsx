@@ -4,22 +4,22 @@ import { lazy, Suspense, type ReactNode } from "react";
 
 // Lazy load output components for better bundle splitting
 const AnsiOutput = lazy(() =>
-  import("./ansi-output").then((m) => ({ default: m.AnsiOutput }))
+  import("./ansi-output").then((m) => ({ default: m.AnsiOutput })),
 );
 const MarkdownOutput = lazy(() =>
-  import("./markdown-output").then((m) => ({ default: m.MarkdownOutput }))
+  import("./markdown-output").then((m) => ({ default: m.MarkdownOutput })),
 );
 const HtmlOutput = lazy(() =>
-  import("./html-output").then((m) => ({ default: m.HtmlOutput }))
+  import("./html-output").then((m) => ({ default: m.HtmlOutput })),
 );
 const ImageOutput = lazy(() =>
-  import("./image-output").then((m) => ({ default: m.ImageOutput }))
+  import("./image-output").then((m) => ({ default: m.ImageOutput })),
 );
 const SvgOutput = lazy(() =>
-  import("./svg-output").then((m) => ({ default: m.SvgOutput }))
+  import("./svg-output").then((m) => ({ default: m.SvgOutput })),
 );
 const JsonOutput = lazy(() =>
-  import("./json-output").then((m) => ({ default: m.JsonOutput }))
+  import("./json-output").then((m) => ({ default: m.JsonOutput })),
 );
 
 /**
@@ -57,12 +57,28 @@ interface OutputData {
   [mimeType: string]: unknown;
 }
 
+interface OutputMetadata {
+  [mimeType: string]:
+    | {
+        width?: number;
+        height?: number;
+        [key: string]: unknown;
+      }
+    | undefined;
+}
+
 interface OutputRouterProps {
   /**
    * Output data object mapping MIME types to content.
    * e.g., { "text/plain": "Hello", "text/html": "<b>Hello</b>" }
    */
   data: OutputData;
+  /**
+   * Output metadata object mapping MIME types to their metadata.
+   * e.g., { "image/png": { width: 400, height: 300 } }
+   * Used for image dimensions, JSON display settings, etc.
+   */
+  metadata?: OutputMetadata;
   /**
    * Whether to allow unsafe HTML rendering (requires iframe).
    * Applies to text/html MIME type.
@@ -148,6 +164,7 @@ function DefaultLoading() {
  */
 export function OutputRouter({
   data,
+  metadata = {},
   unsafe = false,
   fallback,
   loading,
@@ -164,6 +181,7 @@ export function OutputRouter({
   }
 
   const content = data[mimeType];
+  const mimeMetadata = metadata[mimeType] || {};
   const loadingComponent = loading || <DefaultLoading />;
 
   const renderOutput = () => {
@@ -200,6 +218,8 @@ export function OutputRouter({
         <ImageOutput
           data={String(content)}
           mediaType={imageType}
+          width={mimeMetadata.width}
+          height={mimeMetadata.height}
           className={className}
         />
       );
@@ -216,7 +236,13 @@ export function OutputRouter({
       mimeType.includes("+json") ||
       mimeType === "application/geo+json"
     ) {
-      return <JsonOutput data={content} className={className} />;
+      return (
+        <JsonOutput
+          data={content}
+          collapsed={mimeMetadata.collapsed as boolean | number | undefined}
+          className={className}
+        />
+      );
     }
 
     // Plain text (may contain ANSI)
