@@ -1,0 +1,210 @@
+---
+title: Button
+description: A button component with multiple variants and sizes for triggering actions
+icon: MousePointerClick
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Button } from '@/components/ui/button';
+
+<div className="my-8 flex flex-wrap gap-4">
+  <Button>Default</Button>
+  <Button variant="secondary">Secondary</Button>
+  <Button variant="outline">Outline</Button>
+  <Button variant="ghost">Ghost</Button>
+  <Button variant="destructive">Destructive</Button>
+  <Button variant="link">Link</Button>
+</div>
+
+A versatile button component built on [Radix UI](https://www.radix-ui.com/) primitives with support for multiple variants, sizes, and the ability to render as a child component.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add button
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install @radix-ui/react-slot class-variance-authority
+    ```
+    
+    Copy the component from [shadcn/ui button](https://ui.shadcn.com/docs/components/button).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+export function Example() {
+  return <Button>Click me</Button>
+}
+```
+
+## Variants
+
+The button supports several visual variants:
+
+### Default
+
+<div className="my-4 flex gap-4">
+  <Button>Default Button</Button>
+</div>
+
+```tsx
+<Button>Default Button</Button>
+```
+
+### Secondary
+
+<div className="my-4 flex gap-4">
+  <Button variant="secondary">Secondary Button</Button>
+</div>
+
+```tsx
+<Button variant="secondary">Secondary Button</Button>
+```
+
+### Outline
+
+<div className="my-4 flex gap-4">
+  <Button variant="outline">Outline Button</Button>
+</div>
+
+```tsx
+<Button variant="outline">Outline Button</Button>
+```
+
+### Ghost
+
+<div className="my-4 flex gap-4">
+  <Button variant="ghost">Ghost Button</Button>
+</div>
+
+```tsx
+<Button variant="ghost">Ghost Button</Button>
+```
+
+### Destructive
+
+<div className="my-4 flex gap-4">
+  <Button variant="destructive">Destructive Button</Button>
+</div>
+
+```tsx
+<Button variant="destructive">Destructive Button</Button>
+```
+
+### Link
+
+<div className="my-4 flex gap-4">
+  <Button variant="link">Link Button</Button>
+</div>
+
+```tsx
+<Button variant="link">Link Button</Button>
+```
+
+## Sizes
+
+<div className="my-4 flex flex-wrap items-center gap-4">
+  <Button size="xs">Extra Small</Button>
+  <Button size="sm">Small</Button>
+  <Button size="default">Default</Button>
+  <Button size="lg">Large</Button>
+</div>
+
+```tsx
+<Button size="xs">Extra Small</Button>
+<Button size="sm">Small</Button>
+<Button size="default">Default</Button>
+<Button size="lg">Large</Button>
+```
+
+### Icon Sizes
+
+<div className="my-4 flex flex-wrap items-center gap-4">
+  <Button size="icon-xs">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  </Button>
+  <Button size="icon-sm">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  </Button>
+  <Button size="icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  </Button>
+  <Button size="icon-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  </Button>
+</div>
+
+```tsx
+<Button size="icon-xs"><PlusIcon /></Button>
+<Button size="icon-sm"><PlusIcon /></Button>
+<Button size="icon"><PlusIcon /></Button>
+<Button size="icon-lg"><PlusIcon /></Button>
+```
+
+## With Icons
+
+<div className="my-4 flex flex-wrap gap-4">
+  <Button>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+    Add Cell
+  </Button>
+  <Button variant="outline">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+    Run
+  </Button>
+</div>
+
+```tsx
+<Button>
+  <PlusIcon />
+  Add Cell
+</Button>
+<Button variant="outline">
+  <PlayIcon />
+  Run
+</Button>
+```
+
+## Disabled State
+
+<div className="my-4 flex gap-4">
+  <Button disabled>Disabled</Button>
+  <Button variant="outline" disabled>Disabled Outline</Button>
+</div>
+
+```tsx
+<Button disabled>Disabled</Button>
+<Button variant="outline" disabled>Disabled Outline</Button>
+```
+
+## As Child
+
+Use the `asChild` prop to render the button as a different element, like a link:
+
+```tsx
+import Link from "next/link"
+
+<Button asChild>
+  <Link href="/docs">Documentation</Link>
+</Button>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | Visual style variant |
+| `size` | `"default" \| "xs" \| "sm" \| "lg" \| "icon" \| "icon-xs" \| "icon-sm" \| "icon-lg"` | `"default"` | Button size |
+| `asChild` | `boolean` | `false` | Render as child element using Radix Slot |
+| `className` | `string` | — | Additional CSS classes |
+| `disabled` | `boolean` | `false` | Disable the button |
+| `...props` | `ButtonHTMLAttributes` | — | All standard button attributes |
