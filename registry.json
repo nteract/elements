@@ -131,6 +131,19 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "play-button",
+      "type": "registry:component",
+      "title": "PlayButton",
+      "description": "Cell execution control button that shows Play, Stop, or Loading states based on execution state. Used in notebook cell toolbars.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "components/notebook/cell/PlayButton.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
