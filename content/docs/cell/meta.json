@@ -1,4 +1,4 @@
 {
   "title": "Cell",
-  "pages": ["cell-type-button", "execution-status"]
+  "pages": ["cell-type-button", "execution-status", "play-button"]
 }

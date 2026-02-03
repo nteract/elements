@@ -1,0 +1,126 @@
+---
+title: PlayButton
+description: Cell execution control button that shows Play, Stop, or Loading states based on execution state
+icon: Play
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { PlayButtonDemo } from '@/app/_components/PlayButtonDemo';
+
+<div className="my-8 flex gap-4 items-center">
+  <PlayButtonDemo executionState="idle" cellType="code" />
+  <PlayButtonDemo executionState="running" cellType="code" />
+  <PlayButtonDemo executionState="idle" cellType="code" isAutoLaunching />
+</div>
+
+A button component for executing notebook cells. Shows different icons based on the current execution state:
+- **Play** icon when idle, completed, or in error state
+- **Square** (stop) icon when running or queued
+- **Loader** spinner when auto-launching the runtime
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://elements.nteract.io/r/play-button.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/components/notebook/cell/PlayButton.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { PlayButton } from "@/components/notebook/cell/PlayButton"
+
+export function CellToolbar() {
+  return (
+    <PlayButton
+      executionState="idle"
+      cellType="code"
+      onExecute={() => console.log("Execute cell")}
+      onInterrupt={() => console.log("Interrupt execution")}
+    />
+  )
+}
+```
+
+## Examples
+
+### Idle State
+
+<div className="my-4">
+  <PlayButtonDemo executionState="idle" cellType="code" />
+</div>
+
+```tsx
+<PlayButton
+  executionState="idle"
+  cellType="code"
+  onExecute={handleExecute}
+  onInterrupt={handleInterrupt}
+/>
+```
+
+### Running State
+
+<div className="my-4">
+  <PlayButtonDemo executionState="running" cellType="code" />
+</div>
+
+```tsx
+<PlayButton
+  executionState="running"
+  cellType="code"
+  onExecute={handleExecute}
+  onInterrupt={handleInterrupt}
+/>
+```
+
+### Auto-launching
+
+<div className="my-4">
+  <PlayButtonDemo executionState="idle" cellType="code" isAutoLaunching />
+</div>
+
+```tsx
+<PlayButton
+  executionState="idle"
+  cellType="code"
+  onExecute={handleExecute}
+  onInterrupt={handleInterrupt}
+  isAutoLaunching
+/>
+```
+
+### Focused State
+
+<div className="my-4">
+  <PlayButtonDemo executionState="idle" cellType="code" isFocused />
+</div>
+
+```tsx
+<PlayButton
+  executionState="idle"
+  cellType="code"
+  isFocused
+  onExecute={handleExecute}
+  onInterrupt={handleInterrupt}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `executionState` | `"idle" \| "queued" \| "running" \| "completed" \| "error"` | — | Current execution state of the cell |
+| `cellType` | `string` | — | Type of cell (e.g., "code", "markdown") for tooltip |
+| `isFocused` | `boolean` | `false` | Whether the cell is focused |
+| `onExecute` | `() => void` | — | Callback when play button is clicked |
+| `onInterrupt` | `() => void` | — | Callback when stop button is clicked |
+| `className` | `string` | `""` | Additional CSS classes |
+| `focusedClass` | `string` | `"text-foreground"` | CSS class applied when focused |
+| `isAutoLaunching` | `boolean` | `false` | Shows loading spinner and disables button |
