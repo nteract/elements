@@ -1,0 +1,198 @@
+---
+title: Card
+description: A container component for grouping related content with optional header and footer
+icon: CreditCard
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+
+<div className="my-8">
+  <Card className="w-full max-w-sm">
+    <CardHeader>
+      <CardTitle>Card Title</CardTitle>
+      <CardDescription>Card description goes here</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <p>Card content and body text.</p>
+    </CardContent>
+    <CardFooter>
+      <Button size="sm">Action</Button>
+    </CardFooter>
+  </Card>
+</div>
+
+A flexible container component for grouping related content. Cards can include headers, content areas, and footers for consistent layout patterns.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add card
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from [shadcn/ui card](https://ui.shadcn.com/docs/components/card).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card"
+
+export function Example() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Title</CardTitle>
+        <CardDescription>Description</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Content goes here.</p>
+      </CardContent>
+      <CardFooter>
+        <p>Footer</p>
+      </CardFooter>
+    </Card>
+  )
+}
+```
+
+## Examples
+
+### Simple Card
+
+<div className="my-4">
+  <Card className="w-full max-w-sm">
+    <CardContent className="pt-6">
+      <p>A simple card with just content.</p>
+    </CardContent>
+  </Card>
+</div>
+
+```tsx
+<Card>
+  <CardContent className="pt-6">
+    <p>A simple card with just content.</p>
+  </CardContent>
+</Card>
+```
+
+### With Header Action
+
+<div className="my-4">
+  <Card className="w-full max-w-sm">
+    <CardHeader>
+      <CardTitle>Notifications</CardTitle>
+      <CardDescription>You have 3 unread messages</CardDescription>
+      <CardAction>
+        <Button variant="outline" size="sm">View All</Button>
+      </CardAction>
+    </CardHeader>
+    <CardContent>
+      <p>Recent activity will appear here.</p>
+    </CardContent>
+  </Card>
+</div>
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Notifications</CardTitle>
+    <CardDescription>You have 3 unread messages</CardDescription>
+    <CardAction>
+      <Button variant="outline" size="sm">View All</Button>
+    </CardAction>
+  </CardHeader>
+  <CardContent>
+    <p>Recent activity will appear here.</p>
+  </CardContent>
+</Card>
+```
+
+## Notebook Examples
+
+<div className="my-4">
+  <Card className="w-full max-w-md">
+    <CardHeader>
+      <CardTitle>Cell Output</CardTitle>
+      <CardDescription>Execution completed in 0.42s</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <pre className="bg-muted p-2 rounded text-sm">{'{"result": 42}'}</pre>
+    </CardContent>
+  </Card>
+</div>
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Cell Output</CardTitle>
+    <CardDescription>Execution completed in 0.42s</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <pre className="bg-muted p-2 rounded text-sm">{'{"result": 42}'}</pre>
+  </CardContent>
+</Card>
+```
+
+## Props
+
+### Card
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
+
+### CardHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
+
+### CardTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
+
+### CardDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
+
+### CardContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
+
+### CardFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
+
+### CardAction
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |

@@ -133,6 +133,33 @@
       ]
     },
     {
+      "name": "cell-type-button",
+      "type": "registry:component",
+      "title": "CellTypeButton",
+      "description": "Styled buttons for different notebook cell types with color coding. Includes CodeCellButton, MarkdownCellButton, SqlCellButton, and AiCellButton convenience components.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "components/notebook/cell/CellTypeButton.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "execution-status",
+      "type": "registry:component",
+      "title": "ExecutionStatus",
+      "description": "A badge component that displays the execution state of a notebook cell. Shows queued, running, or error states.",
+      "registryDependencies": ["badge"],
+      "files": [
+        {
+          "path": "components/notebook/cell/ExecutionStatus.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "play-button",
       "type": "registry:component",
       "title": "PlayButton",

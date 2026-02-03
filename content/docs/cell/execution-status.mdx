@@ -1,0 +1,98 @@
+---
+title: ExecutionStatus
+description: A badge component that displays the execution state of a notebook cell
+icon: Play
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { ExecutionStatus } from '@/components/notebook/cell/ExecutionStatus';
+
+<div className="my-8 flex flex-wrap gap-4">
+  <ExecutionStatus executionState="idle" />
+  <ExecutionStatus executionState="queued" />
+  <ExecutionStatus executionState="running" />
+  <ExecutionStatus executionState="error" />
+</div>
+
+A cell primitive that displays the current execution state of a notebook cell. Returns appropriate badges for queued, running, and error states, or nothing for idle.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://elements.nteract.io/r/execution-status.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from [nteract/elements](https://github.com/nteract/elements/blob/main/components/notebook/cell/ExecutionStatus.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { ExecutionStatus } from "@/components/notebook/cell/ExecutionStatus"
+
+export function CellHeader() {
+  return (
+    <div className="flex items-center gap-2">
+      <span>[1]:</span>
+      <ExecutionStatus executionState="running" />
+    </div>
+  )
+}
+```
+
+## States
+
+### Idle
+
+Returns `null` - no badge is displayed when the cell is idle.
+
+<div className="my-4 flex gap-4 items-center">
+  <span className="text-muted-foreground text-sm">No badge shown:</span>
+  <ExecutionStatus executionState="idle" />
+</div>
+
+```tsx
+<ExecutionStatus executionState="idle" />
+```
+
+### Queued
+
+<div className="my-4 flex gap-4">
+  <ExecutionStatus executionState="queued" />
+</div>
+
+```tsx
+<ExecutionStatus executionState="queued" />
+```
+
+### Running
+
+Displays a spinning indicator alongside the "Running" text.
+
+<div className="my-4 flex gap-4">
+  <ExecutionStatus executionState="running" />
+</div>
+
+```tsx
+<ExecutionStatus executionState="running" />
+```
+
+### Error
+
+<div className="my-4 flex gap-4">
+  <ExecutionStatus executionState="error" />
+</div>
+
+```tsx
+<ExecutionStatus executionState="error" />
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `executionState` | `string` | — | The execution state: `"idle"`, `"queued"`, `"running"`, or `"error"` |
