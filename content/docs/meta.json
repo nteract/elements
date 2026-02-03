@@ -5,6 +5,8 @@
     "index",
     "---UI---",
     "...ui",
+    "---Cell---",
+    "...cell",
     "---Outputs---",
     "...outputs"
   ]
