@@ -1,0 +1,161 @@
+---
+title: Markdown Output
+description: Component for rendering Markdown content in notebook outputs
+icon: FileText
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { MarkdownOutput } from '@/registry/outputs/markdown-output';
+
+<div className="my-8 rounded-xl border bg-fd-card p-6">
+  <MarkdownOutput content={`# Hello from Markdown
+
+This is **bold** and this is *italic*.
+
+## Features
+
+- GitHub Flavored Markdown
+- Syntax highlighting with copy button
+- Math support: $E = mc^2$
+
+\`\`\`python
+def greet(name):
+    return f"Hello, {name}!"
+\`\`\`
+`} />
+</div>
+
+Component for rendering Markdown content in notebook outputs. Based on the [intheloop](https://github.com/runtimed/intheloop) MarkdownRenderer.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/markdown-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install dependencies:
+    ```bash
+    npm install react-markdown remark-gfm remark-math rehype-katex rehype-raw react-syntax-highlighter katex
+    ```
+    
+    Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/markdown-output.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { MarkdownOutput } from "@/registry/outputs/markdown-output"
+
+export function Example() {
+  const markdown = `# Title
+
+Some **bold** and *italic* text.
+
+Math: $\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}$
+`
+  
+  return <MarkdownOutput content={markdown} />
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | `string` | — | The Markdown content to render |
+| `className` | `string` | `""` | Additional CSS classes |
+| `enableCopyCode` | `boolean` | `true` | Show copy button on code blocks |
+| `unsafe` | `boolean` | `false` | Allow raw HTML (requires iframe) |
+
+## Features
+
+### GitHub Flavored Markdown
+
+Supports GFM extensions:
+
+| Feature | Syntax |
+| --- | --- |
+| Tables | `\| col \| col \|` |
+| Strikethrough | `~~text~~` |
+| Task lists | `- [x] done` |
+| Autolinks | `https://...` |
+
+### Math / LaTeX
+
+Inline math with `$...$` and block math with `$$...$$`:
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <MarkdownOutput content={`The quadratic formula: $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
+
+Block equation:
+
+$$
+\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}
+$$
+`} />
+</div>
+
+### Syntax Highlighting
+
+Code blocks are syntax highlighted with a copy button:
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <MarkdownOutput content={`\`\`\`python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2*np.pi, 100)
+plt.plot(x, np.sin(x))
+plt.show()
+\`\`\`
+`} />
+</div>
+
+### Tables
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <MarkdownOutput content={`| Name | Type | Description |
+| --- | --- | --- |
+| content | string | Markdown to render |
+| unsafe | boolean | Allow raw HTML |
+`} />
+</div>
+
+## Raw HTML (unsafe mode)
+
+<Callout type="warn">
+  Raw HTML in markdown can contain scripts. Set `unsafe={true}` only when rendering inside a sandboxed iframe.
+</Callout>
+
+By default, raw HTML in markdown is stripped. To allow it:
+
+```tsx
+// Inside a sandboxed iframe only
+<MarkdownOutput 
+  content={markdownWithHtml} 
+  unsafe={true} 
+/>
+```
+
+The component will throw an error if `unsafe={true}` is used outside an iframe.
+
+## Jupyter Integration
+
+Markdown outputs come from `display_data` messages with `text/markdown` MIME type:
+
+```tsx
+function renderOutput(output: JupyterOutput) {
+  const data = output.data;
+  
+  if (data["text/markdown"]) {
+    return <MarkdownOutput content={data["text/markdown"]} />
+  }
+  
+  return null;
+}
+```

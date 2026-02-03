@@ -51,6 +51,27 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "markdown-output",
+      "type": "registry:component",
+      "title": "Markdown Output",
+      "description": "Component for rendering Markdown content in notebook outputs. Supports GitHub Flavored Markdown (GFM) with tables, task lists, and syntax-highlighted code blocks.",
+      "dependencies": [
+        "react-markdown",
+        "remark-gfm",
+        "remark-math",
+        "rehype-katex",
+        "rehype-raw",
+        "react-syntax-highlighter",
+        "katex"
+      ],
+      "files": [
+        {
+          "path": "registry/outputs/markdown-output.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
