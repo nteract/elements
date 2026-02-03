@@ -1,0 +1,191 @@
+---
+title: Media Router
+description: MIME type-based output dispatcher with extensible renderers
+icon: Route
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Automatically selects the best renderer for Jupyter outputs based on MIME type priority. Supports custom renderers and priority ordering for platform-specific MIME types.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/media-router.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install all output component dependencies, then copy from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/media-router.tsx).
+  </Tab>
+</Tabs>
+
+<Callout type="info">
+  MediaRouter depends on all built-in output components. Installing it will also install AnsiOutput, MarkdownOutput, HtmlOutput, ImageOutput, SvgOutput, and JsonOutput.
+</Callout>
+
+## Usage
+
+### Basic
+
+```tsx
+import { MediaRouter } from "@/registry/outputs/media-router"
+
+export function CellOutput({ output }) {
+  return <MediaRouter data={output.data} metadata={output.metadata} />
+}
+```
+
+### With Metadata
+
+Metadata is keyed by MIME type, same as data. Used for image dimensions, JSON display settings, etc:
+
+```tsx
+<MediaRouter
+  data={{
+    "image/png": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB..."
+  }}
+  metadata={{
+    "image/png": { width: 400, height: 300 }
+  }}
+/>
+```
+
+### Custom Renderers
+
+Register custom renderers for MIME types not supported by the built-ins, or override built-ins:
+
+```tsx
+import { MediaRouter, DEFAULT_PRIORITY } from "@/registry/outputs/media-router"
+import { PlotlyChart } from "./plotly-chart"
+import { VegaLiteChart } from "./vega-lite-chart"
+
+<MediaRouter
+  data={output.data}
+  metadata={output.metadata}
+  priority={[
+    "application/vnd.plotly.v1+json",
+    "application/vnd.vegalite.v5+json",
+    ...DEFAULT_PRIORITY
+  ]}
+  renderers={{
+    "application/vnd.plotly.v1+json": ({ data }) => (
+      <PlotlyChart data={data} />
+    ),
+    "application/vnd.vegalite.v5+json": ({ data }) => (
+      <VegaLiteChart spec={data} />
+    ),
+  }}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `Record<string, unknown>` | — | Output data mapping MIME types to content |
+| `metadata` | `Record<string, object>` | `{}` | Metadata mapping MIME types to their settings |
+| `priority` | `readonly string[]` | `DEFAULT_PRIORITY` | MIME type priority order |
+| `renderers` | `Record<string, CustomRenderer>` | `{}` | Custom renderer functions |
+| `unsafe` | `boolean` | `false` | Allow unsafe HTML rendering (requires iframe) |
+| `fallback` | `ReactNode` | — | Custom fallback when no MIME type is supported |
+| `loading` | `ReactNode` | — | Custom loading component while lazy-loading |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## Custom Renderer Props
+
+Custom renderer functions receive:
+
+```tsx
+interface RendererProps {
+  data: unknown;              // The content for this MIME type
+  metadata: Record<string, unknown>;  // Metadata for this MIME type
+  mimeType: string;           // The MIME type being rendered
+  className?: string;         // CSS classes from parent
+}
+```
+
+## Metadata
+
+Built-in metadata support:
+
+| MIME Type | Metadata | Usage |
+| --- | --- | --- |
+| `image/*` | `{ width, height }` | Image dimensions |
+| `application/json` | `{ collapsed }` | JSON tree collapse depth |
+
+Custom renderers receive their metadata directly and can use any keys.
+
+## Default Priority
+
+The default MIME type priority (higher = preferred):
+
+```tsx
+import { DEFAULT_PRIORITY } from "@/registry/outputs/media-router"
+
+// DEFAULT_PRIORITY = [
+//   "application/vnd.jupyter.widget-view+json",
+//   "application/vnd.plotly.v1+json",
+//   "application/vnd.vegalite.v5+json",
+//   ...
+//   "text/html",
+//   "text/markdown",
+//   "image/svg+xml",
+//   "image/png",
+//   "image/jpeg",
+//   "application/json",
+//   "text/plain",
+// ]
+```
+
+To add custom types, prepend them to the default:
+
+```tsx
+priority={["application/x-custom", ...DEFAULT_PRIORITY]}
+```
+
+## Jupyter Integration
+
+```tsx
+import { MediaRouter } from "@/registry/outputs/media-router"
+
+function CellOutput({ output }) {
+  // execute_result and display_data outputs
+  if (output.output_type === "execute_result" || 
+      output.output_type === "display_data") {
+    return <MediaRouter data={output.data} metadata={output.metadata} />
+  }
+  
+  // stream outputs (stdout/stderr)
+  if (output.output_type === "stream") {
+    return <MediaRouter data={{ "text/plain": output.text }} />
+  }
+  
+  return null
+}
+```
+
+## Unsafe Mode
+
+For HTML and Markdown outputs that contain scripts, use `unsafe={true}`. This requires rendering inside an iframe:
+
+```tsx
+// Inside a sandboxed iframe only
+<MediaRouter data={outputData} unsafe={true} />
+```
+
+## Helper Function
+
+Use `getSelectedMimeType` to inspect which MIME type would be selected:
+
+```tsx
+import { getSelectedMimeType, DEFAULT_PRIORITY } from "@/registry/outputs/media-router"
+
+const mimeType = getSelectedMimeType(
+  { "text/plain": "Hello", "text/html": "<b>Hello</b>" },
+  DEFAULT_PRIORITY
+)
+// Returns: "text/html"
+```

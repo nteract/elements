@@ -87,10 +87,10 @@
       ]
     },
     {
-      "name": "output-router",
+      "name": "media-router",
       "type": "registry:component",
-      "title": "Output Router",
-      "description": "MIME type-based output dispatcher that automatically selects the best renderer for Jupyter outputs. Routes to AnsiOutput, MarkdownOutput, HtmlOutput, ImageOutput, SvgOutput, or JsonOutput based on content type.",
+      "title": "Media Router",
+      "description": "MIME type-based output dispatcher that automatically selects the best renderer for Jupyter outputs. Supports custom renderers and priority ordering for platform-specific MIME types.",
       "registryDependencies": [
         "ansi-output",
         "markdown-output",
@@ -101,7 +101,7 @@
       ],
       "files": [
         {
-          "path": "registry/outputs/output-router.tsx",
+          "path": "registry/outputs/media-router.tsx",
           "type": "registry:component"
         }
       ]

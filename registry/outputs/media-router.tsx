@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, type ReactNode } from "react";
 
-// Lazy load output components for better bundle splitting
+// Lazy load built-in output components for better bundle splitting
 const AnsiOutput = lazy(() =>
   import("./ansi-output").then((m) => ({ default: m.AnsiOutput })),
 );
@@ -23,10 +23,11 @@ const JsonOutput = lazy(() =>
 );
 
 /**
- * MIME type priority order for rendering.
+ * Default MIME type priority order for rendering.
  * Higher priority types are preferred when multiple are available.
+ * Platforms can override this with the `priority` prop.
  */
-const MIME_TYPE_PRIORITY = [
+export const DEFAULT_PRIORITY = [
   // Rich formats first
   "application/vnd.jupyter.widget-view+json",
   "application/vnd.plotly.v1+json",
@@ -51,13 +52,13 @@ const MIME_TYPE_PRIORITY = [
   "text/plain",
 ] as const;
 
-type MimeType = (typeof MIME_TYPE_PRIORITY)[number] | string;
+type MimeType = (typeof DEFAULT_PRIORITY)[number] | string;
 
-interface OutputData {
+interface MediaData {
   [mimeType: string]: unknown;
 }
 
-interface OutputMetadata {
+interface MediaMetadata {
   [mimeType: string]:
     | {
         width?: number;
@@ -67,21 +68,59 @@ interface OutputMetadata {
     | undefined;
 }
 
-interface OutputRouterProps {
+/**
+ * Props passed to custom renderer functions.
+ */
+export interface RendererProps {
+  data: unknown;
+  metadata: Record<string, unknown>;
+  mimeType: string;
+  className?: string;
+}
+
+/**
+ * Custom renderer function type.
+ */
+export type CustomRenderer = (props: RendererProps) => ReactNode;
+
+interface MediaRouterProps {
   /**
    * Output data object mapping MIME types to content.
    * e.g., { "text/plain": "Hello", "text/html": "<b>Hello</b>" }
    */
-  data: OutputData;
+  data: MediaData;
   /**
    * Output metadata object mapping MIME types to their metadata.
    * e.g., { "image/png": { width: 400, height: 300 } }
-   * Used for image dimensions, JSON display settings, etc.
    */
-  metadata?: OutputMetadata;
+  metadata?: MediaMetadata;
+  /**
+   * Custom MIME type priority order. Types listed first are preferred.
+   * Defaults to DEFAULT_PRIORITY. Your custom types should come first,
+   * followed by spreading DEFAULT_PRIORITY for fallback.
+   *
+   * @example
+   * ```tsx
+   * priority={["application/vnd.plotly.v1+json", ...DEFAULT_PRIORITY]}
+   * ```
+   */
+  priority?: readonly string[];
+  /**
+   * Custom renderers keyed by MIME type. Use this to handle MIME types
+   * not supported by the built-in renderers, or to override built-ins.
+   *
+   * @example
+   * ```tsx
+   * renderers={{
+   *   "application/vnd.plotly.v1+json": ({ data }) => <PlotlyChart data={data} />,
+   *   "application/geo+json": ({ data }) => <GeoJsonMap data={data} />,
+   * }}
+   * ```
+   */
+  renderers?: Record<string, CustomRenderer>;
   /**
    * Whether to allow unsafe HTML rendering (requires iframe).
-   * Applies to text/html MIME type.
+   * Applies to text/html and text/markdown MIME types.
    */
   unsafe?: boolean;
   /**
@@ -93,7 +132,7 @@ interface OutputRouterProps {
    */
   loading?: ReactNode;
   /**
-   * Additional CSS classes
+   * Additional CSS classes passed to the rendered output.
    */
   className?: string;
 }
@@ -101,11 +140,14 @@ interface OutputRouterProps {
 /**
  * Select the best MIME type from available data based on priority.
  */
-function selectMimeType(data: OutputData): MimeType | null {
+function selectMimeType(
+  data: MediaData,
+  priority: readonly string[],
+): MimeType | null {
   const availableTypes = Object.keys(data);
 
   // Check priority list first
-  for (const mimeType of MIME_TYPE_PRIORITY) {
+  for (const mimeType of priority) {
     if (availableTypes.includes(mimeType) && data[mimeType] != null) {
       return mimeType;
     }
@@ -147,30 +189,44 @@ function DefaultLoading() {
 }
 
 /**
- * OutputRouter component for rendering Jupyter outputs based on MIME type.
+ * MediaRouter component for rendering Jupyter outputs based on MIME type.
  *
  * Automatically selects the best available renderer for the output data,
- * following Jupyter's MIME type priority conventions.
+ * following Jupyter's MIME type priority conventions. Supports custom
+ * renderers and priority ordering for platform-specific MIME types.
  *
  * @example
  * ```tsx
- * <OutputRouter
+ * // Basic usage
+ * <MediaRouter
  *   data={{
  *     "text/plain": "Hello, World!",
  *     "text/html": "<b>Hello, World!</b>"
  *   }}
  * />
+ *
+ * // With custom renderers
+ * <MediaRouter
+ *   data={output.data}
+ *   metadata={output.metadata}
+ *   priority={["application/vnd.plotly.v1+json", ...DEFAULT_PRIORITY]}
+ *   renderers={{
+ *     "application/vnd.plotly.v1+json": ({ data }) => <PlotlyChart data={data} />,
+ *   }}
+ * />
  * ```
  */
-export function OutputRouter({
+export function MediaRouter({
   data,
   metadata = {},
+  priority = DEFAULT_PRIORITY,
+  renderers = {},
   unsafe = false,
   fallback,
   loading,
   className = "",
-}: OutputRouterProps) {
-  const mimeType = selectMimeType(data);
+}: MediaRouterProps) {
+  const mimeType = selectMimeType(data, priority);
 
   if (!mimeType) {
     return fallback ? (
@@ -181,10 +237,25 @@ export function OutputRouter({
   }
 
   const content = data[mimeType];
-  const mimeMetadata = metadata[mimeType] || {};
+  const mimeMetadata = (metadata[mimeType] || {}) as Record<string, unknown>;
   const loadingComponent = loading || <DefaultLoading />;
 
-  const renderOutput = () => {
+  // Check for custom renderer first
+  if (renderers[mimeType]) {
+    const customRenderer = renderers[mimeType];
+    return (
+      <Suspense fallback={loadingComponent}>
+        {customRenderer({
+          data: content,
+          metadata: mimeMetadata,
+          mimeType,
+          className,
+        })}
+      </Suspense>
+    );
+  }
+
+  const renderBuiltIn = () => {
     // Text/Markdown
     if (mimeType === "text/markdown") {
       return (
@@ -207,7 +278,7 @@ export function OutputRouter({
       );
     }
 
-    // Images
+    // Images (not SVG)
     if (mimeType.startsWith("image/") && mimeType !== "image/svg+xml") {
       const imageType = mimeType as
         | "image/png"
@@ -218,8 +289,8 @@ export function OutputRouter({
         <ImageOutput
           data={String(content)}
           mediaType={imageType}
-          width={mimeMetadata.width}
-          height={mimeMetadata.height}
+          width={mimeMetadata.width as number | undefined}
+          height={mimeMetadata.height as number | undefined}
           className={className}
         />
       );
@@ -230,12 +301,8 @@ export function OutputRouter({
       return <SvgOutput data={String(content)} className={className} />;
     }
 
-    // JSON and structured data
-    if (
-      mimeType === "application/json" ||
-      mimeType.includes("+json") ||
-      mimeType === "application/geo+json"
-    ) {
+    // JSON and structured data (but not custom +json types without a renderer)
+    if (mimeType === "application/json") {
       return (
         <JsonOutput
           data={content}
@@ -250,18 +317,32 @@ export function OutputRouter({
       return <AnsiOutput className={className}>{String(content)}</AnsiOutput>;
     }
 
-    // Unknown type - render as plain text
+    // Unknown +json types without custom renderer - show as JSON
+    if (mimeType.includes("+json")) {
+      return (
+        <JsonOutput
+          data={content}
+          collapsed={mimeMetadata.collapsed as boolean | number | undefined}
+          className={className}
+        />
+      );
+    }
+
+    // Fallback: render as plain text
     return <AnsiOutput className={className}>{String(content)}</AnsiOutput>;
   };
 
-  return <Suspense fallback={loadingComponent}>{renderOutput()}</Suspense>;
+  return <Suspense fallback={loadingComponent}>{renderBuiltIn()}</Suspense>;
 }
 
 /**
  * Get the selected MIME type for debugging/display purposes.
  */
-export function getSelectedMimeType(data: OutputData): string | null {
-  return selectMimeType(data);
+export function getSelectedMimeType(
+  data: MediaData,
+  priority: readonly string[] = DEFAULT_PRIORITY,
+): string | null {
+  return selectMimeType(data, priority);
 }
 
-export default OutputRouter;
+export default MediaRouter;
