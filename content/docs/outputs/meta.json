@@ -7,6 +7,7 @@
     "html-output",
     "svg-output",
     "markdown-output",
-    "json-output"
+    "json-output",
+    "output-router"
   ]
 }

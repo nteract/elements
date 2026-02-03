@@ -85,6 +85,26 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "output-router",
+      "type": "registry:component",
+      "title": "Output Router",
+      "description": "MIME type-based output dispatcher that automatically selects the best renderer for Jupyter outputs. Routes to AnsiOutput, MarkdownOutput, HtmlOutput, ImageOutput, SvgOutput, or JsonOutput based on content type.",
+      "registryDependencies": [
+        "ansi-output",
+        "markdown-output",
+        "html-output",
+        "image-output",
+        "svg-output",
+        "json-output"
+      ],
+      "files": [
+        {
+          "path": "registry/outputs/output-router.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
