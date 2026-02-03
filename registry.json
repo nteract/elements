@@ -15,6 +15,96 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "image-output",
+      "type": "registry:component",
+      "title": "Image Output",
+      "description": "Component for rendering images in notebook outputs. Handles base64-encoded image data from Jupyter kernels as well as regular URLs. Supports PNG, JPEG, GIF, and WebP.",
+      "files": [
+        {
+          "path": "registry/outputs/image-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "html-output",
+      "type": "registry:component",
+      "title": "HTML Output",
+      "description": "Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and basic interactives. Includes unsafe mode for script execution in sandboxed iframes.",
+      "files": [
+        {
+          "path": "registry/outputs/html-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "svg-output",
+      "type": "registry:component",
+      "title": "SVG Output",
+      "description": "Component for rendering SVG graphics in notebook outputs. Handles matplotlib figures, diagrams, and other vector graphics with proper scaling.",
+      "files": [
+        {
+          "path": "registry/outputs/svg-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "markdown-output",
+      "type": "registry:component",
+      "title": "Markdown Output",
+      "description": "Component for rendering Markdown content in notebook outputs. Supports GitHub Flavored Markdown (GFM) with tables, task lists, and syntax-highlighted code blocks.",
+      "dependencies": [
+        "react-markdown",
+        "remark-gfm",
+        "remark-math",
+        "rehype-katex",
+        "rehype-raw",
+        "react-syntax-highlighter",
+        "katex"
+      ],
+      "files": [
+        {
+          "path": "registry/outputs/markdown-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "json-output",
+      "type": "registry:component",
+      "title": "JSON Output",
+      "description": "Component for rendering JSON data in an interactive, expandable tree view. Useful for inspecting complex data structures and API responses.",
+      "dependencies": ["@uiw/react-json-view"],
+      "files": [
+        {
+          "path": "registry/outputs/json-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "media-router",
+      "type": "registry:component",
+      "title": "Media Router",
+      "description": "MIME type-based output dispatcher that automatically selects the best renderer for Jupyter outputs. Supports custom renderers and priority ordering for platform-specific MIME types.",
+      "registryDependencies": [
+        "ansi-output",
+        "markdown-output",
+        "html-output",
+        "image-output",
+        "svg-output",
+        "json-output"
+      ],
+      "files": [
+        {
+          "path": "registry/outputs/media-router.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

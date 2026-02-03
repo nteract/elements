@@ -1,5 +1,13 @@
 {
   "title": "Outputs",
   "icon": "Terminal",
-  "pages": ["ansi-output"]
+  "pages": [
+    "ansi-output",
+    "image-output",
+    "html-output",
+    "svg-output",
+    "markdown-output",
+    "json-output",
+    "media-router"
+  ]
 }

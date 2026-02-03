@@ -1,0 +1,117 @@
+---
+title: JSON Output
+description: Component for rendering JSON data in an interactive tree view
+icon: Braces
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { JsonOutput } from '@/registry/outputs/json-output';
+
+<div className="my-8 rounded-xl border bg-fd-card p-6">
+  <JsonOutput
+    data={{
+      name: "nteract elements",
+      version: "0.1.0",
+      features: ["ANSI", "Markdown", "Images", "JSON"],
+      config: {
+        theme: "light",
+        expandDepth: 2
+      }
+    }}
+  />
+</div>
+
+Component for rendering JSON data in an interactive, expandable tree view. Useful for inspecting complex data structures, API responses, and object representations from Jupyter kernels.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/json-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install dependencies:
+    ```bash
+    npm install @uiw/react-json-view
+    ```
+    
+    Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/json-output.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { JsonOutput } from "@/registry/outputs/json-output"
+
+export function Example() {
+  const data = {
+    users: [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" }
+    ],
+    total: 2
+  }
+  
+  return <JsonOutput data={data} />
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `unknown` | — | The JSON data to render |
+| `collapsed` | `boolean \| number` | `false` | Collapse depth (`false` = expand all, number = depth limit) |
+| `displayDataTypes` | `boolean` | `false` | Show data types alongside values |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## Collapsed View
+
+Use `collapsed` to limit the initial expansion depth:
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <JsonOutput
+    data={{
+      level1: {
+        level2: {
+          level3: {
+            deep: "value"
+          }
+        }
+      }
+    }}
+    collapsed={1}
+  />
+</div>
+
+```tsx
+<JsonOutput data={deepData} collapsed={1} />
+```
+
+## Jupyter Integration
+
+JSON outputs come from `display_data` or `execute_result` messages with `application/json` MIME type:
+
+```tsx
+function renderOutput(output: JupyterOutput) {
+  const data = output.data;
+  
+  if (data["application/json"]) {
+    return <JsonOutput data={data["application/json"]} />
+  }
+  
+  return null;
+}
+```
+
+## Common Use Cases
+
+| Data Type | Example |
+| --- | --- |
+| API responses | `fetch()` results |
+| DataFrame info | `.info()`, `.describe()` |
+| Model parameters | scikit-learn estimators |
+| Config objects | Settings, metadata |

@@ -1,0 +1,107 @@
+---
+title: Image Output
+description: Component for rendering images in notebook outputs
+icon: Image
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { ImageOutput } from '@/registry/outputs/image-output';
+
+<div className="my-8 rounded-xl border bg-fd-card p-6">
+  <ImageOutput
+    data="iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+    mediaType="image/png"
+    alt="Sample colored square"
+  />
+</div>
+
+Component for rendering images in notebook outputs. Handles base64-encoded image data from Jupyter kernels as well as regular image URLs.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/image-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/image-output.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { ImageOutput } from "@/registry/outputs/image-output"
+
+export function Example() {
+  // Base64 encoded image data from Jupyter kernel
+  const imageData = "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+  
+  return (
+    <ImageOutput 
+      data={imageData} 
+      mediaType="image/png"
+      alt="Plot output"
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `string` | — | Image data (base64 string, data URL, or regular URL) |
+| `mediaType` | `"image/png" \| "image/jpeg" \| "image/gif" \| "image/webp"` | `"image/png"` | The MIME type of the image |
+| `alt` | `string` | `"Output image"` | Alt text for accessibility |
+| `width` | `number` | — | Optional width constraint |
+| `height` | `number` | — | Optional height constraint |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## Data Formats
+
+The component accepts image data in several formats:
+
+| Format | Example |
+| --- | --- |
+| Base64 string | `"iVBORw0KGgoAAAANSUhEUgAAAAE..."` |
+| Data URL | `"data:image/png;base64,iVBORw0..."` |
+| HTTP URL | `"https://example.com/image.png"` |
+| Relative path | `"/images/output.png"` |
+
+## Jupyter Integration
+
+When working with Jupyter outputs, image data typically comes from `display_data` or `execute_result` messages:
+
+```tsx
+import { ImageOutput } from "@/registry/outputs/image-output"
+
+function renderOutput(output: JupyterOutput) {
+  const data = output.data;
+  
+  if (data["image/png"]) {
+    return <ImageOutput data={data["image/png"]} mediaType="image/png" />
+  }
+  
+  if (data["image/jpeg"]) {
+    return <ImageOutput data={data["image/jpeg"]} mediaType="image/jpeg" />
+  }
+  
+  return null;
+}
+```
+
+## Metadata
+
+Jupyter outputs can include metadata specifying dimensions:
+
+```tsx
+<ImageOutput
+  data={imageData}
+  mediaType="image/png"
+  width={metadata.width}
+  height={metadata.height}
+/>
+```
