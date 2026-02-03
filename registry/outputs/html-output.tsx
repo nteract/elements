@@ -36,7 +36,7 @@ function isInIframe(): boolean {
  * HtmlOutput component for rendering HTML content in notebook outputs
  *
  * This component handles HTML output from Jupyter kernels, such as
- * pandas DataFrames, rich HTML displays, and interactive widgets.
+ * pandas DataFrames, rich HTML displays, and basic interactives.
  *
  * Security considerations:
  * - By default, renders HTML statically without script execution
@@ -58,7 +58,7 @@ export function HtmlOutput({
       if (!isInIframe()) {
         throw new Error(
           "HtmlOutput with unsafe={true} must be rendered inside an iframe for security. " +
-            "Use unsafe={false} for static HTML rendering without script execution."
+            "Use unsafe={false} for static HTML rendering without script execution.",
         );
       }
 

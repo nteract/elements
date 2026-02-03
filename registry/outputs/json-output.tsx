@@ -39,15 +39,16 @@ export function JsonOutput({
 }: JsonOutputProps) {
   if (data === undefined || data === null) {
     return (
-      <div className={`not-prose py-2 font-mono text-sm text-gray-500 ${className}`.trim()}>
+      <div
+        className={`not-prose py-2 font-mono text-sm text-gray-500 ${className}`.trim()}
+      >
         {data === undefined ? "undefined" : "null"}
       </div>
     );
   }
 
   // Wrap primitives in an object for display
-  const jsonData =
-    data && typeof data === "object" ? data : { value: data };
+  const jsonData = data && typeof data === "object" ? data : { value: data };
 
   return (
     <div className={`not-prose py-2 ${className}`.trim()}>
@@ -56,7 +57,7 @@ export function JsonOutput({
           value={jsonData}
           collapsed={collapsed}
           displayDataTypes={displayDataTypes}
-          indentWidth={2}
+          indentWidth={4}
           style={{
             backgroundColor: "transparent",
             fontSize: "0.875rem",

@@ -32,7 +32,7 @@
       "name": "html-output",
       "type": "registry:component",
       "title": "HTML Output",
-      "description": "Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and interactive widgets. Includes unsafe mode for script execution in sandboxed iframes.",
+      "description": "Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and basic interactives. Includes unsafe mode for script execution in sandboxed iframes.",
       "files": [
         {
           "path": "registry/outputs/html-output.tsx",
