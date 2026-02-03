@@ -57,7 +57,7 @@ export function JsonOutput({
           value={jsonData}
           collapsed={collapsed}
           displayDataTypes={displayDataTypes}
-          indentWidth={4}
+          indentWidth={2}
           style={{
             backgroundColor: "transparent",
             fontSize: "0.875rem",
