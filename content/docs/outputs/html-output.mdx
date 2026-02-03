@@ -1,0 +1,72 @@
+---
+title: HTML Output
+description: Component for rendering HTML content in notebook outputs
+icon: Code
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and interactive widgets.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/html-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/html-output.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { HtmlOutput } from "@/registry/outputs/html-output"
+
+export function Example() {
+  const html = "<table><tr><th>Name</th><th>Value</th></tr><tr><td>A</td><td>1</td></tr></table>"
+  
+  return <HtmlOutput content={html} />
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | `string` | — | The HTML content to render |
+| `unsafe` | `boolean` | `false` | Enable script execution (requires iframe sandbox) |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## Security
+
+<Callout type="warn">
+  HTML output from kernels can contain arbitrary scripts. By default, scripts are **not** executed.
+</Callout>
+
+### Safe Mode (default)
+
+By default, `unsafe={false}` renders HTML statically. Scripts in the HTML will not execute. This is suitable for most outputs like pandas DataFrames and simple HTML displays.
+
+### Unsafe Mode
+
+Set `unsafe={true}` to enable script execution for interactive outputs like Plotly, Bokeh, or custom widgets. **This mode requires the component to be rendered inside an iframe** for security — it will throw an error otherwise.
+
+```tsx
+// Inside a sandboxed iframe only
+<HtmlOutput content={interactiveHtml} unsafe={true} />
+```
+
+## Common Use Cases
+
+| Output Type | unsafe |
+| --- | --- |
+| pandas DataFrame | `false` |
+| Static HTML table | `false` |
+| Plotly chart | `true` |
+| Bokeh visualization | `true` |
+| Custom widget | `true` |

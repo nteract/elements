@@ -1,0 +1,57 @@
+---
+title: SVG Output
+description: Component for rendering SVG graphics in notebook outputs
+icon: Image
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+Component for rendering SVG graphics in notebook outputs. Handles matplotlib figures rendered as SVG, diagrams, and other vector graphics.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/svg-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/svg-output.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { SvgOutput } from "@/registry/outputs/svg-output"
+
+export function Example() {
+  const svg = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="40" fill="#6366f1" />
+  </svg>`
+  
+  return <SvgOutput data={svg} />
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `string` | — | The SVG content as a string |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## Why SVG?
+
+SVG outputs are common in notebooks for:
+
+- **matplotlib** figures with `savefig(format='svg')`
+- **Diagrams** and flowcharts
+- **Logos** and icons
+- **Interactive** visualizations
+
+SVG is preferred over raster images when you need:
+- Crisp rendering at any zoom level
+- Smaller file sizes for simple graphics
+- Ability to style with CSS

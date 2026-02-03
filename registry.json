@@ -15,6 +15,42 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "image-output",
+      "type": "registry:component",
+      "title": "Image Output",
+      "description": "Component for rendering images in notebook outputs. Handles base64-encoded image data from Jupyter kernels as well as regular URLs. Supports PNG, JPEG, GIF, and WebP.",
+      "files": [
+        {
+          "path": "registry/outputs/image-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "html-output",
+      "type": "registry:component",
+      "title": "HTML Output",
+      "description": "Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and interactive widgets. Includes unsafe mode for script execution in sandboxed iframes.",
+      "files": [
+        {
+          "path": "registry/outputs/html-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "svg-output",
+      "type": "registry:component",
+      "title": "SVG Output",
+      "description": "Component for rendering SVG graphics in notebook outputs. Handles matplotlib figures, diagrams, and other vector graphics with proper scaling.",
+      "files": [
+        {
+          "path": "registry/outputs/svg-output.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
