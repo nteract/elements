@@ -1,4 +1,4 @@
 {
   "title": "UI",
-  "pages": ["button", "input"]
+  "pages": ["badge", "button", "input", "kbd", "spinner"]
 }

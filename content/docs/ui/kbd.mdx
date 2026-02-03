@@ -1,0 +1,175 @@
+---
+title: Kbd
+description: A keyboard key component for displaying keyboard shortcuts and hotkeys
+icon: Keyboard
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Kbd, KbdGroup } from '@/components/ui/kbd';
+
+<div className="my-8 flex flex-wrap items-center gap-4">
+  <Kbd>Shift</Kbd>
+  <Kbd>Enter</Kbd>
+  <KbdGroup>
+    <Kbd>Cmd</Kbd>
+    <Kbd>K</Kbd>
+  </KbdGroup>
+</div>
+
+A keyboard key component for displaying keyboard shortcuts and hotkeys. Essential for notebook interfaces where keyboard shortcuts are commonly used for cell execution, navigation, and editing.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://elements.nteract.io/r/kbd.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from this repository's `components/ui/kbd.tsx`.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+
+export function Example() {
+  return (
+    <KbdGroup>
+      <Kbd>Shift</Kbd>
+      <Kbd>Enter</Kbd>
+    </KbdGroup>
+  )
+}
+```
+
+## Single Key
+
+<div className="my-4 flex gap-4">
+  <Kbd>Enter</Kbd>
+  <Kbd>Esc</Kbd>
+  <Kbd>Tab</Kbd>
+  <Kbd>Space</Kbd>
+</div>
+
+```tsx
+<Kbd>Enter</Kbd>
+<Kbd>Esc</Kbd>
+<Kbd>Tab</Kbd>
+<Kbd>Space</Kbd>
+```
+
+## Key Combinations
+
+Use `KbdGroup` to display key combinations:
+
+<div className="my-4 flex flex-wrap gap-6">
+  <KbdGroup>
+    <Kbd>Shift</Kbd>
+    <Kbd>Enter</Kbd>
+  </KbdGroup>
+  <KbdGroup>
+    <Kbd>Cmd</Kbd>
+    <Kbd>S</Kbd>
+  </KbdGroup>
+  <KbdGroup>
+    <Kbd>Ctrl</Kbd>
+    <Kbd>Alt</Kbd>
+    <Kbd>Delete</Kbd>
+  </KbdGroup>
+</div>
+
+```tsx
+<KbdGroup>
+  <Kbd>Shift</Kbd>
+  <Kbd>Enter</Kbd>
+</KbdGroup>
+
+<KbdGroup>
+  <Kbd>Cmd</Kbd>
+  <Kbd>S</Kbd>
+</KbdGroup>
+
+<KbdGroup>
+  <Kbd>Ctrl</Kbd>
+  <Kbd>Alt</Kbd>
+  <Kbd>Delete</Kbd>
+</KbdGroup>
+```
+
+## Variants
+
+### Default
+
+<div className="my-4 flex gap-4">
+  <Kbd>Default</Kbd>
+</div>
+
+```tsx
+<Kbd>Default</Kbd>
+```
+
+### Dark
+
+For use on dark backgrounds:
+
+<div className="my-4 flex gap-4 bg-foreground p-4 rounded-md">
+  <Kbd variant="dark">Dark</Kbd>
+  <KbdGroup>
+    <Kbd variant="dark">Cmd</Kbd>
+    <Kbd variant="dark">K</Kbd>
+  </KbdGroup>
+</div>
+
+```tsx
+<Kbd variant="dark">Dark</Kbd>
+```
+
+## Notebook Shortcuts
+
+Common notebook keyboard shortcuts:
+
+<div className="my-4 space-y-2">
+  <div className="flex items-center gap-4">
+    <KbdGroup>
+      <Kbd>Shift</Kbd>
+      <Kbd>Enter</Kbd>
+    </KbdGroup>
+    <span className="text-muted-foreground text-sm">Run cell and advance</span>
+  </div>
+  <div className="flex items-center gap-4">
+    <KbdGroup>
+      <Kbd>Cmd</Kbd>
+      <Kbd>Enter</Kbd>
+    </KbdGroup>
+    <span className="text-muted-foreground text-sm">Run cell</span>
+  </div>
+  <div className="flex items-center gap-4">
+    <Kbd>Esc</Kbd>
+    <span className="text-muted-foreground text-sm">Enter command mode</span>
+  </div>
+  <div className="flex items-center gap-4">
+    <Kbd>Enter</Kbd>
+    <span className="text-muted-foreground text-sm">Enter edit mode</span>
+  </div>
+</div>
+
+## Props
+
+### Kbd
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "dark"` | `"default"` | Visual style variant |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLElement>` | — | All standard kbd attributes |
+
+### KbdGroup
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | — | All standard div attributes |
