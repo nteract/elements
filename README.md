@@ -38,7 +38,7 @@ We're actively building out the component library. Priority order:
 4. **Output renderers** — ANSI, JSON, Markdown, HTML, Images, Plots, DataFrames
 5. **Higher-level notebook UI** — NotebookContent, NotebookSidebar, RuntimeHealthIndicator
 
-See `docs/triage.md` for the component intake process.
+See `contributing/triage.md` for the component intake process.
 
 ## Project structure
 
@@ -48,7 +48,7 @@ See `docs/triage.md` for the component intake process.
 | `registry/` | shadcn registry definitions |
 | `app/docs/` | Documentation pages |
 | `content/docs/` | MDX documentation source |
-| `docs/` | Internal docs (triage process, prerequisites) |
+| `contributing/` | Contributor docs (triage process, prerequisites) |
 
 ## Learn more
 
