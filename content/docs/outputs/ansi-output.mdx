@@ -1,0 +1,179 @@
+---
+title: ANSI Output
+description: Components for rendering ANSI escape sequences as colored terminal output in notebook cells
+icon: Terminal
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { AnsiOutput, AnsiStreamOutput, AnsiErrorOutput } from '@/registry/outputs/ansi-output';
+import nteractBanner from '@/lib/nteract-banner.json';
+
+<div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
+  <AnsiOutput>{nteractBanner.logo}</AnsiOutput>
+</div>
+
+Components for rendering ANSI escape sequences as colored text. Preserves the terminal colors developers expect from stdout, stderr, and error tracebacks.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract.io/r/ansi-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependency:
+    ```bash
+    npm install ansi-to-react
+    ```
+    
+    Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/ansi-output.tsx).
+  </Tab>
+</Tabs>
+
+## Components
+
+This package exports three components:
+
+| Component | Purpose |
+| --- | --- |
+| `AnsiOutput` | Base component for rendering ANSI text |
+| `AnsiStreamOutput` | Specialized for stdout/stderr streams |
+| `AnsiErrorOutput` | Specialized for error tracebacks |
+
+## Usage
+
+### AnsiOutput
+
+The base component for rendering any text with ANSI escape sequences.
+
+```tsx
+import { AnsiOutput } from "@/registry/outputs/ansi-output"
+
+export function Example() {
+  const text = "\x1b[32mSuccess:\x1b[0m Operation completed"
+  
+  return <AnsiOutput>{text}</AnsiOutput>
+}
+```
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"\x1b[32mSuccess:\x1b[0m Operation completed"}</AnsiOutput>
+</div>
+
+Here's a more colorful example:
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"\x1b[30mBlack\x1b[0m \x1b[31mRed\x1b[0m \x1b[32mGreen\x1b[0m \x1b[33mYellow\x1b[0m \x1b[34mBlue\x1b[0m \x1b[35mMagenta\x1b[0m \x1b[36mCyan\x1b[0m \x1b[37mWhite\x1b[0m"}</AnsiOutput>
+</div>
+
+#### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `string` | — | The text containing ANSI escape sequences |
+| `className` | `string` | `""` | Additional CSS classes |
+| `isError` | `boolean` | `false` | Applies error styling (red text) |
+
+### AnsiStreamOutput
+
+Renders stdout or stderr output with appropriate styling.
+
+```tsx
+import { AnsiStreamOutput } from "@/registry/outputs/ansi-output"
+
+export function StreamExample() {
+  return (
+    <>
+      <AnsiStreamOutput 
+        text="Hello from stdout" 
+        streamName="stdout" 
+      />
+      <AnsiStreamOutput 
+        text="Warning: something went wrong" 
+        streamName="stderr" 
+      />
+    </>
+  )
+}
+```
+
+<div className="my-4 space-y-2">
+  <div className="rounded-lg border bg-fd-secondary/30 p-4">
+    <div className="mb-1 text-xs text-fd-muted-foreground">stdout</div>
+    <AnsiStreamOutput text={"Installing dependencies...\n\x1b[32m✓\x1b[0m numpy\n\x1b[32m✓\x1b[0m pandas\n\x1b[32m✓\x1b[0m matplotlib"} streamName="stdout" />
+  </div>
+  <div className="rounded-lg border bg-fd-secondary/30 p-4">
+    <div className="mb-1 text-xs text-fd-muted-foreground">stderr</div>
+    <AnsiStreamOutput text="DeprecationWarning: use_categorical is deprecated" streamName="stderr" />
+  </div>
+</div>
+
+#### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` | `string` | — | The stream text to render |
+| `streamName` | `"stdout" \| "stderr"` | — | Stream type (stderr renders in red) |
+| `className` | `string` | `""` | Additional CSS classes |
+
+### AnsiErrorOutput
+
+Renders Python-style error tracebacks with proper formatting.
+
+```tsx
+import { AnsiErrorOutput } from "@/registry/outputs/ansi-output"
+
+export function ErrorExample() {
+  return (
+    <AnsiErrorOutput
+      ename="ValueError"
+      evalue="invalid literal for int() with base 10: 'abc'"
+      traceback={[
+        "Traceback (most recent call last):",
+        '  File "<stdin>", line 1, in <module>',
+        "ValueError: invalid literal for int() with base 10: 'abc'"
+      ]}
+    />
+  )
+}
+```
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiErrorOutput
+    ename="ValueError"
+    evalue="invalid literal for int() with base 10: 'abc'"
+    traceback={[
+      "Traceback (most recent call last):",
+      '  File "<stdin>", line 1, in <module>',
+      "    int('abc')",
+      "ValueError: invalid literal for int() with base 10: 'abc'"
+    ]}
+  />
+</div>
+
+#### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ename` | `string` | — | Exception name (e.g., `"ValueError"`) |
+| `evalue` | `string` | — | Exception value/message |
+| `traceback` | `string[] \| string` | — | Traceback lines (array or joined string) |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## ANSI Color Reference
+
+Common ANSI escape sequences rendered by these components:
+
+| Code | Color | Example |
+| --- | --- | --- |
+| `\x1b[30m` | Black | <AnsiOutput>{"\x1b[30m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[31m` | Red | <AnsiOutput>{"\x1b[31m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[32m` | Green | <AnsiOutput>{"\x1b[32m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[33m` | Yellow | <AnsiOutput>{"\x1b[33m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[34m` | Blue | <AnsiOutput>{"\x1b[34m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[35m` | Magenta | <AnsiOutput>{"\x1b[35m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[36m` | Cyan | <AnsiOutput>{"\x1b[36m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[37m` | White | <AnsiOutput>{"\x1b[37m████\x1b[0m"}</AnsiOutput> |
+| `\x1b[0m` | Reset | — |

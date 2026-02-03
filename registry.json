@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "nteract",
+  "homepage": "https://nteract.io",
+  "items": [
+    {
+      "name": "ansi-output",
+      "type": "registry:component",
+      "title": "ANSI Output",
+      "description": "Components for rendering ANSI escape sequences as colored text in notebook outputs. Includes AnsiOutput, AnsiStreamOutput, and AnsiErrorOutput variants.",
+      "dependencies": ["ansi-to-react"],
+      "files": [
+        {
+          "path": "registry/outputs/ansi-output.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

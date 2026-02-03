@@ -1,13 +1,43 @@
 ---
-title: Hello World
-description: Your first document
+title: nteract elements
+description: A component registry for building notebook interfaces
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from 'fumadocs-ui/components/callout';
 
-## What is Next?
+A collection of React components for building notebook interfaces. Designed for computational environments, Jupyter-compatible outputs, and interactive data exploration.
+
+<Callout type="info">
+  **Work in Progress** — We're bringing the nteract components out of hibernation and into the future with [shadcn](https://ui.shadcn.com). More components coming soon!
+</Callout>
+
+## Installation
+
+Install components directly from the registry using the shadcn CLI:
+
+```bash
+npx shadcn@latest add https://nteract.io/r/ansi-output.json
+```
+
+Or browse the component documentation to copy and adapt components for your project.
+
+## Outputs
+
+Components for rendering Jupyter notebook cell outputs.
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card 
+    title="ANSI Output" 
+    description="Render ANSI escape sequences as colored terminal output"
+    href="/docs/outputs/ansi-output" 
+  />
 </Cards>
+
+## Why nteract elements?
+
+- **Notebook-first**: Built specifically for computational notebook interfaces
+- **ANSI support**: Preserve colored terminal output that developers expect
+- **Composable**: Mix and match components for your notebook UI
+- **TypeScript**: Full type safety out of the box
+- **Tailwind**: Styled with Tailwind CSS, easy to customize
