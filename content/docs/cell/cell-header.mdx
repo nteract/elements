@@ -5,12 +5,12 @@ icon: LayoutPanelTop
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { CellHeader } from '@/registry/cell/CellHeader';
+import { CellHeaderDemo } from '@/app/_components/CellHeaderDemo';
 import { Button } from '@/registry/primitives/button';
 import { Badge } from '@/registry/primitives/badge';
 
 <div className="my-8">
-  <CellHeader
+  <CellHeaderDemo
     leftContent={<Badge variant="secondary">Code</Badge>}
     rightContent={<Button variant="ghost" size="sm">Run</Button>}
   />
@@ -51,7 +51,7 @@ export function MyCell() {
 ### Basic Header
 
 <div className="my-4 border rounded-md">
-  <CellHeader
+  <CellHeaderDemo
     leftContent={<Badge variant="secondary">Code</Badge>}
     rightContent={<Button variant="ghost" size="sm">Run</Button>}
   />
@@ -67,9 +67,8 @@ export function MyCell() {
 ### With Drag Support
 
 <div className="my-4 border rounded-md">
-  <CellHeader
+  <CellHeaderDemo
     draggable
-    onDragStart={(e) => console.log("Drag started")}
     leftContent={<Badge>Markdown</Badge>}
     rightContent={<span className="text-muted-foreground text-sm">Drag me</span>}
   />
@@ -90,7 +89,7 @@ export function MyCell() {
 ### With Custom Styling
 
 <div className="my-4 border rounded-md bg-muted">
-  <CellHeader
+  <CellHeaderDemo
     className="bg-muted/50"
     leftContent={<Badge variant="outline">SQL</Badge>}
     rightContent={<Button variant="secondary" size="sm">Execute</Button>}
