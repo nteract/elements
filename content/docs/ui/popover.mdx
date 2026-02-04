@@ -5,8 +5,8 @@ icon: MessageSquare
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription } from '@/registry/primitives/popover';
+import { Button } from '@/registry/primitives/button';
 
 <div className="my-8">
   <Popover>
@@ -29,11 +29,11 @@ A floating overlay panel that displays rich content when triggered. Built on Rad
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add popover
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/popover.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy the component from [shadcn/ui popover](https://ui.shadcn.com/docs/components/popover).
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
   </Tab>
 </Tabs>
 
@@ -44,7 +44,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover"
+} from "@/registry/primitives/popover"
 
 export function Example() {
   return (

@@ -5,8 +5,8 @@ icon: CreditCard
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from '@/registry/primitives/card';
+import { Button } from '@/registry/primitives/button';
 
 <div className="my-8">
   <Card className="w-full max-w-sm">
@@ -30,11 +30,11 @@ A flexible container component for grouping related content. Cards can include h
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add card
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/card.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy the component from [shadcn/ui card](https://ui.shadcn.com/docs/components/card).
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
   </Tab>
 </Tabs>
 
@@ -48,7 +48,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card"
+} from "@/registry/primitives/card"
 
 export function Example() {
   return (

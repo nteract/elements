@@ -5,7 +5,7 @@ icon: SquareStack
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { CellTypeButton, CodeCellButton, MarkdownCellButton, SqlCellButton, AiCellButton } from '@/components/notebook/cell/CellTypeButton';
+import { CellTypeButton, CodeCellButton, MarkdownCellButton, SqlCellButton, AiCellButton } from '@/registry/cell/CellTypeButton';
 
 <div className="my-8 flex flex-wrap gap-4">
   <CodeCellButton />
@@ -21,20 +21,20 @@ Styled buttons for different notebook cell types. Each cell type has a distinct 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://elements.nteract.io/r/cell-type-button.json
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-type-button.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy the component from [nteract/elements](https://github.com/nteract/elements/blob/main/components/notebook/cell/CellTypeButton.tsx).
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/cell/CellTypeButton.tsx).
 
-    Requires the `Button` component from shadcn/ui.
+    Requires the `Button` component from the nteract registry.
   </Tab>
 </Tabs>
 
 ## Usage
 
 ```tsx
-import { CellTypeButton, CodeCellButton, MarkdownCellButton } from "@/components/notebook/cell/CellTypeButton"
+import { CellTypeButton, CodeCellButton, MarkdownCellButton } from "@/registry/cell/CellTypeButton"
 
 export function Example() {
   return (

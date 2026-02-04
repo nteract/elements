@@ -107,6 +107,69 @@
       ]
     },
     {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "A badge component for displaying status, labels, and counts.",
+      "dependencies": ["class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/primitives/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "A button component with multiple variants and sizes.",
+      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/primitives/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "A card component for grouping related content.",
+      "files": [
+        {
+          "path": "registry/primitives/card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "A dropdown menu component for displaying a list of actions.",
+      "dependencies": ["@radix-ui/react-dropdown-menu"],
+      "files": [
+        {
+          "path": "registry/primitives/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "A text input component with focus and validation states.",
+      "files": [
+        {
+          "path": "registry/primitives/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "kbd",
       "type": "registry:ui",
       "title": "Kbd",
@@ -114,7 +177,20 @@
       "dependencies": ["class-variance-authority"],
       "files": [
         {
-          "path": "components/ui/kbd.tsx",
+          "path": "registry/primitives/kbd.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "A popover component for displaying floating content.",
+      "dependencies": ["@radix-ui/react-popover"],
+      "files": [
+        {
+          "path": "registry/primitives/popover.tsx",
           "type": "registry:ui"
         }
       ]
@@ -127,7 +203,20 @@
       "dependencies": ["lucide-react"],
       "files": [
         {
-          "path": "components/ui/spinner.tsx",
+          "path": "registry/primitives/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "A tooltip component for displaying additional information on hover.",
+      "dependencies": ["@radix-ui/react-tooltip"],
+      "files": [
+        {
+          "path": "registry/primitives/tooltip.tsx",
           "type": "registry:ui"
         }
       ]
@@ -141,7 +230,7 @@
       "registryDependencies": ["button"],
       "files": [
         {
-          "path": "components/notebook/cell/CellTypeButton.tsx",
+          "path": "registry/cell/CellTypeButton.tsx",
           "type": "registry:component"
         }
       ]
@@ -154,7 +243,7 @@
       "registryDependencies": ["badge"],
       "files": [
         {
-          "path": "components/notebook/cell/ExecutionStatus.tsx",
+          "path": "registry/cell/ExecutionStatus.tsx",
           "type": "registry:component"
         }
       ]
@@ -167,7 +256,7 @@
       "dependencies": ["lucide-react"],
       "files": [
         {
-          "path": "components/notebook/cell/PlayButton.tsx",
+          "path": "registry/cell/PlayButton.tsx",
           "type": "registry:component"
         }
       ]

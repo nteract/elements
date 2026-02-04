@@ -5,8 +5,8 @@ icon: Info
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/registry/primitives/tooltip';
+import { Button } from '@/registry/primitives/button';
 
 <div className="my-8">
   <Tooltip>
@@ -26,11 +26,11 @@ A lightweight text popup that appears when hovering over an element. Built on Ra
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add tooltip
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/tooltip.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy the component from [shadcn/ui tooltip](https://ui.shadcn.com/docs/components/tooltip).
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
   </Tab>
 </Tabs>
 
@@ -41,7 +41,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip"
+} from "@/registry/primitives/tooltip"
 
 export function Example() {
   return (
@@ -110,7 +110,7 @@ export function Example() {
 When using multiple tooltips, wrap them in a single `TooltipProvider` to share delay settings:
 
 ```tsx
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/registry/primitives/tooltip"
 
 export function Example() {
   return (

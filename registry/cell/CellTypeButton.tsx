@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/registry/primitives/button";
 import { cn } from "@/lib/utils";
 import { Bot, Code, Database, FileText, Plus } from "lucide-react";
 import { type ComponentProps } from "react";
@@ -15,8 +15,10 @@ export const cellTypeStyles = {
   ai: "border-purple-300 focus-visible:border-purple-500 text-purple-600 hover:bg-purple-50 hover:text-purple-600 focus:bg-purple-50 focus-visible:ring-purple-100",
 };
 
-interface CellTypeButtonProps
-  extends Omit<ComponentProps<typeof Button>, "children"> {
+interface CellTypeButtonProps extends Omit<
+  ComponentProps<typeof Button>,
+  "children"
+> {
   cellType: CellType;
   showIcon?: boolean;
   showPlus?: boolean;
@@ -53,7 +55,7 @@ export function CellTypeButton({
       className={cn(
         cellTypeStyles[cellType],
         "flex items-center gap-1.5",
-        className
+        className,
       )}
       {...props}
     >
@@ -74,7 +76,7 @@ export function CodeCellButton(props: Omit<CellTypeButtonProps, "cellType">) {
 }
 
 export function MarkdownCellButton(
-  props: Omit<CellTypeButtonProps, "cellType">
+  props: Omit<CellTypeButtonProps, "cellType">,
 ) {
   return <CellTypeButton cellType="markdown" {...props} />;
 }

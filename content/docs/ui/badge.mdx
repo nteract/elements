@@ -5,7 +5,7 @@ icon: Tag
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/registry/primitives/badge';
 
 <div className="my-8 flex flex-wrap gap-4">
   <Badge>Default</Badge>
@@ -21,18 +21,18 @@ A badge component for displaying status indicators, labels, counts, or categorie
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add badge
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/badge.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy the component from [shadcn/ui badge](https://ui.shadcn.com/docs/components/badge).
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
   </Tab>
 </Tabs>
 
 ## Usage
 
 ```tsx
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/registry/primitives/badge"
 
 export function Example() {
   return <Badge>New</Badge>
