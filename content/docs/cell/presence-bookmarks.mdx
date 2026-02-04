@@ -1,0 +1,147 @@
+---
+title: PresenceBookmarks
+description: Shows stacked user avatars indicating who is present on a cell
+icon: Users
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { PresenceBookmarksDemo, PresenceBookmarksOverflowDemo, PresenceBookmarksCustomLimitDemo, PresenceBookmarksNoColorDemo, PresenceBookmarksCustomContentDemo } from '@/app/components/PresenceBookmarksDemo';
+
+<div className="my-8">
+  <PresenceBookmarksDemo />
+</div>
+
+A component for displaying real-time presence indicators on notebook cells. Shows stacked user avatars with colored rings and hover cards for user details.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/presence-bookmarks.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/PresenceBookmarks.tsx).
+
+    Requires the [avatar](/docs/ui/avatar) and [hover-card](/docs/ui/hover-card) primitives.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { PresenceBookmarks, type User } from "@/registry/cell/PresenceBookmarks"
+
+const users: User[] = [
+  { id: "1", name: "Alice Chen", picture: "https://...", color: "#ef4444" },
+  { id: "2", name: "Bob Smith", color: "#3b82f6" },
+]
+
+export function CellPresence() {
+  return <PresenceBookmarks users={users} />
+}
+```
+
+## Examples
+
+### Basic Usage
+
+Shows user avatars with colored rings. Hover over an avatar to see user details.
+
+<div className="my-4 p-4 border rounded-md bg-background">
+  <PresenceBookmarksDemo />
+</div>
+
+```tsx
+const users = [
+  { id: "1", name: "Alice Chen", picture: "...", color: "#ef4444" },
+  { id: "2", name: "Bob Smith", picture: "...", color: "#3b82f6" },
+  { id: "3", name: "Carol Davis", picture: "...", color: "#22c55e" },
+]
+
+<PresenceBookmarks users={users} />
+```
+
+### Overflow Indicator
+
+When users exceed the limit, a "+N" indicator shows remaining count.
+
+<div className="my-4 p-4 border rounded-md bg-background">
+  <PresenceBookmarksOverflowDemo />
+</div>
+
+```tsx
+<PresenceBookmarks users={users} limit={5} />
+```
+
+### Custom Limit
+
+Adjust the number of visible avatars with the `limit` prop.
+
+<div className="my-4 p-4 border rounded-md bg-background">
+  <PresenceBookmarksCustomLimitDemo />
+</div>
+
+```tsx
+<PresenceBookmarks users={users} limit={3} />
+```
+
+### Without Colors
+
+Users without a `color` property display with a subtle border instead.
+
+<div className="my-4 p-4 border rounded-md bg-background">
+  <PresenceBookmarksNoColorDemo />
+</div>
+
+```tsx
+const users = [
+  { id: "1", name: "Alice Chen", picture: "..." },
+  { id: "2", name: "Bob Smith", picture: "..." },
+]
+
+<PresenceBookmarks users={users} />
+```
+
+### Custom Hover Content
+
+Use `renderUserContent` to customize what displays in the hover card.
+
+<div className="my-4 p-4 border rounded-md bg-background">
+  <PresenceBookmarksCustomContentDemo />
+</div>
+
+```tsx
+<PresenceBookmarks
+  users={users}
+  renderUserContent={(user) => (
+    <div className="flex flex-col gap-2">
+      <p className="font-semibold">{user.name}</p>
+      <p className="text-xs text-muted-foreground">
+        Currently editing this cell
+      </p>
+    </div>
+  )}
+/>
+```
+
+## Props
+
+### PresenceBookmarks
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `users` | `User[]` | — | Array of users to display |
+| `limit` | `number` | `5` | Maximum number of avatars to show before overflow |
+| `className` | `string` | — | Additional CSS classes |
+| `renderUserContent` | `(user: User) => ReactNode` | — | Custom render function for hover card content |
+
+### User
+
+| Property | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | Yes | Unique identifier for the user |
+| `name` | `string` | Yes | Display name |
+| `picture` | `string` | No | URL to user's avatar image |
+| `color` | `string` | No | CSS color for the ring around the avatar |
