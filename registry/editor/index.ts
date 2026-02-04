@@ -24,6 +24,6 @@ export {
   getAutoTheme,
   isDarkMode,
   prefersDarkMode,
-  documentHasDarkClass,
+  documentHasDarkMode,
   type ThemeMode,
 } from "./themes";

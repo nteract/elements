@@ -124,13 +124,14 @@ export const CodeMirrorEditor = forwardRef<
       const handleMediaChange = () => setIsDark(isDarkMode());
       mediaQuery.addEventListener("change", handleMediaChange);
 
-      // Observe document class changes (for site-level dark mode toggle)
+      // Observe document changes (for site-level dark mode toggle)
+      // Watch class, style (for color-scheme), and data attributes
       const observer = new MutationObserver(() => {
         setIsDark(isDarkMode());
       });
       observer.observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ["class", "data-theme"],
+        attributeFilter: ["class", "style", "data-theme", "data-mode"],
       });
 
       return () => {

@@ -28,7 +28,9 @@ export function getTheme(mode: ThemeMode): Extension {
   }
   // System mode - detect from media query
   if (typeof window !== "undefined") {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
     return prefersDark ? darkTheme : lightTheme;
   }
   // SSR fallback
@@ -36,7 +38,7 @@ export function getTheme(mode: ThemeMode): Extension {
 }
 
 /**
- * Check if the current environment prefers dark mode
+ * Check if the current environment prefers dark mode via system preference
  */
 export function prefersDarkMode(): boolean {
   if (typeof window === "undefined") {
@@ -46,38 +48,78 @@ export function prefersDarkMode(): boolean {
 }
 
 /**
- * Check if the document has a dark class (common pattern for site-level dark mode)
- * Works with Tailwind's dark mode class strategy
+ * Check if the document has dark mode enabled
+ * Checks multiple common patterns:
+ * - class="dark" or class="... dark ..." on <html>
+ * - color-scheme: dark on <html>
+ * - data-theme="dark" attribute
  */
-export function documentHasDarkClass(): boolean {
+export function documentHasDarkMode(): boolean {
   if (typeof document === "undefined") {
     return false;
   }
-  return document.documentElement.classList.contains("dark");
+
+  const html = document.documentElement;
+
+  // Check for 'dark' in classList (Tailwind / fumadocs pattern)
+  if (html.classList.contains("dark")) {
+    return true;
+  }
+
+  // Check color-scheme style
+  const colorScheme =
+    html.style.colorScheme || getComputedStyle(html).colorScheme;
+  if (colorScheme === "dark") {
+    return true;
+  }
+
+  // Check data-theme attribute (another common pattern)
+  if (html.getAttribute("data-theme") === "dark") {
+    return true;
+  }
+
+  // Check data-mode attribute
+  if (html.getAttribute("data-mode") === "dark") {
+    return true;
+  }
+
+  return false;
 }
 
 /**
- * Detect dark mode from either system preference or document class
- * Prioritizes document class (site-level toggle) over system preference
+ * Detect dark mode from either document state or system preference
+ * Prioritizes document state (site-level toggle) over system preference
  */
 export function isDarkMode(): boolean {
-  // Check document class first (site-level dark mode toggle)
+  // Check document state first (site-level dark mode toggle)
+  if (documentHasDarkMode()) {
+    return true;
+  }
+
+  // Check if document explicitly has light mode set
   if (typeof document !== "undefined") {
-    if (document.documentElement.classList.contains("dark")) {
-      return true;
+    const html = document.documentElement;
+
+    // If 'light' class is present, respect it
+    if (html.classList.contains("light")) {
+      return false;
     }
-    // Also check for data-theme attribute (another common pattern)
-    if (document.documentElement.getAttribute("data-theme") === "dark") {
-      return true;
+
+    // If color-scheme is explicitly light, respect it
+    const colorScheme =
+      html.style.colorScheme || getComputedStyle(html).colorScheme;
+    if (colorScheme === "light") {
+      return false;
     }
   }
+
   // Fall back to system preference
   return prefersDarkMode();
 }
 
 /**
  * Get the current theme based on automatic detection
- * Checks document class, data-theme attribute, and system preference
+ * Checks document class, color-scheme, data-theme attribute, and system preference
  */
 export function getAutoTheme(): Extension {
   return isDarkMode() ? darkTheme : lightTheme;
