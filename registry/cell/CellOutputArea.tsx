@@ -10,6 +10,19 @@ const MediaRouter = lazy(() =>
 );
 
 /**
+ * Media metadata type matching MediaRouter's expected format
+ */
+type MediaMetadata = {
+  [mimeType: string]:
+    | {
+        width?: number;
+        height?: number;
+        [key: string]: unknown;
+      }
+    | undefined;
+};
+
+/**
  * Jupyter output types following the Jupyter message spec
  */
 export interface JupyterOutput {
@@ -151,19 +164,7 @@ function OutputItem({ output }: { output: JupyterOutput }) {
       <Suspense fallback={<OutputLoading />}>
         <MediaRouter
           data={output.data}
-          metadata={
-            output.metadata as
-              | {
-                  [mimeType: string]:
-                    | {
-                        width?: number;
-                        height?: number;
-                        [key: string]: unknown;
-                      }
-                    | undefined;
-                }
-              | undefined
-          }
+          metadata={output.metadata as MediaMetadata | undefined}
           className="output-item"
         />
       </Suspense>
@@ -176,6 +177,29 @@ function OutputItem({ output }: { output: JupyterOutput }) {
       Unknown output type: {output.output_type}
     </div>
   );
+}
+
+/**
+ * Generate a stable key for an output based on its content and position.
+ * While not perfect, this provides better stability than just index.
+ */
+function generateOutputKey(output: JupyterOutput, index: number): string {
+  // Create a hash-like key based on output type and index
+  const typePrefix = output.output_type;
+  
+  // Add additional discriminators when available
+  if (output.output_type === "execute_result" && output.execution_count) {
+    return `${typePrefix}-${output.execution_count}`;
+  }
+  if (output.output_type === "stream" && output.name) {
+    return `${typePrefix}-${output.name}-${index}`;
+  }
+  if (output.output_type === "error" && output.ename) {
+    return `${typePrefix}-${output.ename}-${index}`;
+  }
+  
+  // Fallback to type + index
+  return `${typePrefix}-${index}`;
 }
 
 /**
@@ -260,7 +284,7 @@ export const CellOutputArea: React.FC<CellOutputAreaProps> = ({
           style={maxHeight ? { maxHeight: `${maxHeight}px` } : undefined}
         >
           {outputs.map((output, index) => (
-            <div key={index} className="output-wrapper">
+            <div key={generateOutputKey(output, index)} className="output-wrapper">
               <OutputItem output={output} />
             </div>
           ))}
