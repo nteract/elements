@@ -1,124 +1,72 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useWidgetRequired, WidgetProvider } from "@/lib/widget-context";
-import type { JupyterMessage } from "@/lib/widget-manager";
-import { WidgetOutput } from "@/registry/outputs/widget-output";
+import { useState, useEffect } from "react";
 
 /**
- * Real session data captured from a Jupyter kernel running IntProgress widget.
+ * Static mockup of a progress widget for documentation purposes.
  *
- * This demonstrates the full widget lifecycle:
- * 1. comm_open for LayoutModel (styling)
- * 2. comm_open for ProgressStyleModel (progress bar styling)
- * 3. comm_open for IntProgressModel (the actual widget)
- * 4. display_data with widget view reference
- * 5. comm_msg updates as progress increments from 1 to 10
+ * The actual @jupyter-widgets/html-manager library has bundler compatibility
+ * issues with Turbopack, so we show a static representation for the docs.
+ * Real usage requires webpack or a compatible bundler.
  */
-const RAW_SESSION_MESSAGES = `{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_22","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.024498Z","msg_type":"comm_open","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{"version":"2.1.0"},"content":{"comm_id":"a6f0231f219b428cad40fcf5c42d7608","target_name":"jupyter.widget","data":{"buffer_paths":[],"state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_23","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.024696Z","msg_type":"comm_open","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{"version":"2.1.0"},"content":{"comm_id":"7d372ddf69834cfabf6d52701116a7cd","target_name":"jupyter.widget","data":{"buffer_paths":[],"state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":null,"description_width":""}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_24","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.024773Z","msg_type":"comm_open","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{"version":"2.1.0"},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","target_name":"jupyter.widget","data":{"buffer_paths":[],"state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"IntProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"Loading:","description_allow_html":false,"layout":"IPY_MODEL_a6f0231f219b428cad40fcf5c42d7608","max":10,"min":0,"orientation":"horizontal","style":"IPY_MODEL_7d372ddf69834cfabf6d52701116a7cd","tabbable":null,"tooltip":null,"value":0}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_25","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.026241Z","msg_type":"display_data","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"data":{"text/plain":"IntProgress(value=0, description='Loading:', max=10)","application/vnd.jupyter.widget-view+json":{"model_id":"5d3a9b27b8cd4da880f2442d9d7fc047","version_major":2,"version_minor":0}},"metadata":{},"transient":{}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_26","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.331785Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":1}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_27","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.637353Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":2}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_28","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:18.940914Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":3}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_29","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:19.245406Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":4}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_30","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:19.550885Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":5}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_31","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:19.854119Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":6}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_32","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:20.157480Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":7}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_33","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:20.461781Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":8}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_34","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:20.766413Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":9}}},"buffers":[],"channel":null}
-{"header":{"msg_id":"bb91d722-ab349a6aa6e03291c9217b5c_57748_35","username":"kylekelley","session":"bb91d722-ab349a6aa6e03291c9217b5c","date":"2026-02-04T16:48:21.071081Z","msg_type":"comm_msg","version":"5.4"},"parent_header":{"msg_id":"ce77a19f-deb2fa5117453dd0525a360c_57664_6","username":"kylekelley","session":"ce77a19f-deb2fa5117453dd0525a360c","date":"2026-02-04T16:48:17.989424Z","msg_type":"execute_request","version":"5.4"},"metadata":{},"content":{"comm_id":"5d3a9b27b8cd4da880f2442d9d7fc047","data":{"buffer_paths":[],"method":"update","state":{"value":10}}},"buffers":[],"channel":null}`;
+function MockProgressWidget({ value, max }: { value: number; max: number }) {
+  const percentage = (value / max) * 100;
 
-/**
- * Parse the raw session messages into typed JupyterMessages.
- */
-function parseSessionMessages(raw: string): JupyterMessage[] {
-  return raw
-    .trim()
-    .split("\n")
-    .filter((line) => line.trim())
-    .map((line) => JSON.parse(line) as JupyterMessage);
+  return (
+    <div className="flex items-center gap-3 font-sans text-sm">
+      <span className="text-muted-foreground">Loading:</span>
+      <div className="relative h-4 flex-1 overflow-hidden rounded bg-muted">
+        <div
+          className="h-full bg-primary transition-all duration-200"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <span className="tabular-nums text-muted-foreground">
+        {value}/{max}
+      </span>
+    </div>
+  );
 }
 
 /**
- * Inner component that uses the widget context to replay messages.
+ * Demo showing the widget output component states.
  */
 function WidgetReplayDemo() {
-  const { handleMessage } = useWidgetRequired();
-  const [widgetData, setWidgetData] = useState<{ model_id: string } | null>(
-    null,
-  );
+  const [value, setValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const max = 10;
 
-  const messages = parseSessionMessages(RAW_SESSION_MESSAGES);
-
-  // Separate initialization messages (comm_open, display_data) from updates (comm_msg)
-  const initMessages = messages.filter(
-    (m) =>
-      m.header.msg_type === "comm_open" || m.header.msg_type === "display_data",
-  );
-  const updateMessages = messages.filter(
-    (m) => m.header.msg_type === "comm_msg",
-  );
-
-  const initialize = useCallback(() => {
-    // Process all comm_open messages to set up the widget models
-    for (const msg of initMessages) {
-      if (msg.header.msg_type === "comm_open") {
-        handleMessage(msg);
-      } else if (msg.header.msg_type === "display_data") {
-        // Extract the widget view data from display_data
-        const data = msg.content.data as Record<string, unknown>;
-        const widgetView = data["application/vnd.jupyter.widget-view+json"] as {
-          model_id: string;
-        };
-        if (widgetView?.model_id) {
-          setWidgetData(widgetView);
-        }
-      }
-    }
-    setCurrentStep(0);
-  }, [handleMessage, initMessages]);
-
-  const playUpdates = useCallback(() => {
+  const play = () => {
     if (isPlaying) return;
     setIsPlaying(true);
+    setValue(0);
+  };
 
-    let step = 0;
-    const interval = setInterval(() => {
-      if (step < updateMessages.length) {
-        handleMessage(updateMessages[step]);
-        setCurrentStep(step + 1);
-        step++;
-      } else {
-        clearInterval(interval);
-        setIsPlaying(false);
-      }
-    }, 300); // 300ms between updates, matching original timing
-
-    return () => clearInterval(interval);
-  }, [handleMessage, updateMessages, isPlaying]);
-
-  const reset = useCallback(() => {
-    setWidgetData(null);
-    setCurrentStep(0);
-    setIsPlaying(false);
-  }, []);
-
-  // Initialize on mount
   useEffect(() => {
-    initialize();
-  }, [initialize]);
+    if (!isPlaying) return;
+
+    if (value < max) {
+      const timer = setTimeout(() => {
+        setValue((v) => v + 1);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setIsPlaying(false);
+    }
+  }, [isPlaying, value, max]);
+
+  const reset = () => {
+    setValue(0);
+    setIsPlaying(false);
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={playUpdates}
-          disabled={isPlaying || !widgetData}
+          onClick={play}
+          disabled={isPlaying}
           className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground disabled:opacity-50"
         >
           {isPlaying ? "Playing..." : "Play Progress"}
@@ -131,78 +79,104 @@ function WidgetReplayDemo() {
           Reset
         </button>
         <span className="text-xs text-muted-foreground">
-          Step: {currentStep}/{updateMessages.length}
+          Step: {value}/{max}
         </span>
       </div>
 
-      {widgetData ? (
-        <WidgetOutput data={widgetData} />
-      ) : (
-        <div className="text-sm text-muted-foreground">
-          Initializing widget models...
-        </div>
-      )}
+      <div className="rounded border border-border bg-card p-4">
+        <MockProgressWidget value={value} max={max} />
+      </div>
+
+      <p className="text-xs text-muted-foreground">
+        This is a static mockup. Actual ipywidgets render with the HTMLManager
+        when connected to a Jupyter kernel.
+      </p>
     </div>
   );
 }
 
 /**
- * Mock widget view data simulating what comes from a kernel.
+ * Shows the "not configured" state when no WidgetProvider is present.
  */
-const mockWidgetData = {
-  model_id: "mock-slider-123",
-  version_major: 2,
-  version_minor: 0,
-};
+function NotConfiguredDemo() {
+  return (
+    <div className="rounded border border-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+      <div className="font-medium">Widget: 5d3a9b27b8cd4da880f2442d9d7fc047</div>
+      <div className="mt-1 text-xs">
+        To display this widget, wrap your application with a{" "}
+        <code className="rounded bg-muted px-1 font-mono">WidgetProvider</code>.
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Shows the loading state.
+ */
+function LoadingDemo() {
+  return (
+    <div className="flex items-center gap-2 py-2 text-sm text-muted-foreground">
+      <svg
+        className="h-4 w-4 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+      <span>Loading widget...</span>
+    </div>
+  );
+}
+
+/**
+ * Shows the error state.
+ */
+function ErrorDemo() {
+  return (
+    <div className="rounded border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+      Widget model not found: mock-slider-123
+    </div>
+  );
+}
 
 interface WidgetOutputDemoProps {
-  variant?: "no-provider" | "with-provider" | "invalid-data" | "replay";
+  variant?: "replay" | "no-provider" | "loading" | "error";
 }
 
 /**
  * Demo component for WidgetOutput showing different states.
  *
- * Variants:
- * - "replay": Replays real captured session data with an IntProgress widget
- * - "no-provider": Shows the "not configured" fallback state
- * - "with-provider": Shows loading state, then error (no real kernel)
- * - "invalid-data": Shows error for invalid widget data
+ * Note: This is a static mockup for documentation. The actual WidgetOutput
+ * component uses @jupyter-widgets/html-manager which requires webpack.
  */
 export function WidgetOutputDemo({
   variant = "replay",
 }: WidgetOutputDemoProps) {
-  // Mock send function that doesn't do anything
-  const mockSendMessage = (_msg: JupyterMessage) => {
-    // In a real app, this would send to your kernel
-  };
-
   switch (variant) {
     case "replay":
-      // Replay real session data
-      return (
-        <WidgetProvider sendMessage={mockSendMessage}>
-          <WidgetReplayDemo />
-        </WidgetProvider>
-      );
-
+      return <WidgetReplayDemo />;
     case "no-provider":
-      // Shows the "not configured" fallback state
-      return <WidgetOutput data={mockWidgetData} />;
-
-    case "with-provider":
-      // Shows loading state, then error (since there's no real kernel)
-      return (
-        <WidgetProvider sendMessage={mockSendMessage}>
-          <WidgetOutput data={mockWidgetData} />
-        </WidgetProvider>
-      );
-
-    case "invalid-data":
-      // Shows error for invalid widget data
-      return <WidgetOutput data={{ invalid: "data" }} />;
-
+      return <NotConfiguredDemo />;
+    case "loading":
+      return <LoadingDemo />;
+    case "error":
+      return <ErrorDemo />;
     default:
-      return <WidgetOutput data={mockWidgetData} />;
+      return <WidgetReplayDemo />;
   }
 }
 
@@ -211,7 +185,7 @@ export function WidgetOutputDemo({
  */
 export function WidgetOutputInteractiveDemo() {
   const [variant, setVariant] = useState<
-    "replay" | "no-provider" | "with-provider" | "invalid-data"
+    "replay" | "no-provider" | "loading" | "error"
   >("replay");
 
   return (
@@ -226,7 +200,7 @@ export function WidgetOutputInteractiveDemo() {
               : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
-          Replay Session
+          Widget Demo
         </button>
         <button
           type="button"
@@ -241,25 +215,25 @@ export function WidgetOutputInteractiveDemo() {
         </button>
         <button
           type="button"
-          onClick={() => setVariant("with-provider")}
+          onClick={() => setVariant("loading")}
           className={`rounded px-3 py-1 text-sm ${
-            variant === "with-provider"
+            variant === "loading"
               ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
-          With Provider
+          Loading
         </button>
         <button
           type="button"
-          onClick={() => setVariant("invalid-data")}
+          onClick={() => setVariant("error")}
           className={`rounded px-3 py-1 text-sm ${
-            variant === "invalid-data"
+            variant === "error"
               ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
-          Invalid Data
+          Error
         </button>
       </div>
       <div className="rounded-lg border p-4">
