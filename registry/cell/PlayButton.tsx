@@ -35,7 +35,7 @@ export const PlayButton: React.FC<PlayButtonProps> = ({
       onClick={isRunning ? onInterrupt : onExecute}
       disabled={isAutoLaunching}
       className={cn(
-        "hover:bg-muted/80 flex items-center justify-center rounded-sm bg-white p-1 transition-colors",
+        "hover:bg-muted/80 flex items-center justify-center rounded-sm bg-background p-1 transition-colors",
         isRunning
           ? "text-destructive hover:text-destructive shadow-destructive/20 animate-pulse drop-shadow-sm"
           : isFocused
@@ -56,7 +56,7 @@ export const PlayButton: React.FC<PlayButtonProps> = ({
           className="size-4"
         />
       ) : (
-        <Play fill="white" className="size-4" />
+        <Play fill="currentColor" className="size-4" />
       )}
     </button>
   );
