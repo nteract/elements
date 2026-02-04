@@ -8,7 +8,7 @@ export type CellType = "code" | "markdown" | "sql" | "ai";
 
 // Colocated cell type color styles that won't be affected by shadcn updates
 export const cellTypeStyles = {
-  code: "border-gray-300 focus-visible:border-gray-500 text-gray-600 hover:bg-gray-50 hover:text-gray-600 focus:bg-gray-50 focus-visible:ring-gray-100",
+  code: "border-gray-300 dark:border-gray-500 focus-visible:border-gray-500 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-600 focus:bg-gray-50 dark:focus:bg-gray-800 focus-visible:ring-gray-100 dark:focus-visible:ring-gray-700",
   markdown:
     "border-yellow-300 focus-visible:border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-600 focus:bg-yellow-50 focus-visible:ring-yellow-100",
   sql: "border-blue-300 focus-visible:border-blue-500 text-blue-600 hover:bg-blue-50 hover:text-blue-600 focus:bg-blue-50 focus-visible:ring-blue-100",
