@@ -1,0 +1,210 @@
+---
+title: AnyWidget View
+description: Render anywidget ESM modules with the AFM interface
+icon: Sparkles
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { AnyWidgetDemo } from '@/app/components/AnyWidgetDemo';
+
+<div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
+  <AnyWidgetDemo />
+</div>
+
+React component for rendering [anywidget](https://anywidget.dev) ESM modules. Implements the [AFM (AnyWidget Frontend Module)](https://anywidget.dev/en/afm/) interface for seamless widget integration.
+
+## Features
+
+- **Dynamic ESM loading** - Loads inline code or remote URLs
+- **CSS injection** - Injects widget styles with automatic cleanup
+- **AFM interface** - Full `get`, `set`, `on`, `off`, `save_changes`, `send` support
+- **Two-way binding** - State syncs between widget and kernel
+- **Cleanup on unmount** - Properly disposes widget and styles
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/anywidget-view.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the file to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/widgets/anywidget-view.tsx).
+
+    **Requires:** [Widget Store](/docs/widgets/widget-store)
+  </Tab>
+</Tabs>
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { AnyWidgetView } from "@/registry/widgets/anywidget-view"
+
+function WidgetOutput({ modelId }: { modelId: string }) {
+  return <AnyWidgetView modelId={modelId} />
+}
+```
+
+### With Widget Store
+
+The component requires `WidgetStoreProvider` to be present in the component tree:
+
+```tsx
+import { WidgetStoreProvider } from "@/registry/widgets/widget-store-context"
+import { AnyWidgetView } from "@/registry/widgets/anywidget-view"
+
+function App() {
+  return (
+    <WidgetStoreProvider sendMessage={(msg) => kernel.send(msg)}>
+      <AnyWidgetView modelId="comm-id-123" />
+    </WidgetStoreProvider>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `modelId` | `string` | — | The comm_id of the widget model |
+| `className` | `string` | `""` | Additional CSS classes for the container |
+
+## How anywidgets Work
+
+anywidget sends widget code in the model state:
+
+```python
+# Python (kernel side)
+import anywidget
+import traitlets
+
+class CounterWidget(anywidget.AnyWidget):
+    _esm = """
+    export default {
+      render({ model, el }) {
+        const btn = document.createElement("button");
+        btn.textContent = "Count: " + model.get("count");
+        btn.onclick = () => {
+          model.set("count", model.get("count") + 1);
+          model.save_changes();
+        };
+        model.on("change:count", () => {
+          btn.textContent = "Count: " + model.get("count");
+        });
+        el.appendChild(btn);
+      }
+    }
+    """
+    count = traitlets.Int(0).tag(sync=True)
+```
+
+The frontend receives this as a `comm_open` message with `_esm` and optional `_css` in the state.
+
+## AFM Model Interface
+
+Widget ESM code receives a model object with these methods:
+
+```typescript
+interface AnyWidgetModel {
+  // Get current state value
+  get(key: string): unknown
+
+  // Set state locally (buffered until save_changes)
+  set(key: string, value: unknown): void
+
+  // Send buffered changes to kernel
+  save_changes(): void
+
+  // Subscribe to state changes
+  on(event: string, callback: Function): void
+  off(event: string, callback?: Function): void
+
+  // Send custom message to kernel
+  send(content: object, callbacks?: object, buffers?: ArrayBuffer[]): void
+
+  // Access other widget models
+  widget_manager: {
+    get_model(modelId: string): Promise<AnyWidgetModel>
+  }
+}
+```
+
+### Event Types
+
+| Event | Description |
+| --- | --- |
+| `change:key` | Fires when a specific key changes |
+| `change` | Fires on any state change |
+
+## Example: Slider Widget
+
+```javascript
+export default {
+  render({ model, el }) {
+    const slider = document.createElement("input");
+    slider.type = "range";
+    slider.min = model.get("min") ?? 0;
+    slider.max = model.get("max") ?? 100;
+    slider.value = model.get("value") ?? 50;
+
+    const label = document.createElement("span");
+    label.textContent = slider.value;
+
+    slider.oninput = () => {
+      label.textContent = slider.value;
+      model.set("value", Number(slider.value));
+      model.save_changes();
+    };
+
+    model.on("change:value", () => {
+      slider.value = model.get("value");
+      label.textContent = slider.value;
+    });
+
+    el.append(slider, label);
+  }
+}
+```
+
+## Detecting anywidgets
+
+Use `isAnyWidget` to check if a model is an anywidget:
+
+```tsx
+import { isAnyWidget } from "@/registry/widgets/anywidget-view"
+
+function WidgetRouter({ model }) {
+  if (isAnyWidget(model)) {
+    return <AnyWidgetView modelId={model.id} />
+  }
+  // Handle other widget types...
+}
+```
+
+## ESM Loading
+
+The component handles two ESM formats:
+
+| Format | Example | Behavior |
+| --- | --- | --- |
+| Inline code | `export default { render() {} }` | Creates blob URL for import |
+| Remote URL | `https://cdn.example.com/widget.js` | Direct dynamic import |
+
+<Callout type="info">
+  Remote ESM URLs must be CORS-enabled and serve valid ES modules.
+</Callout>
+
+## CSS Injection
+
+When `_css` is present in the model state, styles are injected into `<head>` with a `data-widget-id` attribute for debugging. Styles are automatically removed when the component unmounts.
+
+```html
+<!-- Injected style element -->
+<style data-widget-id="comm-id-123">
+  .my-widget { color: blue; }
+</style>
+```
