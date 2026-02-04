@@ -1,0 +1,178 @@
+---
+title: OutputArea
+description: Wrapper component for rendering multiple Jupyter outputs with collapsible state and scroll behavior
+icon: LayoutList
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { OutputAreaDemo } from '@/app/components/OutputAreaDemo';
+
+<div className="my-8">
+  <OutputAreaDemo variant="multi" />
+</div>
+
+OutputArea handles rendering multiple Jupyter outputs with:
+- **Output type routing** - Automatically routes to the right renderer for each output type
+- **Collapsible state** - Toggle output visibility with a collapse button
+- **Scroll behavior** - Set `maxHeight` to enable scrolling for large outputs
+- **Empty state** - Renders nothing when there are no outputs
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/output-area.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/OutputArea.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { OutputArea } from "@/registry/cell/OutputArea"
+
+export function CellWithOutputs({ cell }) {
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <OutputArea
+      outputs={cell.outputs}
+      collapsed={collapsed}
+      onToggleCollapse={() => setCollapsed(!collapsed)}
+      maxHeight={400}
+    />
+  )
+}
+```
+
+## Examples
+
+### Simple Output
+
+<div className="my-4 rounded border p-4">
+  <OutputAreaDemo variant="simple" />
+</div>
+
+```tsx
+<OutputArea outputs={[{
+  output_type: "execute_result",
+  data: { "text/plain": "42" },
+  execution_count: 1,
+}]} />
+```
+
+### Stream and Result
+
+<div className="my-4 rounded border p-4">
+  <OutputAreaDemo variant="multi" />
+</div>
+
+```tsx
+<OutputArea outputs={[
+  {
+    output_type: "stream",
+    name: "stdout",
+    text: "Processing data...\nLoading model...\n",
+  },
+  {
+    output_type: "execute_result",
+    data: { "text/plain": "{'accuracy': 0.95}" },
+    execution_count: 2,
+  },
+]} />
+```
+
+### Error Output
+
+<div className="my-4 rounded border p-4">
+  <OutputAreaDemo variant="error" />
+</div>
+
+```tsx
+<OutputArea outputs={[{
+  output_type: "error",
+  ename: "ValueError",
+  evalue: "invalid literal for int()",
+  traceback: ["..."],
+}]} />
+```
+
+### Collapsible
+
+<div className="my-4 rounded border p-4">
+  <OutputAreaDemo variant="collapsible" />
+</div>
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+<OutputArea
+  outputs={outputs}
+  collapsed={collapsed}
+  onToggleCollapse={() => setCollapsed(!collapsed)}
+/>
+```
+
+### With Max Height
+
+<div className="my-4 rounded border p-4">
+  <OutputAreaDemo variant="scrollable" />
+</div>
+
+```tsx
+<OutputArea
+  outputs={largeOutputs}
+  maxHeight={150}
+/>
+```
+
+## Output Types
+
+OutputArea handles all Jupyter output types:
+
+| Type | Description | Renderer |
+| --- | --- | --- |
+| `execute_result` | Cell execution result | MediaRouter |
+| `display_data` | Rich display output | MediaRouter |
+| `stream` | stdout/stderr text | AnsiStreamOutput |
+| `error` | Exception traceback | AnsiErrorOutput |
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `outputs` | `JupyterOutput[]` | — | Array of Jupyter outputs to render |
+| `collapsed` | `boolean` | `false` | Whether outputs are collapsed |
+| `onToggleCollapse` | `() => void` | — | Callback when collapse is toggled |
+| `maxHeight` | `number` | — | Maximum height in pixels before scrolling |
+| `className` | `string` | — | Additional CSS classes |
+| `renderers` | `Record<string, CustomRenderer>` | — | Custom renderers for MediaRouter |
+| `priority` | `readonly string[]` | — | MIME type priority for MediaRouter |
+| `unsafe` | `boolean` | `false` | Allow unsafe HTML rendering |
+
+## JupyterOutput Type
+
+```tsx
+type JupyterOutput =
+  | {
+      output_type: "execute_result" | "display_data";
+      data: Record<string, unknown>;
+      metadata?: Record<string, unknown>;
+      execution_count?: number | null;
+    }
+  | {
+      output_type: "stream";
+      name: "stdout" | "stderr";
+      text: string | string[];
+    }
+  | {
+      output_type: "error";
+      ename: string;
+      evalue: string;
+      traceback: string[];
+    };
+```
