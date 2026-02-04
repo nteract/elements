@@ -4,7 +4,7 @@
  * Demo component for the AnyWidgetView.
  *
  * This demonstrates:
- * - Loading inline ESM code
+ * - Loading inline ESM code with remote imports (esm.sh)
  * - AFM model interface (get, set, save_changes, on, send)
  * - CSS injection
  * - Two-way state synchronization
@@ -112,6 +112,40 @@ const COUNTER_CSS = `
 }
 `;
 
+// Confetti widget - demonstrates remote ESM imports from CDN
+const CONFETTI_ESM = `
+import confetti from "https://esm.sh/canvas-confetti@1.6";
+
+function render({ model, el }) {
+  let btn = document.createElement("button");
+  btn.classList.add("confetti-button");
+  btn.innerHTML = "click me!";
+  btn.addEventListener("click", () => {
+    confetti();
+  });
+  el.appendChild(btn);
+}
+
+export default { render };
+`;
+
+const CONFETTI_CSS = `
+.confetti-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background-color: #ea580c;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.confetti-button:hover {
+  background-color: #9a3412;
+}
+`;
+
 // === Test Messages ===
 
 const createAnyWidgetMessage = (
@@ -173,39 +207,61 @@ const customMessage = (
   },
 });
 
+const createConfettiWidgetMessage = (commId: string): JupyterCommMessage => ({
+  header: {
+    msg_id: crypto.randomUUID(),
+    msg_type: "comm_open",
+  },
+  content: {
+    comm_id: commId,
+    target_name: "jupyter.widget",
+    data: {
+      state: {
+        _model_name: "AnyModel",
+        _model_module: "anywidget",
+        _view_name: "AnyView",
+        _view_module: "anywidget",
+        _esm: CONFETTI_ESM,
+        _css: CONFETTI_CSS,
+      },
+    },
+  },
+});
+
 // === Demo Components ===
 
-const WIDGET_ID = "demo-anywidget-001";
+const COUNTER_WIDGET_ID = "demo-anywidget-counter";
+const CONFETTI_WIDGET_ID = "demo-anywidget-confetti";
 
-function DemoControls() {
+function CounterDemo() {
   const { handleMessage } = useWidgetStoreRequired();
   const models = useWidgetModels();
   const [log, setLog] = useState<string[]>([]);
 
-  const hasWidget = models.has(WIDGET_ID);
+  const hasWidget = models.has(COUNTER_WIDGET_ID);
 
   const addLog = (msg: string) => {
     setLog((prev) => [...prev.slice(-4), msg]);
   };
 
   const createWidget = () => {
-    handleMessage(createAnyWidgetMessage(WIDGET_ID, 0));
+    handleMessage(createAnyWidgetMessage(COUNTER_WIDGET_ID, 0));
     addLog("comm_open: Created counter widget");
   };
 
   const simulateKernelUpdate = () => {
     const randomCount = Math.floor(Math.random() * 100);
-    handleMessage(updateCountMessage(WIDGET_ID, randomCount));
+    handleMessage(updateCountMessage(COUNTER_WIDGET_ID, randomCount));
     addLog(`comm_msg: Kernel set count → ${randomCount}`);
   };
 
   const resetCount = () => {
-    handleMessage(updateCountMessage(WIDGET_ID, 0));
+    handleMessage(updateCountMessage(COUNTER_WIDGET_ID, 0));
     addLog("comm_msg: Reset count → 0");
   };
 
   const sendCustomToWidget = () => {
-    const msg = customMessage(WIDGET_ID, {
+    const msg = customMessage(COUNTER_WIDGET_ID, {
       type: "pong",
       message: "Hello from kernel!",
       timestamp: Date.now(),
@@ -215,28 +271,39 @@ function DemoControls() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border rounded-lg p-4">
+      <div>
+        <h4 className="font-medium mb-1">Counter Widget</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          Demonstrates state sync, custom messages, and the full AFM interface.
+        </p>
+      </div>
       <div className="flex flex-wrap gap-2">
         {!hasWidget ? (
-          <Button onClick={createWidget} variant="default">
-            Create Widget
+          <Button onClick={createWidget} variant="default" size="sm">
+            Create Counter
           </Button>
         ) : (
           <>
-            <Button onClick={simulateKernelUpdate} variant="secondary">
-              Simulate Kernel Update
+            <Button onClick={simulateKernelUpdate} variant="secondary" size="sm">
+              Kernel Update
             </Button>
-            <Button onClick={sendCustomToWidget} variant="secondary">
-              Send Custom Message
+            <Button onClick={sendCustomToWidget} variant="secondary" size="sm">
+              Custom Message
             </Button>
-            <Button onClick={resetCount} variant="outline">
-              Reset Count
+            <Button onClick={resetCount} variant="outline" size="sm">
+              Reset
             </Button>
           </>
         )}
       </div>
+      {hasWidget && (
+        <div className="pt-2">
+          <AnyWidgetView modelId={COUNTER_WIDGET_ID} />
+        </div>
+      )}
       {log.length > 0 && (
-        <div className="text-xs font-mono bg-muted p-2 rounded max-h-24 overflow-y-auto">
+        <div className="text-xs font-mono bg-muted p-2 rounded max-h-20 overflow-y-auto">
           {log.map((entry, i) => (
             <div key={i} className="text-muted-foreground">
               {entry}
@@ -248,27 +315,31 @@ function DemoControls() {
   );
 }
 
-function WidgetDisplay() {
+function ConfettiDemo() {
+  const { handleMessage } = useWidgetStoreRequired();
   const models = useWidgetModels();
-  const hasWidget = models.has(WIDGET_ID);
 
-  if (!hasWidget) {
-    return (
-      <div className="text-muted-foreground italic text-sm">
-        Click "Create Widget" to load the anywidget.
-      </div>
-    );
-  }
+  const hasWidget = models.has(CONFETTI_WIDGET_ID);
+
+  const createWidget = () => {
+    handleMessage(createConfettiWidgetMessage(CONFETTI_WIDGET_ID));
+  };
 
   return (
-    <div className="space-y-3">
-      <AnyWidgetView modelId={WIDGET_ID} />
-      <p className="text-xs text-muted-foreground">
-        Click the count button to increment. Use "Simulate Kernel Update" to see
-        external state changes. Use "Send Custom Message" to test kernel→widget
-        custom messages, or click "Send to Kernel" in the widget to test
-        widget→kernel custom messages.
-      </p>
+    <div className="space-y-4 border rounded-lg p-4">
+      <div>
+        <h4 className="font-medium mb-1">Confetti Widget</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          Demonstrates remote ESM imports from CDN (esm.sh/canvas-confetti).
+        </p>
+      </div>
+      {!hasWidget ? (
+        <Button onClick={createWidget} variant="default" size="sm">
+          Create Confetti
+        </Button>
+      ) : (
+        <AnyWidgetView modelId={CONFETTI_WIDGET_ID} />
+      )}
     </div>
   );
 }
@@ -276,14 +347,9 @@ function WidgetDisplay() {
 function AnyWidgetDemoContent() {
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Controls</h3>
-        <DemoControls />
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Widget</h3>
-        <WidgetDisplay />
+      <div className="grid gap-4 md:grid-cols-2">
+        <CounterDemo />
+        <ConfettiDemo />
       </div>
     </div>
   );
