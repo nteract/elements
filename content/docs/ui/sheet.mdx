@@ -1,0 +1,389 @@
+---
+title: Sheet
+description: A slide-out panel for sidebars, details panels, and mobile navigation
+icon: PanelRight
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  SheetClose,
+} from '@/registry/primitives/sheet';
+import { Button } from '@/registry/primitives/button';
+
+<div className="my-8">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Open Sheet</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Variable Inspector</SheetTitle>
+        <SheetDescription>
+          View and explore variables in the current kernel session.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="grid gap-2 py-4">
+        <div className="flex justify-between items-center text-sm">
+          <span className="font-mono">df</span>
+          <span className="text-muted-foreground">DataFrame (1000, 5)</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span className="font-mono">model</span>
+          <span className="text-muted-foreground">RandomForest</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span className="font-mono">results</span>
+          <span className="text-muted-foreground">dict (3 keys)</span>
+        </div>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+A slide-out panel component that slides in from an edge of the screen. Built on Radix UI Dialog for accessible focus management. Ideal for sidebars, cell details, variable inspectors, and mobile navigation.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/sheet.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui lucide-react
+    ```
+
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/registry/primitives/sheet"
+
+export function Example() {
+  return (
+    <Sheet>
+      <SheetTrigger>Open</SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Sheet Title</SheetTitle>
+          <SheetDescription>Sheet description text.</SheetDescription>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
+  )
+}
+```
+
+## Examples
+
+### Right Side (Default)
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Open Right</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Cell Details</SheetTitle>
+        <SheetDescription>
+          Metadata and execution history for this cell.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="grid gap-4 py-4 text-sm">
+        <div className="grid gap-1">
+          <span className="text-muted-foreground">Cell ID</span>
+          <span className="font-mono">cell-abc-123</span>
+        </div>
+        <div className="grid gap-1">
+          <span className="text-muted-foreground">Last executed</span>
+          <span>2 minutes ago</span>
+        </div>
+        <div className="grid gap-1">
+          <span className="text-muted-foreground">Execution time</span>
+          <span>0.42s</span>
+        </div>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">Open Right</Button>
+  </SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Cell Details</SheetTitle>
+      <SheetDescription>Metadata and execution history.</SheetDescription>
+    </SheetHeader>
+    <div className="grid gap-4 py-4">
+      <div>Cell ID: cell-abc-123</div>
+      <div>Last executed: 2 minutes ago</div>
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+### Left Side
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Open Left</Button>
+    </SheetTrigger>
+    <SheetContent side="left">
+      <SheetHeader>
+        <SheetTitle>File Browser</SheetTitle>
+        <SheetDescription>
+          Navigate your project files.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="grid gap-1 py-4 text-sm">
+        <button className="flex items-center gap-2 p-2 text-left rounded hover:bg-muted">
+          <span>notebooks/</span>
+        </button>
+        <button className="flex items-center gap-2 p-2 text-left rounded hover:bg-muted pl-6">
+          <span>analysis.ipynb</span>
+        </button>
+        <button className="flex items-center gap-2 p-2 text-left rounded hover:bg-muted pl-6">
+          <span>exploration.ipynb</span>
+        </button>
+        <button className="flex items-center gap-2 p-2 text-left rounded hover:bg-muted">
+          <span>data/</span>
+        </button>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">Open Left</Button>
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>File Browser</SheetTitle>
+      <SheetDescription>Navigate your project files.</SheetDescription>
+    </SheetHeader>
+    <FileTree files={files} />
+  </SheetContent>
+</Sheet>
+```
+
+### Bottom Sheet
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Open Bottom</Button>
+    </SheetTrigger>
+    <SheetContent side="bottom">
+      <SheetHeader>
+        <SheetTitle>Console Output</SheetTitle>
+        <SheetDescription>
+          Kernel stdout and stderr streams.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4">
+        <pre className="text-sm font-mono bg-muted p-4 rounded-md overflow-auto max-h-48">
+{`[2024-01-15 10:30:15] Starting kernel...
+[2024-01-15 10:30:16] Kernel ready
+[2024-01-15 10:30:20] Executing cell 1...
+[2024-01-15 10:30:21] Cell 1 complete (0.42s)`}
+        </pre>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">Open Bottom</Button>
+  </SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Console Output</SheetTitle>
+      <SheetDescription>Kernel stdout and stderr streams.</SheetDescription>
+    </SheetHeader>
+    <pre className="font-mono bg-muted p-4 rounded-md">
+      {consoleOutput}
+    </pre>
+  </SheetContent>
+</Sheet>
+```
+
+## Notebook Examples
+
+### Variable Inspector
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="secondary" size="sm">Variables</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Variable Inspector</SheetTitle>
+        <SheetDescription>
+          Variables in the current kernel session.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="grid gap-3 py-4">
+        <div className="flex items-center justify-between p-2 rounded bg-muted">
+          <div>
+            <span className="font-mono text-sm">df</span>
+            <p className="text-xs text-muted-foreground">pandas.DataFrame</p>
+          </div>
+          <span className="text-xs text-muted-foreground">(1000, 5)</span>
+        </div>
+        <div className="flex items-center justify-between p-2 rounded bg-muted">
+          <div>
+            <span className="font-mono text-sm">X_train</span>
+            <p className="text-xs text-muted-foreground">numpy.ndarray</p>
+          </div>
+          <span className="text-xs text-muted-foreground">(800, 4)</span>
+        </div>
+        <div className="flex items-center justify-between p-2 rounded bg-muted">
+          <div>
+            <span className="font-mono text-sm">model</span>
+            <p className="text-xs text-muted-foreground">sklearn.ensemble.RandomForestClassifier</p>
+          </div>
+          <span className="text-xs text-muted-foreground">fitted</span>
+        </div>
+      </div>
+      <SheetFooter>
+        <Button variant="outline" size="sm">Refresh</Button>
+      </SheetFooter>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="secondary" size="sm">Variables</Button>
+  </SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Variable Inspector</SheetTitle>
+      <SheetDescription>Variables in the current kernel session.</SheetDescription>
+    </SheetHeader>
+    <div className="grid gap-3 py-4">
+      {variables.map((v) => (
+        <VariableRow key={v.name} variable={v} />
+      ))}
+    </div>
+    <SheetFooter>
+      <Button variant="outline" size="sm">Refresh</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>
+```
+
+### Mobile Navigation
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline" size="sm">Menu</Button>
+    </SheetTrigger>
+    <SheetContent side="left">
+      <SheetHeader>
+        <SheetTitle>Navigation</SheetTitle>
+      </SheetHeader>
+      <nav className="grid gap-1 py-4">
+        <a href="#" className="flex items-center gap-2 p-3 rounded hover:bg-muted text-sm font-medium">
+          Notebooks
+        </a>
+        <a href="#" className="flex items-center gap-2 p-3 rounded hover:bg-muted text-sm font-medium">
+          Files
+        </a>
+        <a href="#" className="flex items-center gap-2 p-3 rounded hover:bg-muted text-sm font-medium">
+          Terminals
+        </a>
+        <a href="#" className="flex items-center gap-2 p-3 rounded hover:bg-muted text-sm font-medium">
+          Settings
+        </a>
+      </nav>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline" size="sm">Menu</Button>
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>Navigation</SheetTitle>
+    </SheetHeader>
+    <nav className="grid gap-1 py-4">
+      {navItems.map((item) => (
+        <NavLink key={item.href} {...item} />
+      ))}
+    </nav>
+  </SheetContent>
+</Sheet>
+```
+
+## Components
+
+| Component | Description |
+| --- | --- |
+| `Sheet` | Root component managing open state |
+| `SheetTrigger` | Element that opens the sheet |
+| `SheetContent` | Slide-out panel with overlay |
+| `SheetHeader` | Container for title and description |
+| `SheetFooter` | Container for action buttons |
+| `SheetTitle` | Accessible title element |
+| `SheetDescription` | Accessible description element |
+| `SheetClose` | Element that closes the sheet |
+
+## Props
+
+### Sheet
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state |
+| `defaultOpen` | `boolean` | `false` | Default open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+
+### SheetContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `"top" \| "right" \| "bottom" \| "left"` | `"right"` | Edge to slide in from |
+| `showCloseButton` | `boolean` | `true` | Show the close button |
+| `className` | `string` | — | Additional CSS classes |
+
+### SheetTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Render as child element using Radix Slot |
