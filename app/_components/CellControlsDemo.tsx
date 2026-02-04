@@ -8,6 +8,7 @@ interface CellControlsDemoProps {
   showDeleteAllBelow?: boolean;
   hasOutputs?: boolean;
   contextSelectionMode?: boolean;
+  forceVisible?: boolean;
 }
 
 export function CellControlsDemo({
@@ -15,6 +16,7 @@ export function CellControlsDemo({
   showDeleteAllBelow = false,
   hasOutputs = true,
   contextSelectionMode = false,
+  forceVisible,
 }: CellControlsDemoProps) {
   const [sourceVisible, setSourceVisible] = useState(true);
   const [aiContextVisible, setAiContextVisible] = useState(false);
@@ -42,6 +44,7 @@ export function CellControlsDemo({
           showDeleteAllBelow ? () => alert("Delete all below") : undefined
         }
         hasCellsBelow={showDeleteAllBelow}
+        forceVisible={forceVisible}
       />
     </div>
   );

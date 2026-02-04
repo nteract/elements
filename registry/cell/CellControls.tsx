@@ -43,6 +43,8 @@ interface CellControlsProps {
   contextSelectionMode?: boolean;
   /** Optional: Toggle AI context visibility */
   toggleAiContextVisibility?: () => void;
+  /** Force controls to be visible, bypassing hover behavior */
+  forceVisible?: boolean;
   className?: string;
 }
 
@@ -64,12 +66,16 @@ export const CellControls: React.FC<CellControlsProps> = ({
   canMoveDown = false,
   onDeleteAllBelow,
   hasCellsBelow = false,
+  forceVisible,
   className,
 }) => {
   return (
     <div
       className={cn(
-        "cell-controls flex items-center gap-0.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100",
+        "cell-controls flex items-center gap-0.5 transition-opacity",
+        forceVisible
+          ? "opacity-100"
+          : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
         className
       )}
     >

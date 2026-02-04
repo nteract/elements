@@ -8,7 +8,7 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { CellControlsDemo } from '@/app/_components/CellControlsDemo';
 
 <div className="my-8">
-  <CellControlsDemo showMoveControls hasOutputs />
+  <CellControlsDemo showMoveControls hasOutputs forceVisible />
 </div>
 
 A control panel for notebook cells that provides:
@@ -16,7 +16,7 @@ A control panel for notebook cells that provides:
 - **Dropdown menu** - Move cells, clear outputs, delete cell
 - **Optional AI context toggle** - For AI-assisted notebook interfaces
 
-The controls are hidden on mobile and shown on hover for desktop.
+By default, controls are hidden on desktop and shown on hover (always visible on mobile). Use `forceVisible` to always show controls.
 
 ## Installation
 
@@ -153,4 +153,5 @@ import { PlayButton } from "@/registry/cell/PlayButton"
 | `aiContextVisible` | `boolean` | `false` | Whether AI context is visible |
 | `contextSelectionMode` | `boolean` | `false` | Whether context selection mode is active |
 | `toggleAiContextVisibility` | `() => void` | — | Toggle AI context visibility |
+| `forceVisible` | `boolean` | — | Force controls to always be visible |
 | `className` | `string` | — | Additional CSS classes |
