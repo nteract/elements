@@ -1,0 +1,139 @@
+---
+title: RuntimeHealthIndicator
+description: A visual indicator for kernel connection status in notebook interfaces
+icon: Circle
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RuntimeHealthIndicatorDemo } from '@/app/_components/RuntimeHealthIndicatorDemo';
+
+<div className="my-8 flex gap-4 items-center">
+  <RuntimeHealthIndicatorDemo status="idle" kernelName="Python 3" interactive />
+  <RuntimeHealthIndicatorDemo status="busy" kernelName="Python 3" interactive />
+  <RuntimeHealthIndicatorDemo status="connecting" interactive />
+  <RuntimeHealthIndicatorDemo status="disconnected" interactive />
+</div>
+
+A component that displays kernel connection status with color-coded indicators. Shows one of four states: idle (green), busy (amber), connecting (blue), or disconnected (red). Optionally displays the kernel name and can function as a clickable button.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/runtime-health-indicator.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/RuntimeHealthIndicator.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { RuntimeHealthIndicator } from "@/registry/cell/RuntimeHealthIndicator"
+
+export function NotebookToolbar() {
+  return (
+    <RuntimeHealthIndicator
+      status="idle"
+      kernelName="Python 3"
+      onClick={() => openKernelSelector()}
+    />
+  )
+}
+```
+
+## Examples
+
+### Status Variants
+
+<div className="my-4 flex gap-4 items-center">
+  <RuntimeHealthIndicatorDemo status="idle" showStatus />
+  <RuntimeHealthIndicatorDemo status="busy" showStatus />
+  <RuntimeHealthIndicatorDemo status="connecting" showStatus />
+  <RuntimeHealthIndicatorDemo status="disconnected" showStatus />
+</div>
+
+```tsx
+<RuntimeHealthIndicator status="idle" showStatus />
+<RuntimeHealthIndicator status="busy" showStatus />
+<RuntimeHealthIndicator status="connecting" showStatus />
+<RuntimeHealthIndicator status="disconnected" showStatus />
+```
+
+### With Kernel Name
+
+<div className="my-4 flex gap-4 items-center">
+  <RuntimeHealthIndicatorDemo status="idle" kernelName="Python 3" interactive />
+  <RuntimeHealthIndicatorDemo status="busy" kernelName="Julia 1.10" interactive />
+  <RuntimeHealthIndicatorDemo status="idle" kernelName="R" interactive />
+</div>
+
+```tsx
+<RuntimeHealthIndicator status="idle" kernelName="Python 3" onClick={handleClick} />
+<RuntimeHealthIndicator status="busy" kernelName="Julia 1.10" onClick={handleClick} />
+<RuntimeHealthIndicator status="idle" kernelName="R" onClick={handleClick} />
+```
+
+### Indicator Only
+
+<div className="my-4 flex gap-4 items-center">
+  <RuntimeHealthIndicatorDemo status="idle" />
+  <RuntimeHealthIndicatorDemo status="busy" />
+  <RuntimeHealthIndicatorDemo status="connecting" />
+  <RuntimeHealthIndicatorDemo status="disconnected" />
+</div>
+
+```tsx
+<RuntimeHealthIndicator status="idle" />
+<RuntimeHealthIndicator status="busy" />
+<RuntimeHealthIndicator status="connecting" />
+<RuntimeHealthIndicator status="disconnected" />
+```
+
+### Full Display
+
+<div className="my-4">
+  <RuntimeHealthIndicatorDemo status="idle" kernelName="Python 3" showStatus interactive />
+</div>
+
+```tsx
+<RuntimeHealthIndicator
+  status="idle"
+  kernelName="Python 3"
+  showStatus
+  onClick={() => openKernelSelector()}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `status` | `"idle" \| "busy" \| "disconnected" \| "connecting"` | — | Current kernel connection status |
+| `kernelName` | `string` | — | Name of the kernel to display |
+| `onClick` | `() => void` | — | Callback when clicked (renders as button when provided) |
+| `showStatus` | `boolean` | `false` | Whether to show status text |
+| `className` | `string` | — | Additional CSS classes |
+
+## Exports
+
+The component also exports utility functions for customization:
+
+```tsx
+import {
+  RuntimeHealthIndicator,
+  getStatusColor,
+  getStatusText,
+  getStatusTextColor,
+  type RuntimeStatus
+} from "@/registry/cell/RuntimeHealthIndicator"
+
+// Get the Tailwind color class for a status
+getStatusColor("idle") // "text-green-500"
+
+// Get the display text for a status
+getStatusText("connecting") // "Connecting..."
+```

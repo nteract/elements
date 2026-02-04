@@ -260,6 +260,19 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "runtime-health-indicator",
+      "type": "registry:component",
+      "title": "RuntimeHealthIndicator",
+      "description": "A visual indicator for kernel connection status. Shows idle, busy, connecting, or disconnected states with color-coded dots. Can display kernel name and optionally function as a button.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/cell/RuntimeHealthIndicator.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
