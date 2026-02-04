@@ -25,6 +25,11 @@ import {
  * Custom editor styles for notebook contexts
  */
 export const notebookEditorTheme = EditorView.theme({
+  // Transparent background so editor inherits from container
+  // (overrides theme's white background)
+  "&": {
+    backgroundColor: "transparent",
+  },
   // Remove focus dotted outline
   "&.cm-focused": {
     outline: "none",
