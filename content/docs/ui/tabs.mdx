@@ -1,0 +1,271 @@
+---
+title: Tabs
+description: A tabbed interface for switching between different views or content panels
+icon: LayoutPanelLeft
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Tabs as TabsComponent, TabsList, TabsTrigger, TabsContent } from '@/registry/primitives/tabs';
+import { Button } from '@/registry/primitives/button';
+import { Card, CardContent } from '@/registry/primitives/card';
+
+<div className="my-8">
+  <TabsComponent defaultValue="code" className="w-full">
+    <TabsList>
+      <TabsTrigger value="code">Code</TabsTrigger>
+      <TabsTrigger value="output">Output</TabsTrigger>
+      <TabsTrigger value="logs">Logs</TabsTrigger>
+    </TabsList>
+    <TabsContent value="code" className="mt-4">
+      <Card>
+        <CardContent className="pt-6">
+          <pre className="text-sm">print("Hello, world!")</pre>
+        </CardContent>
+      </Card>
+    </TabsContent>
+    <TabsContent value="output" className="mt-4">
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-sm">Hello, world!</p>
+        </CardContent>
+      </Card>
+    </TabsContent>
+    <TabsContent value="logs" className="mt-4">
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-sm text-muted-foreground">No logs available.</p>
+        </CardContent>
+      </Card>
+    </TabsContent>
+  </TabsComponent>
+</div>
+
+A tabbed interface component for organizing content into switchable panels. Built on Radix UI Tabs for accessible keyboard navigation and focus management. Ideal for output type switching, settings panels, and multi-view interfaces.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/tabs.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui class-variance-authority
+    ```
+
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/registry/primitives/tabs"
+
+export function Example() {
+  return (
+    <Tabs defaultValue="tab1">
+      <TabsList>
+        <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+        <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+      </TabsList>
+      <TabsContent value="tab1">Content for Tab 1</TabsContent>
+      <TabsContent value="tab2">Content for Tab 2</TabsContent>
+    </Tabs>
+  )
+}
+```
+
+## Examples
+
+### Default Variant
+
+<div className="my-4">
+  <TabsComponent defaultValue="preview">
+    <TabsList>
+      <TabsTrigger value="preview">Preview</TabsTrigger>
+      <TabsTrigger value="raw">Raw</TabsTrigger>
+    </TabsList>
+    <TabsContent value="preview" className="mt-2">
+      <p className="text-sm">Rendered preview content.</p>
+    </TabsContent>
+    <TabsContent value="raw" className="mt-2">
+      <pre className="text-sm font-mono">{"{ \"type\": \"display_data\" }"}</pre>
+    </TabsContent>
+  </TabsComponent>
+</div>
+
+```tsx
+<Tabs defaultValue="preview">
+  <TabsList>
+    <TabsTrigger value="preview">Preview</TabsTrigger>
+    <TabsTrigger value="raw">Raw</TabsTrigger>
+  </TabsList>
+  <TabsContent value="preview">Rendered preview content.</TabsContent>
+  <TabsContent value="raw">{"{ \"type\": \"display_data\" }"}</TabsContent>
+</Tabs>
+```
+
+### Line Variant
+
+<div className="my-4">
+  <TabsComponent defaultValue="python">
+    <TabsList variant="line">
+      <TabsTrigger value="python">Python</TabsTrigger>
+      <TabsTrigger value="r">R</TabsTrigger>
+      <TabsTrigger value="julia">Julia</TabsTrigger>
+    </TabsList>
+    <TabsContent value="python" className="mt-2">
+      <pre className="text-sm font-mono">import pandas as pd</pre>
+    </TabsContent>
+    <TabsContent value="r" className="mt-2">
+      <pre className="text-sm font-mono">library(tidyverse)</pre>
+    </TabsContent>
+    <TabsContent value="julia" className="mt-2">
+      <pre className="text-sm font-mono">using DataFrames</pre>
+    </TabsContent>
+  </TabsComponent>
+</div>
+
+```tsx
+<Tabs defaultValue="python">
+  <TabsList variant="line">
+    <TabsTrigger value="python">Python</TabsTrigger>
+    <TabsTrigger value="r">R</TabsTrigger>
+    <TabsTrigger value="julia">Julia</TabsTrigger>
+  </TabsList>
+  <TabsContent value="python">import pandas as pd</TabsContent>
+  <TabsContent value="r">library(tidyverse)</TabsContent>
+  <TabsContent value="julia">using DataFrames</TabsContent>
+</Tabs>
+```
+
+### Vertical Orientation
+
+<div className="my-4">
+  <TabsComponent defaultValue="general" orientation="vertical">
+    <TabsList>
+      <TabsTrigger value="general">General</TabsTrigger>
+      <TabsTrigger value="editor">Editor</TabsTrigger>
+      <TabsTrigger value="keybindings">Keybindings</TabsTrigger>
+    </TabsList>
+    <TabsContent value="general" className="ml-4">
+      <p className="text-sm">General settings for the notebook interface.</p>
+    </TabsContent>
+    <TabsContent value="editor" className="ml-4">
+      <p className="text-sm">Editor preferences and code formatting.</p>
+    </TabsContent>
+    <TabsContent value="keybindings" className="ml-4">
+      <p className="text-sm">Customize keyboard shortcuts.</p>
+    </TabsContent>
+  </TabsComponent>
+</div>
+
+```tsx
+<Tabs defaultValue="general" orientation="vertical">
+  <TabsList>
+    <TabsTrigger value="general">General</TabsTrigger>
+    <TabsTrigger value="editor">Editor</TabsTrigger>
+    <TabsTrigger value="keybindings">Keybindings</TabsTrigger>
+  </TabsList>
+  <TabsContent value="general">General settings...</TabsContent>
+  <TabsContent value="editor">Editor preferences...</TabsContent>
+  <TabsContent value="keybindings">Customize shortcuts...</TabsContent>
+</Tabs>
+```
+
+## Notebook Examples
+
+### Output Type Switcher
+
+<div className="my-4">
+  <TabsComponent defaultValue="rich">
+    <TabsList>
+      <TabsTrigger value="rich">Rich</TabsTrigger>
+      <TabsTrigger value="plain">Plain</TabsTrigger>
+      <TabsTrigger value="data">Data</TabsTrigger>
+    </TabsList>
+    <TabsContent value="rich" className="mt-2">
+      <div className="p-4 bg-muted rounded-md">
+        <p className="text-sm font-medium">DataFrame Preview</p>
+        <p className="text-xs text-muted-foreground">5 rows x 3 columns</p>
+      </div>
+    </TabsContent>
+    <TabsContent value="plain" className="mt-2">
+      <pre className="text-sm font-mono p-4 bg-muted rounded-md">{"   A  B  C\n0  1  2  3\n1  4  5  6"}</pre>
+    </TabsContent>
+    <TabsContent value="data" className="mt-2">
+      <pre className="text-sm font-mono p-4 bg-muted rounded-md">{"{ \"columns\": [\"A\", \"B\", \"C\"] }"}</pre>
+    </TabsContent>
+  </TabsComponent>
+</div>
+
+```tsx
+<Tabs defaultValue="rich">
+  <TabsList>
+    <TabsTrigger value="rich">Rich</TabsTrigger>
+    <TabsTrigger value="plain">Plain</TabsTrigger>
+    <TabsTrigger value="data">Data</TabsTrigger>
+  </TabsList>
+  <TabsContent value="rich">
+    <DataFramePreview data={output} />
+  </TabsContent>
+  <TabsContent value="plain">
+    <pre>{output.text}</pre>
+  </TabsContent>
+  <TabsContent value="data">
+    <JsonView data={output.data} />
+  </TabsContent>
+</Tabs>
+```
+
+## Components
+
+| Component | Description |
+| --- | --- |
+| `Tabs` | Root component managing tab state and orientation |
+| `TabsList` | Container for tab triggers with variant styling |
+| `TabsTrigger` | Clickable tab button that activates its panel |
+| `TabsContent` | Panel content shown when its tab is active |
+
+## Props
+
+### Tabs
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultValue` | `string` | — | Default active tab value |
+| `value` | `string` | — | Controlled active tab value |
+| `onValueChange` | `(value: string) => void` | — | Callback when active tab changes |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Layout orientation |
+| `className` | `string` | — | Additional CSS classes |
+
+### TabsList
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "line"` | `"default"` | Visual variant |
+| `className` | `string` | — | Additional CSS classes |
+
+### TabsTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | — | Unique value for this tab (required) |
+| `disabled` | `boolean` | `false` | Disable the tab |
+| `className` | `string` | — | Additional CSS classes |
+
+### TabsContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | — | Value matching the trigger (required) |
+| `className` | `string` | — | Additional CSS classes |
