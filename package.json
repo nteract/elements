@@ -25,6 +25,8 @@
     "@codemirror/lint": "^6.9.3",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.12",
+    "@jupyter-widgets/base": "^6.0.11",
+    "@jupyter-widgets/html-manager": "^1.0.14",
     "@radix-ui/react-slot": "^1.2.4",
     "@uiw/codemirror-theme-github": "^4.25.4",
     "@uiw/react-codemirror": "^4.25.4",

@@ -87,6 +87,27 @@
       ]
     },
     {
+      "name": "widget-output",
+      "type": "registry:component",
+      "title": "Widget Output",
+      "description": "Component for rendering Jupyter widgets (ipywidgets and anywidgets) using the HTMLManager. Handles the application/vnd.jupyter.widget-view+json MIME type.",
+      "dependencies": ["@jupyter-widgets/html-manager", "@jupyter-widgets/base"],
+      "files": [
+        {
+          "path": "registry/outputs/widget-output.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/widget-manager.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/widget-context.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "media-router",
       "type": "registry:component",
       "title": "Media Router",
