@@ -647,6 +647,19 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "anywidget-view",
+      "type": "registry:component",
+      "title": "AnyWidget View",
+      "description": "React component for rendering anywidget ESM modules with the AFM (AnyWidget Frontend Module) interface. Handles dynamic ESM loading, CSS injection, and two-way state synchronization.",
+      "registryDependencies": ["@nteract/widget-store"],
+      "files": [
+        {
+          "path": "registry/widgets/anywidget-view.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
