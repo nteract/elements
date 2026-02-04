@@ -34,16 +34,24 @@ Process for evaluating and importing components into nteract-elements.
 
 | Component | Description |
 |-----------|-------------|
+| `CellControls` | Action menu (delete, move, clear outputs) |
+| `CellHeader` | Slot-based header layout (left/right content) |
 | `CellTypeButton` | Code/Markdown/SQL/AI cell type buttons |
-| `ExecutionStatus` | Queued/Running/Error badges |
+| `ExecutionStatus` | Queued/Running/Error state badges |
 | `PlayButton` | Execute/interrupt button |
+| `RuntimeHealthIndicator` | Kernel connection status |
 
 ## Priority order for new components
 
-1. **Atomic primitives** — Separator, Label, Textarea
-2. **Layout utilities** — Sidebar, Tabs, Dialog, Sheet
-3. **Notebook primitives** — CellControls, CellContainer, CellHeader
-4. **Higher-level notebook UI** — RuntimeHealthIndicator
+### Next up
+
+1. **More shadcn primitives** — Separator, Label, Textarea (#33), Tabs, Dialog, Sheet (#34)
+2. **Cell composition** — CellContainer (#19), ExecutionCount (#36), CellOutputArea (#35)
+3. **Notebook-level components** — from intheloop (NotebookContent, NotebookSidebar)
+
+### Deferred
+
+- Dynamic registry API route (#10) — not blocking current work
 
 ## Directory structure
 
@@ -79,7 +87,7 @@ After adding via CLI:
 2. Add entry to `registry.json` with correct path
 3. Add MDX documentation under `content/docs/ui/<component>.mdx`
 4. Update `content/docs/ui/meta.json` to include the new component
-5. Open PR with commit message referencing the issue (e.g., `Closes #5`)
+5. Open PR with commit message referencing the issue (e.g., `Closes #33`)
 
 ### For notebook-specific components
 
@@ -115,25 +123,32 @@ For notebook-specific components not available via shadcn:
 
 ### `src/components/notebook/` — notebook-specific
 
-- `NotebookContent.tsx` — main notebook layout
-- `NotebookSidebar.tsx` — sidebar with panels
-- `NotebookTitle.tsx` — editable title
-- `NotebookLoadingScreen.tsx` — loading state
-- `RuntimeHealthIndicator.tsx` — kernel status indicator
-- `EmptyStateCellAdder.tsx` — empty notebook state
+| File | Status | Notes |
+|------|--------|-------|
+| `RuntimeHealthIndicator.tsx` | ✅ Done | #9 |
+| `NotebookContent.tsx` | Not started | Main notebook layout |
+| `NotebookSidebar.tsx` | Not started | Sidebar with panels |
+| `NotebookTitle.tsx` | Not started | Editable title |
+| `NotebookLoadingScreen.tsx` | Not started | Loading state |
+| `EmptyStateCellAdder.tsx` | Not started | Empty notebook state |
 
 ### `src/components/notebook/cell/` — cell components
 
-**Import as primitives (see #8 sub-issues):**
+**Completed:**
 
-| File | Size | Issue | Notes |
-|------|------|-------|-------|
-| `shared/PlayButton.tsx` | 1.8KB | #15 | ✅ Done |
-| `shared/ExecutionStatus.tsx` | 1KB | #16 | ✅ Done |
-| `CellTypeButtons.tsx` | 2.6KB | #17 | ✅ Done |
-| `shared/CellControls.tsx` | 5.4KB | #18 | Needs DropdownMenu |
-| `shared/CellContainer.tsx` | 3.2KB | #19 | Refactor — strip hooks |
-| `shared/CellHeader.tsx` | 1KB | #20 | Refactor — strip hooks |
+| File | Issue | Notes |
+|------|-------|-------|
+| `shared/PlayButton.tsx` | #15 ✅ | Execute/interrupt button |
+| `shared/ExecutionStatus.tsx` | #16 ✅ | State badges |
+| `CellTypeButtons.tsx` | #17 ✅ | Cell type buttons |
+| `shared/CellControls.tsx` | #18 ✅ | Action menu |
+| `shared/CellHeader.tsx` | #20 ✅ | Header layout |
+
+**In progress:**
+
+| File | Issue | Notes |
+|------|-------|-------|
+| `shared/CellContainer.tsx` | #19 | Focus/selection wrapper |
 
 **Do NOT import (too coupled):**
 
@@ -152,28 +167,10 @@ For notebook-specific components not available via shadcn:
 
 | Pattern | Found in | Replace with |
 |---------|----------|--------------|
-| `@runtimed/schema` types | CellContainer, CellTypeSelector | Local `CellType` interface |
-| `useDragDropCellSort` | CellContainer, CellHeader | Optional `onDragStart`, `onDrop` props |
-| `useFeatureFlag` | CellTypeSelector | `enabledCellTypes?: CellType[]` prop |
+| `@runtimed/schema` types | CellContainer | Local interface |
+| `useDragDropCellSort` | CellContainer, CellHeader | Optional callback props |
+| `useFeatureFlag` | CellTypeSelector | Props like `enabledCellTypes` |
 | `useAddCell` | CellAdder, CellBetweener | `onAddCell` callback prop |
-
-## Dependency graph for cell primitives
-
-```
-DropdownMenu (#14) ✅
-    └── CellControls (#18)
-
-Badge (#6) ✅
-    └── ExecutionStatus (#16) ✅
-
-Button (#5) ✅
-    └── CellTypeButton (#17) ✅
-
-No deps:
-    ├── PlayButton (#15) ✅
-    ├── CellContainer (#19) — refactor only
-    └── CellHeader (#20) — refactor only
-```
 
 ## Dependencies
 

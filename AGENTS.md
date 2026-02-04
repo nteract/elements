@@ -124,11 +124,11 @@ Brief description paragraph.
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add component-name
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/component-name.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy from [shadcn/ui](https://ui.shadcn.com/docs/components/component-name).
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
   </Tab>
 </Tabs>
 
@@ -140,18 +140,6 @@ import { ComponentName } from "@/registry/primitives/component-name"
 export function Example() {
   return <ComponentName>Example</ComponentName>
 }
-```
-
-## Examples
-
-### Variant Name
-
-<div className="my-4">
-  <ComponentName variant="example">Example</ComponentName>
-</div>
-
-```tsx
-<ComponentName variant="example">Example</ComponentName>
 ```
 
 ## Props
@@ -180,24 +168,37 @@ export function Example() {
 
 ## Issue Status
 
-Component intake is tracked in issue #4.
+Component intake is tracked in issue #4. Cell primitives tracked in #8.
 
-### Completed
+### Sprint 1 Complete ✅
 
-- #5 — Button and Input ✅
+**UI Primitives (`registry/primitives/`):**
+- #5 — Button, Input ✅
 - #6 — Badge, Kbd, Spinner ✅
 - #7 — Card, Popover, Tooltip ✅
 - #14 — DropdownMenu ✅
+
+**Cell Primitives (`registry/cell/`):**
+- #9 — RuntimeHealthIndicator ✅
 - #15 — PlayButton ✅
 - #16 — ExecutionStatus ✅
 - #17 — CellTypeButton ✅
+- #18 — CellControls ✅
+- #20 — CellHeader ✅
+
+**Infrastructure:**
+- #27 — Registry restructure ✅
 
 ### In Progress
 
-- #18 — CellControls (needs DropdownMenu ✅)
-- #19 — CellContainer (refactor needed)
-- #20 — CellHeader (refactor needed)
-- #9 — RuntimeHealthIndicator
+- #19 — CellContainer (with composition documentation)
+
+### Next Phase
+
+- #33 — Separator, Label, Textarea (shadcn primitives)
+- #34 — Tabs, Dialog, Sheet (shadcn primitives)
+- #35 — CellOutputArea (output wrapper component)
+- #36 — ExecutionCount (cell execution count display)
 
 ### Deferred
 
