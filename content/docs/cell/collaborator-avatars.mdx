@@ -1,0 +1,141 @@
+---
+title: CollaboratorAvatars
+description: Display avatars of users collaborating on a notebook with overflow handling
+icon: Users
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CollaboratorAvatarsDemo } from '@/app/components/CollaboratorAvatarsDemo';
+
+<div className="my-8">
+  <CollaboratorAvatarsDemo />
+</div>
+
+The CollaboratorAvatars component displays a row of user avatars showing who is currently collaborating on a notebook. It handles overflow gracefully and shows user details on hover.
+
+## Features
+
+- Filters out the current user from display
+- Configurable limit on visible avatars (default 3)
+- Overflow indicator shows "+N" for additional users
+- HoverCard on each avatar shows user info
+- Stacked layout with negative margin overlap
+- Optional color indicator per user
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/collaborator-avatars.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/tree/main/registry/cell/CollaboratorAvatars.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CollaboratorAvatars } from "@/registry/cell/CollaboratorAvatars";
+
+const users = [
+  { id: "1", name: "Alice Smith", picture: "https://example.com/alice.jpg", color: "#e91e63" },
+  { id: "2", name: "Bob Johnson", color: "#2196f3" },
+  { id: "3", name: "Carol Williams", picture: "https://example.com/carol.jpg", color: "#4caf50" },
+  { id: "4", name: "David Brown", color: "#ff9800" },
+];
+
+function NotebookHeader() {
+  return (
+    <CollaboratorAvatars
+      users={users}
+      currentUserId="1"
+      limit={3}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `users` | `CollaboratorUser[]` | — | Array of user objects to display |
+| `currentUserId` | `string` | — | ID of current user (excluded from display) |
+| `limit` | `number` | `3` | Maximum avatars to show before overflow |
+| `size` | `"default" \| "sm" \| "lg"` | `"sm"` | Avatar size |
+| `className` | `string` | — | Additional classes for the container |
+
+### CollaboratorUser Interface
+
+```tsx
+interface CollaboratorUser {
+  id: string;
+  name: string;
+  picture?: string;
+  color?: string;
+}
+```
+
+## Examples
+
+### Basic Usage
+
+```tsx
+<CollaboratorAvatars
+  users={[
+    { id: "1", name: "Alice" },
+    { id: "2", name: "Bob" },
+  ]}
+/>
+```
+
+### With Current User Filtered
+
+```tsx
+<CollaboratorAvatars
+  users={users}
+  currentUserId="current-user-id"
+/>
+```
+
+### Custom Limit
+
+```tsx
+<CollaboratorAvatars
+  users={users}
+  limit={5}
+/>
+```
+
+### With Colors
+
+Colors can be used to indicate cursor positions or user-specific highlighting in collaborative editing:
+
+```tsx
+<CollaboratorAvatars
+  users={[
+    { id: "1", name: "Alice", color: "#e91e63" },
+    { id: "2", name: "Bob", color: "#2196f3" },
+  ]}
+/>
+```
+
+### In a Cell Header
+
+```tsx
+import { CellHeader } from "@/registry/cell/CellHeader";
+import { CollaboratorAvatars } from "@/registry/cell/CollaboratorAvatars";
+
+<CellHeader
+  leftContent={<PlayButton />}
+  rightContent={
+    <div className="flex items-center gap-2">
+      <CollaboratorAvatars users={collaborators} currentUserId={userId} />
+      <CellControls />
+    </div>
+  }
+/>
+```

@@ -498,6 +498,19 @@
       ]
     },
     {
+      "name": "collaborator-avatars",
+      "type": "registry:component",
+      "title": "CollaboratorAvatars",
+      "description": "Display avatars of users collaborating on a notebook with overflow handling.",
+      "registryDependencies": ["avatar", "hover-card"],
+      "files": [
+        {
+          "path": "registry/cell/CollaboratorAvatars.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
