@@ -1,0 +1,157 @@
+---
+title: CellControls
+description: Cell action menu with source visibility toggle, move controls, and dropdown menu for delete and clear operations
+icon: MoreVertical
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CellControlsDemo } from '@/app/_components/CellControlsDemo';
+
+<div className="my-8">
+  <CellControlsDemo showMoveControls hasOutputs forceVisible />
+</div>
+
+A control panel for notebook cells that provides:
+- **Source visibility toggle** - Show/hide cell source code
+- **Dropdown menu** - Move cells, clear outputs, delete cell
+- **Optional AI context toggle** - For AI-assisted notebook interfaces
+
+By default, controls are hidden on desktop and shown on hover (always visible on mobile). Use `forceVisible` to always show controls.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-controls.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/CellControls.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CellControls } from "@/registry/cell/CellControls"
+
+export function CellToolbar() {
+  const [sourceVisible, setSourceVisible] = useState(true)
+
+  return (
+    <CellControls
+      sourceVisible={sourceVisible}
+      toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
+      onDeleteCell={() => console.log("Delete")}
+      onClearOutputs={() => console.log("Clear")}
+      hasOutputs={true}
+    />
+  )
+}
+```
+
+## Examples
+
+### Basic Controls
+
+<div className="my-4">
+  <CellControlsDemo forceVisible />
+</div>
+
+```tsx
+<CellControls
+  sourceVisible={sourceVisible}
+  toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
+  onDeleteCell={handleDelete}
+  onClearOutputs={handleClear}
+  hasOutputs={true}
+/>
+```
+
+### With Move Controls
+
+<div className="my-4">
+  <CellControlsDemo showMoveControls forceVisible />
+</div>
+
+```tsx
+<CellControls
+  sourceVisible={sourceVisible}
+  toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
+  onDeleteCell={handleDelete}
+  onClearOutputs={handleClear}
+  hasOutputs={true}
+  canMoveUp={true}
+  canMoveDown={true}
+  onMoveUp={handleMoveUp}
+  onMoveDown={handleMoveDown}
+  onMoveToTop={handleMoveToTop}
+  onMoveToBottom={handleMoveToBottom}
+/>
+```
+
+### With AI Context Mode
+
+<div className="my-4">
+  <CellControlsDemo contextSelectionMode forceVisible />
+</div>
+
+```tsx
+<CellControls
+  sourceVisible={sourceVisible}
+  toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
+  onDeleteCell={handleDelete}
+  onClearOutputs={handleClear}
+  hasOutputs={true}
+  contextSelectionMode={true}
+  aiContextVisible={aiContextVisible}
+  toggleAiContextVisibility={() => setAiContextVisible(!aiContextVisible)}
+/>
+```
+
+### With PlayButton
+
+```tsx
+import { PlayButton } from "@/registry/cell/PlayButton"
+
+<CellControls
+  sourceVisible={sourceVisible}
+  toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
+  onDeleteCell={handleDelete}
+  onClearOutputs={handleClear}
+  hasOutputs={true}
+  playButton={
+    <PlayButton
+      executionState="idle"
+      cellType="code"
+      onExecute={handleExecute}
+      onInterrupt={handleInterrupt}
+    />
+  }
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `sourceVisible` | `boolean` | — | Whether cell source is visible |
+| `toggleSourceVisibility` | `() => void` | — | Toggle source visibility |
+| `onDeleteCell` | `() => void` | — | Callback to delete the cell |
+| `onClearOutputs` | `() => void` | — | Callback to clear cell outputs |
+| `hasOutputs` | `boolean` | — | Whether cell has outputs to clear |
+| `playButton` | `React.ReactNode` | — | Optional play button component |
+| `onMoveUp` | `() => void` | — | Callback to move cell up |
+| `onMoveDown` | `() => void` | — | Callback to move cell down |
+| `onMoveToTop` | `() => void` | — | Callback to move cell to top |
+| `onMoveToBottom` | `() => void` | — | Callback to move cell to bottom |
+| `canMoveUp` | `boolean` | `false` | Whether cell can move up |
+| `canMoveDown` | `boolean` | `false` | Whether cell can move down |
+| `onDeleteAllBelow` | `() => void` | — | Callback to delete all cells below |
+| `hasCellsBelow` | `boolean` | `false` | Whether there are cells below |
+| `aiContextVisible` | `boolean` | `false` | Whether AI context is visible |
+| `contextSelectionMode` | `boolean` | `false` | Whether context selection mode is active |
+| `toggleAiContextVisibility` | `() => void` | — | Toggle AI context visibility |
+| `forceVisible` | `boolean` | — | Force controls to always be visible |
+| `className` | `string` | — | Additional CSS classes |

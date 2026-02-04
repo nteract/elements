@@ -273,6 +273,20 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "cell-controls",
+      "type": "registry:component",
+      "title": "CellControls",
+      "description": "Cell action menu with source visibility toggle, move controls, and dropdown menu for delete and clear operations.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "dropdown-menu"],
+      "files": [
+        {
+          "path": "registry/cell/CellControls.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
