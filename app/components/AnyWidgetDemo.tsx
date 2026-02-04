@@ -11,7 +11,7 @@
  * - Custom message handling (kernel ↔ widget)
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   WidgetStoreProvider,
   useWidgetStoreRequired,
@@ -344,29 +344,128 @@ function ConfettiDemo() {
   );
 }
 
-function AnyWidgetDemoContent() {
-  return (
-    <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2">
-        <CounterDemo />
-        <ConfettiDemo />
-      </div>
-    </div>
-  );
+// Kernel log entry type
+interface KernelLogEntry {
+  direction: "in" | "out";
+  type: string;
+  data: unknown;
+  timestamp: number;
 }
 
 /**
  * Exported demo component with provider wrapper.
  */
 export function AnyWidgetDemo() {
-  const sendMessage = useCallback((msg: JupyterCommMessage) => {
-    console.log("Widget → Kernel:", msg);
+  const [kernelLog, setKernelLog] = useState<KernelLogEntry[]>([]);
+  const handleMessageRef = useRef<((msg: JupyterCommMessage) => void) | null>(null);
+
+  const addKernelLog = useCallback((entry: Omit<KernelLogEntry, "timestamp">) => {
+    setKernelLog((prev) => [...prev.slice(-9), { ...entry, timestamp: Date.now() }]);
   }, []);
+
+  // Kernel message handler - receives messages from widgets
+  const sendMessage = useCallback((msg: JupyterCommMessage) => {
+    const method = msg.content.data?.method;
+    const commId = msg.content.comm_id;
+
+    // Log the incoming message
+    if (method === "update") {
+      addKernelLog({
+        direction: "in",
+        type: "update",
+        data: msg.content.data?.state,
+      });
+    } else if (method === "custom") {
+      const content = msg.content.data as Record<string, unknown>;
+      addKernelLog({
+        direction: "in",
+        type: "custom",
+        data: content,
+      });
+
+      // Auto-respond to ping with pong (simulating kernel behavior)
+      if (content?.type === "ping" && commId && handleMessageRef.current) {
+        setTimeout(() => {
+          const response = customMessage(commId, {
+            type: "pong",
+            message: "Kernel received your ping!",
+            originalTimestamp: content.timestamp,
+            responseTimestamp: Date.now(),
+          });
+          addKernelLog({
+            direction: "out",
+            type: "pong",
+            data: response.content.data,
+          });
+          handleMessageRef.current?.(response);
+        }, 100); // Small delay to simulate network
+      }
+    }
+  }, [addKernelLog]);
 
   return (
     <WidgetStoreProvider sendMessage={sendMessage}>
-      <AnyWidgetDemoContent />
+      <AnyWidgetDemoInner
+        kernelLog={kernelLog}
+        setHandleMessage={(fn) => { handleMessageRef.current = fn; }}
+      />
     </WidgetStoreProvider>
+  );
+}
+
+function AnyWidgetDemoInner({
+  kernelLog,
+  setHandleMessage,
+}: {
+  kernelLog: KernelLogEntry[];
+  setHandleMessage: (fn: (msg: JupyterCommMessage) => void) => void;
+}) {
+  const { handleMessage } = useWidgetStoreRequired();
+
+  // Pass handleMessage to parent so kernel can send responses
+  useCallback(() => {
+    setHandleMessage(handleMessage);
+  }, [handleMessage, setHandleMessage])();
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2">
+        <CounterDemo />
+        <ConfettiDemo />
+      </div>
+
+      {/* Kernel Log */}
+      <div className="border rounded-lg p-4">
+        <h4 className="font-medium mb-2">Kernel Log</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          Messages between widgets and the simulated kernel. The kernel auto-responds to "ping" with "pong".
+        </p>
+        {kernelLog.length === 0 ? (
+          <div className="text-xs text-muted-foreground italic">
+            No messages yet. Click "Send to Kernel" in a widget.
+          </div>
+        ) : (
+          <div className="text-xs font-mono bg-muted p-2 rounded max-h-32 overflow-y-auto space-y-1">
+            {kernelLog.map((entry, i) => (
+              <div
+                key={i}
+                className={
+                  entry.direction === "in"
+                    ? "text-blue-600 dark:text-blue-400"
+                    : "text-green-600 dark:text-green-400"
+                }
+              >
+                <span className="opacity-50">
+                  {new Date(entry.timestamp).toLocaleTimeString()}
+                </span>{" "}
+                {entry.direction === "in" ? "←" : "→"} {entry.type}:{" "}
+                {JSON.stringify(entry.data)}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
