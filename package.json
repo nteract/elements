@@ -17,6 +17,7 @@
     "ansi-to-react": "^6.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "fumadocs-core": "16.5.0",
     "fumadocs-mdx": "14.2.6",
     "fumadocs-ui": "16.5.0",

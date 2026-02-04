@@ -415,6 +415,46 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "A profile picture component with fallback support. Includes Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, and AvatarGroupCount components.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "Hover Card",
+      "description": "A card that appears on hover, useful for displaying additional information about an element without requiring a click.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/hover-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "Command",
+      "description": "A command palette component for keyboard-driven navigation and actions. Built on cmdk with dialog support.",
+      "dependencies": ["cmdk", "lucide-react"],
+      "registryDependencies": ["dialog"],
+      "files": [
+        {
+          "path": "registry/primitives/command.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
