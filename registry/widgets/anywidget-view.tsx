@@ -135,6 +135,9 @@ export function createAFMModelProxy(
   // Store unsubscribe functions for key listeners
   const keyUnsubscribers = new Map<string, () => void>();
 
+  // Custom message subscription (only one needed per model)
+  let customMessageUnsubscriber: (() => void) | null = null;
+
   return {
     get(key: string): unknown {
       // Return pending change if it exists, otherwise current state
@@ -203,6 +206,20 @@ export function createAFMModelProxy(
           keyUnsubscribers.set(key, unsubscribe);
         }
       }
+
+      // Handle msg:custom event by subscribing to store custom messages
+      if (event === "msg:custom" && !customMessageUnsubscriber) {
+        customMessageUnsubscriber = store.subscribeToCustomMessage(
+          model.id,
+          (content, buffers) => {
+            // Notify all msg:custom listeners
+            const msgListeners = listeners.get("msg:custom");
+            if (msgListeners) {
+              msgListeners.forEach((cb) => cb(content, buffers));
+            }
+          }
+        );
+      }
     },
 
     off(event: string, callback?: EventCallback): void {
@@ -226,6 +243,16 @@ export function createAFMModelProxy(
           if (unsubscribe) {
             unsubscribe();
             keyUnsubscribers.delete(key);
+          }
+        }
+      }
+
+      // Clean up custom message subscription if no listeners remain
+      if (event === "msg:custom") {
+        if (!listeners.has("msg:custom") || listeners.get("msg:custom")!.size === 0) {
+          if (customMessageUnsubscriber) {
+            customMessageUnsubscriber();
+            customMessageUnsubscriber = null;
           }
         }
       }

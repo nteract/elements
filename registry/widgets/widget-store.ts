@@ -22,6 +22,10 @@ export interface WidgetModel {
 
 type Listener = () => void;
 type KeyListener = (value: unknown) => void;
+type CustomMessageCallback = (
+  content: Record<string, unknown>,
+  buffers?: ArrayBuffer[]
+) => void;
 
 export interface WidgetStore {
   /** Subscribe to all model changes (for useSyncExternalStore) */
@@ -49,6 +53,17 @@ export interface WidgetStore {
     modelId: string,
     key: string,
     callback: KeyListener
+  ) => () => void;
+  /** Emit a custom message to listeners for a model */
+  emitCustomMessage: (
+    commId: string,
+    content: Record<string, unknown>,
+    buffers?: ArrayBuffer[]
+  ) => void;
+  /** Subscribe to custom messages for a model */
+  subscribeToCustomMessage: (
+    commId: string,
+    callback: CustomMessageCallback
   ) => () => void;
 }
 
@@ -106,6 +121,10 @@ export function createWidgetStore(): WidgetStore {
   // Key-specific listeners for fine-grained subscriptions
   // Structure: modelId -> key -> Set<callback>
   const keyListeners = new Map<string, Map<string, Set<KeyListener>>>();
+
+  // Custom message listeners
+  // Structure: modelId -> Set<callback>
+  const customListeners = new Map<string, Set<CustomMessageCallback>>();
 
   // Notify all global listeners that something changed
   function emitChange() {
@@ -198,8 +217,9 @@ export function createWidgetStore(): WidgetStore {
       models = new Map(models);
       models.delete(commId);
 
-      // Clean up key listeners for this model
+      // Clean up listeners for this model
       keyListeners.delete(commId);
+      customListeners.delete(commId);
 
       emitChange();
     },
@@ -231,6 +251,38 @@ export function createWidgetStore(): WidgetStore {
         }
         if (modelMap.size === 0) {
           keyListeners.delete(modelId);
+        }
+      };
+    },
+
+    emitCustomMessage(
+      commId: string,
+      content: Record<string, unknown>,
+      buffers?: ArrayBuffer[]
+    ): void {
+      const callbacks = customListeners.get(commId);
+      if (callbacks) {
+        callbacks.forEach((cb) => cb(content, buffers));
+      }
+    },
+
+    subscribeToCustomMessage(
+      commId: string,
+      callback: CustomMessageCallback
+    ): () => void {
+      // Ensure entry exists
+      if (!customListeners.has(commId)) {
+        customListeners.set(commId, new Set());
+      }
+      customListeners.get(commId)!.add(callback);
+
+      // Return unsubscribe function
+      return () => {
+        customListeners.get(commId)?.delete(callback);
+
+        // Clean up empty sets
+        if (customListeners.get(commId)?.size === 0) {
+          customListeners.delete(commId);
         }
       };
     },

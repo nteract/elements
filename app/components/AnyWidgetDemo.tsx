@@ -5,9 +5,10 @@
  *
  * This demonstrates:
  * - Loading inline ESM code
- * - AFM model interface (get, set, save_changes, on)
+ * - AFM model interface (get, set, save_changes, on, send)
  * - CSS injection
  * - Two-way state synchronization
+ * - Custom message handling (kernel ↔ widget)
  */
 
 import { useCallback, useState } from "react";
@@ -25,6 +26,11 @@ import { Button } from "@/registry/primitives/button";
 const COUNTER_ESM = `
 export default {
   render({ model, el }) {
+    // Create container
+    const container = document.createElement("div");
+    container.className = "anywidget-counter-container";
+
+    // Counter button
     const btn = document.createElement("button");
     btn.className = "anywidget-counter-btn";
     btn.textContent = "Count: " + (model.get("count") ?? 0);
@@ -40,12 +46,40 @@ export default {
       btn.textContent = "Count: " + model.get("count");
     });
 
-    el.appendChild(btn);
+    // Custom message display
+    const msgDisplay = document.createElement("div");
+    msgDisplay.className = "anywidget-msg-display";
+    msgDisplay.textContent = "No custom messages yet";
+
+    // Listen for custom messages from kernel
+    model.on("msg:custom", (content, buffers) => {
+      msgDisplay.textContent = "Received: " + JSON.stringify(content);
+      msgDisplay.classList.add("anywidget-msg-highlight");
+      setTimeout(() => msgDisplay.classList.remove("anywidget-msg-highlight"), 500);
+    });
+
+    // Button to send custom message back to kernel
+    const sendBtn = document.createElement("button");
+    sendBtn.className = "anywidget-counter-btn anywidget-send-btn";
+    sendBtn.textContent = "Send to Kernel";
+    sendBtn.onclick = () => {
+      model.send({ type: "ping", timestamp: Date.now() });
+    };
+
+    container.appendChild(btn);
+    container.appendChild(sendBtn);
+    container.appendChild(msgDisplay);
+    el.appendChild(container);
   }
 }
 `;
 
 const COUNTER_CSS = `
+.anywidget-counter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .anywidget-counter-btn {
   padding: 8px 16px;
   font-size: 14px;
@@ -56,9 +90,25 @@ const COUNTER_CSS = `
   color: hsl(var(--foreground));
   cursor: pointer;
   transition: background 0.15s;
+  width: fit-content;
 }
 .anywidget-counter-btn:hover {
   background: hsl(var(--muted));
+}
+.anywidget-send-btn {
+  font-size: 12px;
+  padding: 4px 12px;
+}
+.anywidget-msg-display {
+  font-size: 12px;
+  font-family: monospace;
+  padding: 8px;
+  background: hsl(var(--muted));
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.anywidget-msg-highlight {
+  background: hsl(var(--primary) / 0.2);
 }
 `;
 
@@ -106,6 +156,23 @@ const updateCountMessage = (
   },
 });
 
+const customMessage = (
+  commId: string,
+  content: Record<string, unknown>
+): JupyterCommMessage => ({
+  header: {
+    msg_id: crypto.randomUUID(),
+    msg_type: "comm_msg",
+  },
+  content: {
+    comm_id: commId,
+    data: {
+      method: "custom",
+      content,
+    },
+  },
+});
+
 // === Demo Components ===
 
 const WIDGET_ID = "demo-anywidget-001";
@@ -137,6 +204,16 @@ function DemoControls() {
     addLog("comm_msg: Reset count → 0");
   };
 
+  const sendCustomToWidget = () => {
+    const msg = customMessage(WIDGET_ID, {
+      type: "pong",
+      message: "Hello from kernel!",
+      timestamp: Date.now(),
+    });
+    handleMessage(msg);
+    addLog("comm_msg: Sent custom message to widget");
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
@@ -148,6 +225,9 @@ function DemoControls() {
           <>
             <Button onClick={simulateKernelUpdate} variant="secondary">
               Simulate Kernel Update
+            </Button>
+            <Button onClick={sendCustomToWidget} variant="secondary">
+              Send Custom Message
             </Button>
             <Button onClick={resetCount} variant="outline">
               Reset Count
@@ -184,8 +264,10 @@ function WidgetDisplay() {
     <div className="space-y-3">
       <AnyWidgetView modelId={WIDGET_ID} />
       <p className="text-xs text-muted-foreground">
-        Click the button to increment. Use "Simulate Kernel Update" to see
-        external state changes.
+        Click the count button to increment. Use "Simulate Kernel Update" to see
+        external state changes. Use "Send Custom Message" to test kernel→widget
+        custom messages, or click "Send to Kernel" in the widget to test
+        widget→kernel custom messages.
       </p>
     </div>
   );

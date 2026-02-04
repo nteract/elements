@@ -26,46 +26,35 @@ import {
   type WidgetModel,
   type WidgetStore,
 } from "./widget-store";
-
-// === Jupyter Message Types ===
-
-export interface JupyterMessageHeader {
-  msg_id: string;
-  msg_type: string;
-  username?: string;
-  session?: string;
-  date?: string;
-  version?: string;
-}
-
-export interface JupyterCommMessage {
-  header: JupyterMessageHeader;
-  parent_header?: JupyterMessageHeader;
-  metadata?: Record<string, unknown>;
-  content: {
-    comm_id?: string;
-    target_name?: string;
-    data?: {
-      state?: Record<string, unknown>;
-      method?: string;
-      buffer_paths?: string[][];
-    };
-  };
-  buffers?: ArrayBuffer[];
-  channel?: string | null;
-}
-
-/**
- * Function type for sending messages back to the kernel.
- */
-export type SendMessage = (msg: JupyterCommMessage) => void;
+import {
+  useCommRouter,
+  type JupyterCommMessage,
+  type JupyterMessageHeader,
+  type SendMessage,
+} from "./use-comm-router";
 
 // === Context Types ===
 
 interface WidgetStoreContextValue {
   store: WidgetStore;
+  /** Handle incoming Jupyter comm messages */
   handleMessage: (msg: JupyterCommMessage) => void;
+  /** Raw send function (prefer sendUpdate/sendCustom for specific cases) */
   sendMessage: SendMessage;
+  /** Send a state update to the kernel */
+  sendUpdate: (
+    commId: string,
+    state: Record<string, unknown>,
+    buffers?: ArrayBuffer[]
+  ) => void;
+  /** Send a custom message to the kernel */
+  sendCustom: (
+    commId: string,
+    content: Record<string, unknown>,
+    buffers?: ArrayBuffer[]
+  ) => void;
+  /** Close a comm channel */
+  closeComm: (commId: string) => void;
 }
 
 // === Context ===
@@ -97,44 +86,15 @@ export function WidgetStoreProvider({
   }
   const store = storeRef.current;
 
-  /**
-   * Handle incoming Jupyter comm messages.
-   * Routes comm_open, comm_msg, and comm_close to appropriate store methods.
-   */
-  const handleMessage = useCallback(
-    (msg: JupyterCommMessage) => {
-      const msgType = msg.header.msg_type;
-      const commId = msg.content.comm_id;
-
-      if (!commId) return;
-
-      switch (msgType) {
-        case "comm_open": {
-          const state = msg.content.data?.state || {};
-          const buffers = msg.buffers || [];
-          store.createModel(commId, state, buffers);
-          break;
-        }
-        case "comm_msg": {
-          const data = msg.content.data;
-          if (data?.method === "update" && data.state) {
-            store.updateModel(commId, data.state, msg.buffers);
-          }
-          // Note: Other methods like "custom" could be handled here
-          break;
-        }
-        case "comm_close": {
-          store.deleteModel(commId);
-          break;
-        }
-      }
-    },
-    [store]
-  );
+  // Use the comm router hook for message handling
+  const { handleMessage, sendUpdate, sendCustom, closeComm } = useCommRouter({
+    sendMessage,
+    store,
+  });
 
   const value = useMemo(
-    () => ({ store, handleMessage, sendMessage }),
-    [store, handleMessage, sendMessage]
+    () => ({ store, handleMessage, sendMessage, sendUpdate, sendCustom, closeComm }),
+    [store, handleMessage, sendMessage, sendUpdate, sendCustom, closeComm]
   );
 
   return (
@@ -253,3 +213,11 @@ export function useResolvedModelValue<T = unknown>(
 // Re-export types and utilities from widget-store
 export { resolveModelRef, isModelRef, parseModelRef } from "./widget-store";
 export type { WidgetModel, WidgetStore } from "./widget-store";
+
+// Re-export types from use-comm-router
+export { useCommRouter } from "./use-comm-router";
+export type {
+  JupyterCommMessage,
+  JupyterMessageHeader,
+  SendMessage,
+} from "./use-comm-router";
