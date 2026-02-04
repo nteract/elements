@@ -20,7 +20,7 @@ import {
   useResolvedModelValue,
   type JupyterCommMessage,
   type WidgetModel,
-} from "@/lib/widget-store-context";
+} from "@/registry/widgets/widget-store-context";
 import { Button } from "@/registry/primitives/button";
 import { cn } from "@/lib/utils";
 

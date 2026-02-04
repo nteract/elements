@@ -631,6 +631,22 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "widget-store",
+      "type": "registry:lib",
+      "title": "Widget Store",
+      "description": "Pure React state management for Jupyter widget models. Handles comm_open, comm_msg, and comm_close messages with fine-grained subscriptions via useSyncExternalStore.",
+      "files": [
+        {
+          "path": "registry/widgets/widget-store.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/widgets/widget-store-context.tsx",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

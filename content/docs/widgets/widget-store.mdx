@@ -21,10 +21,20 @@ A pure React state store for managing Jupyter widget models. This replaces the B
 
 ## Installation
 
-Copy the files to your project:
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
-- `lib/widget-store.ts` - Core store implementation
-- `lib/widget-store-context.tsx` - React context and hooks
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-store.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the files to your project from [the registry source](https://github.com/nteract/elements/tree/main/registry/widgets):
+    - `registry/widgets/widget-store.ts` - Core store implementation
+    - `registry/widgets/widget-store-context.tsx` - React context and hooks
+  </Tab>
+</Tabs>
 
 ## Usage
 
@@ -33,7 +43,7 @@ Copy the files to your project:
 Wrap your app with `WidgetStoreProvider`:
 
 ```tsx
-import { WidgetStoreProvider } from "@/lib/widget-store-context"
+import { WidgetStoreProvider } from "@/registry/widgets/widget-store-context"
 
 function App() {
   const sendMessage = (msg) => {
