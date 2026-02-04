@@ -1,0 +1,162 @@
+---
+title: Widget Store
+description: Pure React state management for Jupyter widget models
+icon: Layers
+---
+
+import { WidgetStoreDemo } from '@/app/components/WidgetStoreDemo';
+
+<div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
+  <WidgetStoreDemo />
+</div>
+
+A pure React state store for managing Jupyter widget models. This replaces the Backbone.js-based model system from `@jupyter-widgets/html-manager` with native React state management using `useSyncExternalStore`.
+
+## Features
+
+- **Concurrent safe** - Works correctly with React 18/19 transitions
+- **Fine-grained subscriptions** - Components subscribe to specific model keys
+- **External store semantics** - Matches the reality that the kernel drives state
+- **No external dependencies** - Pure React implementation
+
+## Installation
+
+Copy the files to your project:
+
+- `lib/widget-store.ts` - Core store implementation
+- `lib/widget-store-context.tsx` - React context and hooks
+
+## Usage
+
+### Setup the Provider
+
+Wrap your app with `WidgetStoreProvider`:
+
+```tsx
+import { WidgetStoreProvider } from "@/lib/widget-store-context"
+
+function App() {
+  const sendMessage = (msg) => {
+    // Send message back to Jupyter kernel
+    kernel.send(msg)
+  }
+
+  return (
+    <WidgetStoreProvider sendMessage={sendMessage}>
+      <YourApp />
+    </WidgetStoreProvider>
+  )
+}
+```
+
+### Process Kernel Messages
+
+Route incoming comm messages to the store:
+
+```tsx
+import { useWidgetStoreRequired } from "@/lib/widget-store-context"
+
+function KernelMessageHandler({ kernel }) {
+  const { handleMessage } = useWidgetStoreRequired()
+
+  useEffect(() => {
+    kernel.onMessage((msg) => {
+      // handleMessage routes comm_open, comm_msg, comm_close
+      handleMessage(msg)
+    })
+  }, [kernel, handleMessage])
+
+  return null
+}
+```
+
+### Subscribe to Widget State
+
+Use hooks with different granularity levels:
+
+```tsx
+import {
+  useWidgetModels,
+  useWidgetModel,
+  useWidgetModelValue,
+} from "@/lib/widget-store-context"
+
+// Subscribe to ALL models (re-renders on any change)
+function ModelList() {
+  const models = useWidgetModels()
+  return <div>{models.size} models</div>
+}
+
+// Subscribe to ONE model (re-renders when that model changes)
+function ModelView({ modelId }) {
+  const model = useWidgetModel(modelId)
+  return <div>{model?.modelName}</div>
+}
+
+// Subscribe to ONE KEY (finest granularity - only re-renders when that key changes)
+function SliderValue({ modelId }) {
+  const value = useWidgetModelValue<number>(modelId, "value")
+  return <div>Value: {value}</div>
+}
+```
+
+## Hooks Reference
+
+| Hook | Re-renders when | Use case |
+| --- | --- | --- |
+| `useWidgetModels()` | Any model added/updated/removed | Model list, debugging |
+| `useWidgetModel(id)` | That model's state changes | Single widget display |
+| `useWidgetModelValue(id, key)` | That specific key changes | Individual widget props |
+| `useResolvedModelValue(id, key)` | That key changes | IPY_MODEL_ references |
+
+## IPY_MODEL_ References
+
+ipywidgets uses `IPY_MODEL_<id>` strings to reference other models (e.g., a slider's `layout` property references a LayoutModel). Use `useResolvedModelValue` to automatically resolve these:
+
+```tsx
+function SliderWidget({ modelId }) {
+  // If state.layout is "IPY_MODEL_abc123", this returns the LayoutModel
+  const layoutModel = useResolvedModelValue(modelId, "layout")
+
+  // Now you can access the layout model's properties
+  const width = layoutModel?.state.width
+}
+```
+
+## Message Types
+
+The store handles these Jupyter comm message types:
+
+| Message Type | Action |
+| --- | --- |
+| `comm_open` | Creates a new model with initial state |
+| `comm_msg` (method: "update") | Patches the model's state |
+| `comm_close` | Deletes the model |
+
+## Store API
+
+The underlying store (accessible via `useWidgetStoreRequired().store`) provides:
+
+```typescript
+interface WidgetStore {
+  subscribe(listener: () => void): () => void
+  getSnapshot(): Map<string, WidgetModel>
+  getModel(modelId: string): WidgetModel | undefined
+  createModel(commId: string, state: Record<string, unknown>, buffers?: ArrayBuffer[]): void
+  updateModel(commId: string, statePatch: Record<string, unknown>, buffers?: ArrayBuffer[]): void
+  deleteModel(commId: string): void
+  subscribeToKey(modelId: string, key: string, callback: (value: unknown) => void): () => void
+}
+```
+
+## Model Interface
+
+```typescript
+interface WidgetModel {
+  id: string                          // comm_id
+  state: Record<string, unknown>      // Widget state (value, min, max, etc.)
+  buffers: ArrayBuffer[]              // Binary buffers
+  modelName: string                   // e.g., "IntSliderModel"
+  modelModule: string                 // e.g., "@jupyter-widgets/controls"
+}
+```
