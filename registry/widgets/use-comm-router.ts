@@ -226,6 +226,7 @@ export function useCommRouter({
 
   /**
    * Send a state update to the kernel.
+   * Also applies optimistic update to local store for immediate UI response.
    */
   const sendUpdate = useCallback(
     (
@@ -233,9 +234,12 @@ export function useCommRouter({
       state: Record<string, unknown>,
       buffers?: ArrayBuffer[]
     ) => {
+      // Optimistic update: apply locally first for responsive UI
+      store.updateModel(commId, state, buffers);
+      // Then send to kernel
       sendMessage(createUpdateMessage(commId, state, buffers));
     },
-    [sendMessage]
+    [sendMessage, store]
   );
 
   /**
