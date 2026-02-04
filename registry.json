@@ -183,6 +183,18 @@
       ]
     },
     {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "A label component for form fields with accessibility support.",
+      "files": [
+        {
+          "path": "registry/primitives/label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "title": "Popover",
@@ -209,6 +221,18 @@
       ]
     },
     {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "A visual divider component for separating sections of content.",
+      "files": [
+        {
+          "path": "registry/primitives/separator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "tooltip",
       "type": "registry:ui",
       "title": "Tooltip",
@@ -217,6 +241,18 @@
       "files": [
         {
           "path": "registry/primitives/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "A multi-line text input component for forms and content editing.",
+      "files": [
+        {
+          "path": "registry/primitives/textarea.tsx",
           "type": "registry:ui"
         }
       ]
