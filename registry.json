@@ -660,6 +660,92 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "widget-view",
+      "type": "registry:component",
+      "title": "Widget View",
+      "description": "Universal widget router that renders Jupyter widgets. Routes anywidgets to ESM loader and standard ipywidgets to built-in shadcn-backed components.",
+      "registryDependencies": ["@nteract/widget-store", "@nteract/anywidget-view"],
+      "files": [
+        {
+          "path": "registry/widgets/widget-view.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/widget-registry.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "widget-controls",
+      "type": "registry:component",
+      "title": "Widget Controls",
+      "description": "Built-in shadcn-backed widget components for standard ipywidgets (IntSlider, FloatSlider, IntProgress, Button, Checkbox, Text, Textarea).",
+      "registryDependencies": ["@nteract/widget-view", "slider", "progress", "button", "checkbox", "input", "textarea", "label"],
+      "files": [
+        {
+          "path": "registry/widgets/controls/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/widgets/controls/int-slider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/float-slider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/int-progress.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/float-progress.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/button-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/checkbox-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/text-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/textarea-widget.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Progress bar component built on Radix UI Progress primitive.",
+      "files": [
+        {
+          "path": "registry/primitives/progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Checkbox component built on Radix UI Checkbox primitive.",
+      "files": [
+        {
+          "path": "registry/primitives/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
