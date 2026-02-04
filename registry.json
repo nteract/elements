@@ -496,6 +496,71 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "A placeholder loading component that shows a pulsing animation while content is loading.",
+      "files": [
+        {
+          "path": "registry/primitives/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "A toggle switch component for boolean settings. Supports default and small sizes.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "A draggable slider component for selecting numeric values within a range. Supports single and range selection.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "A callout component for displaying important messages. Supports default and destructive variants.",
+      "dependencies": ["class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/primitives/alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert Dialog",
+      "description": "A modal dialog for critical confirmations that require user acknowledgment. Built on Radix UI with accessible focus management.",
+      "dependencies": ["radix-ui"],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "registry/primitives/alert-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
