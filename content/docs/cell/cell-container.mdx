@@ -1,0 +1,145 @@
+---
+title: CellContainer
+description: A focus and selection wrapper for notebook cells with optional drag-and-drop support
+icon: Box
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CellContainer } from '@/registry/cell/CellContainer';
+
+<div className="my-8 space-y-4">
+  <CellContainer id="demo-1" isFocused={false}>
+    <div className="p-4">Unfocused cell</div>
+  </CellContainer>
+  <CellContainer id="demo-2" isFocused={true}>
+    <div className="p-4">Focused cell</div>
+  </CellContainer>
+</div>
+
+A wrapper component for notebook cells that handles:
+- Focus/selection border styling
+- `data-cell-id` attribute for cell identification
+- Optional drag-and-drop event handlers
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-container.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/CellContainer.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CellContainer } from "@/registry/cell/CellContainer"
+
+export function NotebookCell({ cellId, isFocused, onFocus }) {
+  return (
+    <CellContainer
+      id={cellId}
+      isFocused={isFocused}
+      onFocus={onFocus}
+    >
+      {/* Cell content */}
+    </CellContainer>
+  )
+}
+```
+
+## Examples
+
+### Unfocused State
+
+<div className="my-4">
+  <CellContainer id="example-unfocused" isFocused={false}>
+    <div className="p-4">Cell content here</div>
+  </CellContainer>
+</div>
+
+```tsx
+<CellContainer id="cell-1" isFocused={false}>
+  <div className="p-4">Cell content here</div>
+</CellContainer>
+```
+
+### Focused State
+
+<div className="my-4">
+  <CellContainer id="example-focused" isFocused={true}>
+    <div className="p-4">Cell content here</div>
+  </CellContainer>
+</div>
+
+```tsx
+<CellContainer id="cell-1" isFocused={true}>
+  <div className="p-4">Cell content here</div>
+</CellContainer>
+```
+
+### With Drag-and-Drop
+
+```tsx
+<CellContainer
+  id="cell-1"
+  isFocused={false}
+  onDragStart={(e) => {
+    e.dataTransfer.setData("text/plain", "cell-1");
+  }}
+  onDragOver={(e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  }}
+  onDrop={(e) => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("text/plain");
+    // Handle reordering
+  }}
+>
+  <div className="p-4">Draggable cell</div>
+</CellContainer>
+```
+
+### Custom Focus Colors
+
+<div className="my-4">
+  <CellContainer
+    id="example-custom"
+    isFocused={true}
+    focusBgColor="bg-blue-50"
+    focusBorderColor="border-blue-400"
+  >
+    <div className="p-4">Custom focus colors</div>
+  </CellContainer>
+</div>
+
+```tsx
+<CellContainer
+  id="cell-1"
+  isFocused={true}
+  focusBgColor="bg-blue-50"
+  focusBorderColor="border-blue-400"
+>
+  <div className="p-4">Custom focus colors</div>
+</CellContainer>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | — | Cell identifier, used for `data-cell-id` attribute |
+| `isFocused` | `boolean` | `false` | Whether the cell is currently focused |
+| `onFocus` | `() => void` | — | Callback when cell is clicked |
+| `children` | `ReactNode` | — | Cell content |
+| `onDragStart` | `(e: React.DragEvent) => void` | — | Drag start handler (enables draggable) |
+| `onDragOver` | `(e: React.DragEvent) => void` | — | Drag over handler |
+| `onDrop` | `(e: React.DragEvent) => void` | — | Drop handler |
+| `className` | `string` | — | Additional CSS classes |
+| `focusBgColor` | `string` | `"bg-primary/5"` | Background color when focused |
+| `focusBorderColor` | `string` | `"border-primary/60"` | Border color when focused |
