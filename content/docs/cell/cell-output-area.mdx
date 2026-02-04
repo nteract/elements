@@ -1,0 +1,264 @@
+---
+title: CellOutputArea
+description: Container for rendering multiple notebook cell outputs with proper spacing and collapse functionality
+icon: FileOutput
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+A container component that wraps and renders multiple notebook cell outputs. It provides proper spacing between outputs, collapse/expand functionality, and scroll behavior for large output areas. Uses MediaRouter internally to render individual outputs based on their MIME types.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-output-area.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/CellOutputArea.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CellOutputArea } from "@/registry/cell/CellOutputArea"
+
+export function MyCell() {
+  const outputs = [
+    {
+      output_type: "stream",
+      name: "stdout",
+      text: "Hello, World!\n"
+    },
+    {
+      output_type: "execute_result",
+      execution_count: 1,
+      data: {
+        "text/plain": "42",
+        "text/html": "<b>42</b>"
+      },
+      metadata: {}
+    }
+  ]
+
+  return <CellOutputArea outputs={outputs} />
+}
+```
+
+## Examples
+
+### Basic Output Area
+
+Simple output area displaying multiple outputs:
+
+```tsx
+<CellOutputArea
+  outputs={[
+    {
+      output_type: "stream",
+      name: "stdout",
+      text: "Hello from Python!\n"
+    },
+    {
+      output_type: "execute_result",
+      execution_count: 1,
+      data: {
+        "text/plain": "42"
+      },
+      metadata: {}
+    }
+  ]}
+/>
+```
+
+### With Collapse Control
+
+Add collapse/expand functionality with a toggle:
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+<CellOutputArea
+  outputs={cell.outputs}
+  collapsed={collapsed}
+  onToggleCollapse={() => setCollapsed(!collapsed)}
+/>
+```
+
+### With Max Height
+
+Limit the output area height and enable scrolling:
+
+```tsx
+<CellOutputArea
+  outputs={cell.outputs}
+  maxHeight={400}
+/>
+```
+
+### Error Outputs
+
+The component handles error outputs with proper styling:
+
+```tsx
+<CellOutputArea
+  outputs={[
+    {
+      output_type: "error",
+      ename: "ValueError",
+      evalue: "invalid literal for int() with base 10: 'abc'",
+      traceback: [
+        "Traceback (most recent call last):",
+        "  File \"<stdin>\", line 1, in <module>",
+        "ValueError: invalid literal for int() with base 10: 'abc'"
+      ]
+    }
+  ]}
+/>
+```
+
+### Stream Outputs
+
+Stream outputs from stdout and stderr are rendered with appropriate styling:
+
+```tsx
+<CellOutputArea
+  outputs={[
+    {
+      output_type: "stream",
+      name: "stdout",
+      text: "Standard output\n"
+    },
+    {
+      output_type: "stream",
+      name: "stderr",
+      text: "Error output\n"
+    }
+  ]}
+/>
+```
+
+### Complete Cell Integration
+
+Integrate with other cell components for a complete cell UI:
+
+```tsx
+import { CellHeader } from "@/registry/cell/CellHeader"
+import { PlayButton } from "@/registry/cell/PlayButton"
+import { CellOutputArea } from "@/registry/cell/CellOutputArea"
+import { Badge } from "@/registry/primitives/badge"
+
+export function CodeCell({ cell, onRun }) {
+  const [collapsed, setCollapsed] = useState(false)
+  
+  return (
+    <div className="border rounded-lg">
+      <CellHeader
+        leftContent={<Badge variant="secondary">Code</Badge>}
+        rightContent={<PlayButton onClick={onRun} />}
+      />
+      <div className="px-4 py-2">
+        <pre>{cell.source}</pre>
+      </div>
+      <CellOutputArea
+        outputs={cell.outputs}
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed(!collapsed)}
+        maxHeight={500}
+      />
+    </div>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `outputs` | `JupyterOutput[]` | — | Array of Jupyter outputs to render |
+| `collapsed` | `boolean` | `false` | Whether the output area is collapsed |
+| `onToggleCollapse` | `() => void` | — | Callback when collapse state is toggled |
+| `maxHeight` | `number` | — | Maximum height in pixels before scrolling |
+| `className` | `string` | — | Additional CSS classes |
+
+## Output Types
+
+The component supports all standard Jupyter output types:
+
+### execute_result
+
+Outputs from expression evaluation:
+
+```tsx
+{
+  output_type: "execute_result",
+  execution_count: 1,
+  data: {
+    "text/plain": "42",
+    "text/html": "<b>42</b>"
+  },
+  metadata: {}
+}
+```
+
+### display_data
+
+Rich display outputs:
+
+```tsx
+{
+  output_type: "display_data",
+  data: {
+    "image/png": "iVBORw0KGgoAAAANSUhEUgAAAAUA...",
+    "text/plain": "<matplotlib.figure.Figure>"
+  },
+  metadata: {
+    "image/png": {
+      "width": 400,
+      "height": 300
+    }
+  }
+}
+```
+
+### stream
+
+Stdout and stderr outputs:
+
+```tsx
+{
+  output_type: "stream",
+  name: "stdout", // or "stderr"
+  text: "Output text\n"
+}
+```
+
+### error
+
+Exception and error outputs:
+
+```tsx
+{
+  output_type: "error",
+  ename: "ValueError",
+  evalue: "invalid literal",
+  traceback: [
+    "Traceback (most recent call last):",
+    "  File \"<stdin>\", line 1, in <module>",
+    "ValueError: invalid literal"
+  ]
+}
+```
+
+## Features
+
+- **Multiple MIME types**: Uses MediaRouter to select the best renderer for each output
+- **Lazy loading**: Output renderers are loaded on-demand for better performance
+- **Collapse control**: Optional toggle to show/hide outputs
+- **Scroll behavior**: Set max height to enable scrolling for large outputs
+- **Proper spacing**: Consistent spacing between multiple outputs
+- **Error handling**: Special styling for error and stderr outputs
+- **Accessibility**: Keyboard navigation and ARIA attributes for collapse toggle

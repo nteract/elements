@@ -299,6 +299,20 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "cell-output-area",
+      "type": "registry:component",
+      "title": "CellOutputArea",
+      "description": "Container for rendering multiple notebook cell outputs with proper spacing, collapse/expand functionality, and scroll behavior for large outputs.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["media-router"],
+      "files": [
+        {
+          "path": "registry/cell/CellOutputArea.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
