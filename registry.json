@@ -353,6 +353,44 @@
       ]
     },
     {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "A visual divider for separating content sections. Supports horizontal and vertical orientations.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/separator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "An accessible label component for form controls. Pairs with inputs, textareas, and other form elements.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "A multiline text input for longer content. Ideal for code cells, markdown input, and form fields.",
+      "files": [
+        {
+          "path": "registry/primitives/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "output-area",
       "type": "registry:component",
       "title": "OutputArea",
