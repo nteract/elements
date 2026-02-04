@@ -1,0 +1,294 @@
+---
+title: CodeMirror Editor
+description: A CodeMirror 6 editor component for notebook cells with syntax highlighting and language support.
+icon: Code
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CodeMirrorEditorDemo, SimpleEditorDemo, ThemeComparisonDemo } from '@/app/components/CodeMirrorEditorDemo';
+
+<div className="my-8">
+  <CodeMirrorEditorDemo />
+</div>
+
+The `CodeMirrorEditor` component provides a full-featured code editor built on CodeMirror 6. It includes syntax highlighting, key bindings, and support for multiple languages out of the box.
+
+Try the editor above — switch languages, edit the code, and toggle between light/dark mode to see the theme adapt.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/codemirror-editor.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install dependencies:
+    ```bash
+    npm install @codemirror/view @codemirror/state @codemirror/commands @codemirror/autocomplete @codemirror/language @codemirror/lint @codemirror/lang-python @codemirror/lang-markdown @codemirror/lang-sql @codemirror/lang-html @codemirror/lang-javascript @codemirror/lang-json @uiw/react-codemirror
+    ```
+    
+    Then copy the files from [registry/editor](https://github.com/nteract/elements/tree/main/registry/editor).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CodeMirrorEditor } from "@/registry/editor";
+
+export function MyCell() {
+  const [source, setSource] = useState("print('Hello, world!')");
+
+  return (
+    <CodeMirrorEditor
+      value={source}
+      language="python"
+      onValueChange={setSource}
+      placeholder="Enter code..."
+    />
+  );
+}
+```
+
+## Supported Languages
+
+| Language | Value |
+|----------|-------|
+| Python | `"python"` |
+| Markdown | `"markdown"` |
+| SQL | `"sql"` |
+| HTML | `"html"` |
+| JavaScript | `"javascript"` |
+| TypeScript | `"typescript"` |
+| JSON | `"json"` |
+| Plain Text | `"plain"` |
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Current editor content |
+| `language` | `SupportedLanguage` | `"python"` | Language for syntax highlighting |
+| `onValueChange` | `(value: string) => void` | — | Callback when content changes |
+| `autoFocus` | `boolean` | `false` | Auto-focus on mount |
+| `onFocus` | `() => void` | — | Callback when editor gains focus |
+| `onBlur` | `() => void` | — | Callback when editor loses focus |
+| `placeholder` | `string` | — | Placeholder text when empty |
+| `keyMap` | `KeyBinding[]` | — | Additional key bindings |
+| `className` | `string` | — | Additional CSS classes |
+| `maxHeight` | `string` | — | Maximum height (CSS value) |
+| `lineWrapping` | `boolean` | `false` | Enable line wrapping |
+| `extensions` | `Extension[]` | — | Additional CodeMirror extensions |
+| `baseExtensions` | `Extension[]` | `defaultExtensions` | Replace default extensions |
+| `readOnly` | `boolean` | `false` | Read-only mode |
+| `theme` | `"light" \| "dark" \| "system"` | `"system"` | Theme mode |
+
+## Themes
+
+The editor includes GitHub Light and GitHub Dark themes that automatically adapt to your site's dark mode.
+
+### Automatic (Default)
+
+By default (`theme="system"`), the editor detects dark mode from:
+1. Document class (`.dark` on `<html>`) - for site-level toggles
+2. `data-theme="dark"` attribute - another common pattern
+3. System preference (`prefers-color-scheme: dark`)
+
+```tsx
+// Automatically adapts to dark mode
+<CodeMirrorEditor
+  value={source}
+  language="python"
+  onValueChange={setSource}
+/>
+```
+
+### Manual Control
+
+Force a specific theme:
+
+```tsx
+// Always light
+<CodeMirrorEditor theme="light" ... />
+
+// Always dark
+<CodeMirrorEditor theme="dark" ... />
+```
+
+### Theme Comparison
+
+<div className="my-8">
+  <ThemeComparisonDemo />
+</div>
+
+### Theme Utilities
+
+Access theme utilities directly:
+
+```tsx
+import { lightTheme, darkTheme, isDarkMode } from "@/registry/editor";
+
+// Check current dark mode state
+if (isDarkMode()) {
+  console.log("Dark mode is active");
+}
+
+// Use themes as extensions
+<CodeMirrorEditor
+  extensions={[isDarkMode() ? darkTheme : lightTheme]}
+  ...
+/>
+```
+
+## Ref Methods
+
+The component exposes methods via `ref`:
+
+```tsx
+const editorRef = useRef<CodeMirrorEditorRef>(null);
+
+// Focus the editor
+editorRef.current?.focus();
+
+// Move cursor to start or end
+editorRef.current?.setCursorPosition("end");
+
+// Access the underlying EditorView
+const view = editorRef.current?.getEditor();
+```
+
+## Custom Key Bindings
+
+Add notebook-specific key bindings:
+
+```tsx
+import { KeyBinding } from "@codemirror/view";
+
+const notebookKeymap: KeyBinding[] = [
+  {
+    key: "Shift-Enter",
+    run: () => {
+      executeCell();
+      return true;
+    },
+  },
+  {
+    key: "Mod-Enter",
+    run: () => {
+      executeCell();
+      focusNextCell();
+      return true;
+    },
+  },
+];
+
+<CodeMirrorEditor
+  value={source}
+  language="python"
+  onValueChange={setSource}
+  keyMap={notebookKeymap}
+/>
+```
+
+## Custom Extensions
+
+Add themes or other CodeMirror extensions:
+
+```tsx
+import { oneDark } from "@codemirror/theme-one-dark";
+import { lineNumbers } from "@codemirror/view";
+
+<CodeMirrorEditor
+  value={source}
+  language="python"
+  onValueChange={setSource}
+  extensions={[oneDark, lineNumbers()]}
+/>
+```
+
+## Minimal Setup (No Autocomplete)
+
+For AI prompt inputs or simpler use cases:
+
+```tsx
+import { minimalExtensions } from "@/registry/editor";
+
+<CodeMirrorEditor
+  value={prompt}
+  language="markdown"
+  onValueChange={setPrompt}
+  baseExtensions={minimalExtensions}
+  lineWrapping
+  placeholder="Describe what you want..."
+/>
+```
+
+## Language Detection
+
+Detect language from filename:
+
+```tsx
+import { detectLanguage } from "@/registry/editor";
+
+const language = detectLanguage("script.py"); // "python"
+const language = detectLanguage("README.md"); // "markdown"
+```
+
+## Integration with CellContainer
+
+Combine with cell components for a complete notebook cell:
+
+```tsx
+import { CellContainer } from "@/registry/cell/CellContainer";
+import { CellHeader } from "@/registry/cell/CellHeader";
+import { PlayButton } from "@/registry/cell/PlayButton";
+import { CodeMirrorEditor } from "@/registry/editor";
+import { OutputArea } from "@/registry/cell/OutputArea";
+
+function CodeCell({ cell, outputs }) {
+  const [source, setSource] = useState(cell.source);
+  
+  return (
+    <CellContainer cellId={cell.id}>
+      <CellHeader
+        leftContent={
+          <PlayButton
+            executionState={cell.state}
+            cellType="code"
+            onExecute={handleExecute}
+            onInterrupt={handleInterrupt}
+          />
+        }
+      />
+      <CodeMirrorEditor
+        value={source}
+        language="python"
+        onValueChange={setSource}
+        keyMap={cellKeymap}
+      />
+      <OutputArea outputs={outputs} />
+    </CellContainer>
+  );
+}
+```
+
+## Bundled Themes
+
+| Theme | Package | Description |
+|-------|---------|-------------|
+| GitHub Light | `@uiw/codemirror-theme-github` | Clean light theme (default light) |
+| GitHub Dark | `@uiw/codemirror-theme-github` | Dark theme matching GitHub (default dark) |
+
+To use other themes, install them and pass as extensions:
+
+```tsx
+import { oneDark } from "@codemirror/theme-one-dark";
+
+<CodeMirrorEditor
+  theme="light" // Disable built-in theme
+  extensions={[oneDark]}
+  ...
+/>
+```
