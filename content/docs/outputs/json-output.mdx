@@ -6,6 +6,7 @@ icon: Braces
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { JsonOutput } from '@/registry/outputs/json-output';
+import { JsonStringViewer } from '@/components/json-string-viewer';
 
 <div className="my-8 rounded-xl border bg-fd-card p-6">
   <JsonOutput
@@ -32,12 +33,9 @@ Component for rendering JSON data in an interactive, expandable tree view. Usefu
     ```
   </Tab>
   <Tab value="Manual">
-    Install dependencies:
-    ```bash
-    npm install @uiw/react-json-view
-    ```
-    
     Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/json-output.tsx).
+
+    You'll also need the [Collapsible primitive](https://github.com/nteract/elements/blob/main/registry/primitives/collapsible.tsx).
   </Tab>
 </Tabs>
 
@@ -106,6 +104,52 @@ function renderOutput(output: JupyterOutput) {
   return null;
 }
 ```
+
+## Parsing String Input
+
+When receiving JSON as a string (e.g., from user input or text fields), parse it before rendering:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { JsonOutput } from "@/registry/outputs/json-output";
+
+export function JsonStringViewer() {
+  const [input, setInput] = useState('{"name": "example", "count": 42}');
+  const [error, setError] = useState<string | null>(null);
+  const [parsed, setParsed] = useState<unknown>(null);
+
+  const handleParse = () => {
+    try {
+      const data = JSON.parse(input);
+      setParsed(data);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Invalid JSON");
+      setParsed(null);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="w-full rounded border p-2 font-mono text-sm"
+        rows={4}
+      />
+      <button onClick={handleParse}>Parse JSON</button>
+      {error && <p className="text-red-500">{error}</p>}
+      {parsed && <JsonOutput data={parsed} />}
+    </div>
+  );
+}
+```
+
+<div className="my-8 rounded-xl border bg-fd-card p-6">
+  <JsonStringViewer />
+</div>
 
 ## Common Use Cases
 

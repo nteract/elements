@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
-    "@uiw/react-json-view": "^2.0.0-alpha.27",
     "ansi-to-react": "^6.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
