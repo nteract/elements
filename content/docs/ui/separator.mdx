@@ -1,0 +1,125 @@
+---
+title: Separator
+description: A visual divider for separating content sections
+icon: Minus
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Separator } from '@/registry/primitives/separator';
+
+<div className="my-8 space-y-4">
+  <div>Some content above</div>
+  <Separator />
+  <div>Some content below</div>
+</div>
+
+A simple visual divider component used to separate sections of content. Supports both horizontal and vertical orientations.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/separator.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Separator } from "@/registry/primitives/separator"
+
+export function Example() {
+  return (
+    <div>
+      <div>Section 1</div>
+      <Separator />
+      <div>Section 2</div>
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Horizontal
+
+<div className="my-4 space-y-4">
+  <p>Content above the separator</p>
+  <Separator />
+  <p>Content below the separator</p>
+</div>
+
+```tsx
+<div>
+  <p>Content above the separator</p>
+  <Separator />
+  <p>Content below the separator</p>
+</div>
+```
+
+### Vertical
+
+<div className="my-4 flex h-8 items-center space-x-4">
+  <span>Item 1</span>
+  <Separator orientation="vertical" />
+  <span>Item 2</span>
+  <Separator orientation="vertical" />
+  <span>Item 3</span>
+</div>
+
+```tsx
+<div className="flex h-8 items-center space-x-4">
+  <span>Item 1</span>
+  <Separator orientation="vertical" />
+  <span>Item 2</span>
+  <Separator orientation="vertical" />
+  <span>Item 3</span>
+</div>
+```
+
+### In Lists
+
+<div className="my-4 space-y-2 max-w-sm">
+  <div className="p-3">
+    <h3 className="text-sm font-medium">Output 1</h3>
+    <p className="text-xs text-muted-foreground">Execution completed</p>
+  </div>
+  <Separator />
+  <div className="p-3">
+    <h3 className="text-sm font-medium">Output 2</h3>
+    <p className="text-xs text-muted-foreground">Execution completed</p>
+  </div>
+  <Separator />
+  <div className="p-3">
+    <h3 className="text-sm font-medium">Output 3</h3>
+    <p className="text-xs text-muted-foreground">Execution completed</p>
+  </div>
+</div>
+
+```tsx
+<div className="space-y-2">
+  <div className="p-3">
+    <h3 className="text-sm font-medium">Output 1</h3>
+    <p className="text-xs text-muted-foreground">Execution completed</p>
+  </div>
+  <Separator />
+  <div className="p-3">
+    <h3 className="text-sm font-medium">Output 2</h3>
+    <p className="text-xs text-muted-foreground">Execution completed</p>
+  </div>
+</div>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | The orientation of the separator |
+| `decorative` | `boolean` | `true` | Whether the separator is purely decorative |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `SeparatorProps` | — | All Radix Separator props |

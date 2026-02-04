@@ -1,0 +1,181 @@
+---
+title: Textarea
+description: A multi-line text input component for forms and content editing
+icon: AlignLeft
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Textarea } from '@/registry/primitives/textarea';
+import { Label } from '@/registry/primitives/label';
+
+<div className="my-8 max-w-md">
+  <Textarea placeholder="Enter multi-line text..." />
+</div>
+
+A multi-line text input component for forms, markdown cells, comments, and any content that requires multiple lines. Features automatic height adjustment and consistent styling.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/textarea.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Textarea } from "@/registry/primitives/textarea"
+
+export function Example() {
+  return <Textarea placeholder="Enter your text..." />
+}
+```
+
+## Examples
+
+### Default
+
+<div className="my-4 max-w-md">
+  <Textarea placeholder="Type something..." />
+</div>
+
+```tsx
+<Textarea placeholder="Type something..." />
+```
+
+### With Label
+
+<div className="my-4 max-w-md space-y-2">
+  <Label htmlFor="description">Description</Label>
+  <Textarea id="description" placeholder="Enter a description..." />
+</div>
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="description">Description</Label>
+  <Textarea id="description" placeholder="Enter a description..." />
+</div>
+```
+
+### With Default Value
+
+<div className="my-4 max-w-md">
+  <Textarea defaultValue="This is some default text that spans multiple lines and demonstrates the textarea component." />
+</div>
+
+```tsx
+<Textarea 
+  defaultValue="This is some default text that spans multiple lines." 
+/>
+```
+
+### Disabled
+
+<div className="my-4 max-w-md">
+  <Textarea placeholder="This field is disabled" disabled />
+</div>
+
+```tsx
+<Textarea placeholder="This field is disabled" disabled />
+```
+
+### With Row Count
+
+<div className="my-4 max-w-md">
+  <Textarea rows={8} placeholder="A larger textarea with 8 rows..." />
+</div>
+
+```tsx
+<Textarea rows={8} placeholder="A larger textarea with 8 rows..." />
+```
+
+### Invalid State
+
+<div className="my-4 max-w-md">
+  <Textarea aria-invalid="true" defaultValue="This content has validation errors" />
+</div>
+
+```tsx
+<Textarea 
+  aria-invalid="true" 
+  defaultValue="This content has validation errors" 
+/>
+```
+
+## Notebook Examples
+
+### Markdown Cell Editor
+
+<div className="my-4 max-w-2xl space-y-2">
+  <Label htmlFor="markdown">Markdown Cell</Label>
+  <Textarea 
+    id="markdown" 
+    placeholder="# Enter markdown here..." 
+    defaultValue="# Data Analysis\n\nThis notebook demonstrates data analysis using Python." 
+    rows={6}
+  />
+</div>
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="markdown">Markdown Cell</Label>
+  <Textarea 
+    id="markdown" 
+    placeholder="# Enter markdown here..." 
+    rows={6}
+  />
+</div>
+```
+
+### Cell Comments
+
+<div className="my-4 max-w-md space-y-2">
+  <Label htmlFor="comment">Add Comment</Label>
+  <Textarea 
+    id="comment" 
+    placeholder="Leave a comment about this cell..." 
+    rows={3}
+  />
+</div>
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="comment">Add Comment</Label>
+  <Textarea 
+    id="comment" 
+    placeholder="Leave a comment about this cell..." 
+    rows={3}
+  />
+</div>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` | — | Placeholder text |
+| `rows` | `number` | — | Number of visible text lines |
+| `disabled` | `boolean` | `false` | Disable the textarea |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `TextareaHTMLAttributes` | — | All standard textarea attributes |
+
+## Features
+
+- **Auto-sizing**: Uses `field-sizing-content` for automatic height adjustment based on content
+- **Consistent styling**: Matches Input component styling for visual consistency
+- **Validation states**: Supports `aria-invalid` for form validation
+- **Focus states**: Clear focus indicators with ring and border color changes
+- **Dark mode**: Proper contrast and styling in dark mode
+
+## Accessibility
+
+- Supports all standard ARIA attributes
+- Focus-visible styles for keyboard navigation
+- Proper contrast in both light and dark modes
+- Works with Label component for proper accessibility

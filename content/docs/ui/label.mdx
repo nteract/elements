@@ -1,0 +1,155 @@
+---
+title: Label
+description: A form label component with accessibility support
+icon: Tag
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Label } from '@/registry/primitives/label';
+import { Input } from '@/registry/primitives/input';
+
+<div className="my-8 max-w-sm space-y-2">
+  <Label htmlFor="example">Example Label</Label>
+  <Input id="example" placeholder="Enter text..." />
+</div>
+
+A label component for form fields that provides proper accessibility and styling. Essential for accessible forms and notebook inputs.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/label.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Label } from "@/registry/primitives/label"
+import { Input } from "@/registry/primitives/input"
+
+export function Example() {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor="email">Email</Label>
+      <Input id="email" type="email" placeholder="you@example.com" />
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Basic Label
+
+<div className="my-4 max-w-sm space-y-2">
+  <Label htmlFor="name">Name</Label>
+  <Input id="name" placeholder="John Doe" />
+</div>
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="name">Name</Label>
+  <Input id="name" placeholder="John Doe" />
+</div>
+```
+
+### Required Field
+
+<div className="my-4 max-w-sm space-y-2">
+  <Label htmlFor="required">
+    Required Field
+    <span className="text-destructive ml-1">*</span>
+  </Label>
+  <Input id="required" required />
+</div>
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="required">
+    Required Field
+    <span className="text-destructive ml-1">*</span>
+  </Label>
+  <Input id="required" required />
+</div>
+```
+
+### With Description
+
+<div className="my-4 max-w-sm space-y-2">
+  <Label htmlFor="kernel">Kernel Name</Label>
+  <p className="text-xs text-muted-foreground">The name of the Jupyter kernel to use</p>
+  <Input id="kernel" placeholder="python3" />
+</div>
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="kernel">Kernel Name</Label>
+  <p className="text-xs text-muted-foreground">
+    The name of the Jupyter kernel to use
+  </p>
+  <Input id="kernel" placeholder="python3" />
+</div>
+```
+
+### Disabled State
+
+<div className="my-4 max-w-sm">
+  <div className="space-y-2 opacity-50 group" data-disabled="true">
+    <Label htmlFor="disabled">Disabled Field</Label>
+    <Input id="disabled" disabled placeholder="Cannot edit" />
+  </div>
+</div>
+
+```tsx
+<div className="group" data-disabled="true">
+  <Label htmlFor="disabled">Disabled Field</Label>
+  <Input id="disabled" disabled placeholder="Cannot edit" />
+</div>
+```
+
+## Notebook Examples
+
+<div className="my-4 max-w-md space-y-4">
+  <div className="space-y-2">
+    <Label htmlFor="cell-name">Cell Name</Label>
+    <Input id="cell-name" placeholder="data_processing" />
+  </div>
+  <div className="space-y-2">
+    <Label htmlFor="execution-timeout">Execution Timeout (seconds)</Label>
+    <Input id="execution-timeout" type="number" defaultValue="30" />
+  </div>
+</div>
+
+```tsx
+<div className="space-y-4">
+  <div className="space-y-2">
+    <Label htmlFor="cell-name">Cell Name</Label>
+    <Input id="cell-name" placeholder="data_processing" />
+  </div>
+  <div className="space-y-2">
+    <Label htmlFor="execution-timeout">Execution Timeout (seconds)</Label>
+    <Input id="execution-timeout" type="number" defaultValue="30" />
+  </div>
+</div>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `htmlFor` | `string` | — | The id of the form element this label is for |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `LabelProps` | — | All Radix Label props |
+
+## Accessibility
+
+- The label is properly associated with its form element using the `htmlFor` prop
+- Supports disabled states via `peer-disabled:` and `group-data-[disabled=true]:` classes
+- Screen readers will announce the label text when the associated form element receives focus
