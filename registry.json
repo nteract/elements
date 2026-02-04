@@ -248,6 +248,18 @@
       ]
     },
     {
+      "name": "execution-count",
+      "type": "registry:component",
+      "title": "ExecutionCount",
+      "description": "Displays the cell execution count indicator (e.g., [1]:, [*]:, [ ]:). Shows never executed, currently executing, or executed with count states.",
+      "files": [
+        {
+          "path": "registry/cell/ExecutionCount.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "execution-status",
       "type": "registry:component",
       "title": "ExecutionStatus",

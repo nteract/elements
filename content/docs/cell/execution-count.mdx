@@ -1,0 +1,110 @@
+---
+title: ExecutionCount
+description: Displays the cell execution count indicator (e.g., [1]:, [*]:, [ ]:)
+icon: Hash
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { ExecutionCount } from '@/registry/cell/ExecutionCount';
+
+<div className="my-8 flex flex-wrap gap-4">
+  <ExecutionCount count={null} />
+  <ExecutionCount count={null} isExecuting={true} />
+  <ExecutionCount count={1} />
+</div>
+
+A cell primitive that displays the execution count indicator for notebook cells. Shows `[ ]:` for never executed cells, `[*]:` for currently executing cells, and `[n]:` for executed cells with their count.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/execution-count.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/ExecutionCount.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { ExecutionCount } from "@/registry/cell/ExecutionCount"
+
+export function CodeCell() {
+  return (
+    <div className="flex items-center gap-2">
+      <ExecutionCount count={1} />
+      <span>print("Hello, World!")</span>
+    </div>
+  )
+}
+```
+
+## States
+
+### Never Executed
+
+Shows `[ ]:` when count is `null` and not executing.
+
+<div className="my-4 flex gap-4">
+  <ExecutionCount count={null} />
+</div>
+
+```tsx
+<ExecutionCount count={null} />
+```
+
+### Currently Executing
+
+Shows `[*]:` when `isExecuting` is `true`.
+
+<div className="my-4 flex gap-4">
+  <ExecutionCount count={null} isExecuting={true} />
+</div>
+
+```tsx
+<ExecutionCount count={null} isExecuting={true} />
+```
+
+### Executed with Count
+
+Shows `[n]:` when count is provided.
+
+<div className="my-4 flex gap-4">
+  <ExecutionCount count={1} />
+  <ExecutionCount count={42} />
+  <ExecutionCount count={999} />
+</div>
+
+```tsx
+<ExecutionCount count={1} />
+<ExecutionCount count={42} />
+<ExecutionCount count={999} />
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `count` | `number \| null` | — | The execution count number, or `null` for never executed |
+| `isExecuting` | `boolean` | `false` | Whether the cell is currently executing |
+| `className` | `string` | — | Additional CSS classes to apply |
+
+## Styling
+
+The component uses:
+- Monospace font (`font-mono`) for consistent alignment
+- Muted text color (`text-muted-foreground`) to match Jupyter conventions
+- Small text size (`text-sm`)
+
+You can customize the styling by passing a `className` prop:
+
+```tsx
+<ExecutionCount 
+  count={1} 
+  className="text-blue-600 font-bold" 
+/>
+```
