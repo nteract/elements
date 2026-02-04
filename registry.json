@@ -455,6 +455,19 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "Empty state container with slots for icon, title, description, and actions.",
+      "dependencies": ["class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/primitives/empty.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

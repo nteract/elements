@@ -1,4 +1,4 @@
 {
   "title": "UI",
-  "pages": ["avatar", "badge", "button", "card", "command", "dialog", "dropdown-menu", "hover-card", "input", "kbd", "label", "popover", "separator", "sheet", "spinner", "tabs", "textarea", "tooltip"]
+  "pages": ["avatar", "badge", "button", "card", "command", "dialog", "dropdown-menu", "empty", "hover-card", "input", "kbd", "label", "popover", "separator", "sheet", "spinner", "tabs", "textarea", "tooltip"]
 }
