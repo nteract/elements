@@ -6,11 +6,9 @@ icon: Box
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { CellDemo, NotebookDemo } from '@/app/_components/CellDemo';
-import { CellContainer } from '@/registry/cell/CellContainer';
-import { CellHeader } from '@/registry/cell/CellHeader';
-import { CellControls } from '@/registry/cell/CellControls';
-import { CellTypeButton, CodeCellButton, MarkdownCellButton } from '@/registry/cell/CellTypeButton';
-import { PlayButton } from '@/registry/cell/PlayButton';
+import { CellContainerDemo } from '@/app/_components/CellContainerDemo';
+import { CellTypeButtonDemo } from '@/app/_components/CellTypeButtonDemo';
+import { PlayButtonDemo } from '@/app/_components/PlayButtonDemo';
 import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
 
 <div className="my-8">
@@ -124,12 +122,12 @@ Install all cell components:
 The outer wrapper that provides focus styling and the `data-cell-id` attribute.
 
 <div className="my-4 space-y-2">
-  <CellContainer id="unfocused" isFocused={false}>
+  <CellContainerDemo id="unfocused" isFocused={false}>
     <div className="p-4 text-sm text-muted-foreground">Unfocused cell (hover to see border)</div>
-  </CellContainer>
-  <CellContainer id="focused" isFocused={true}>
+  </CellContainerDemo>
+  <CellContainerDemo id="focused" isFocused={true}>
     <div className="p-4 text-sm">Focused cell with selection border</div>
-  </CellContainer>
+  </CellContainerDemo>
 </div>
 
 | Prop | Type | Default | Description |
@@ -162,10 +160,10 @@ Slot-based layout for the cell toolbar.
 Color-coded button showing cell type. Also exports convenience components: `CodeCellButton`, `MarkdownCellButton`, `SqlCellButton`, `AiCellButton`.
 
 <div className="my-4 flex gap-2 flex-wrap">
-  <CellTypeButton cellType="code" size="sm" />
-  <CellTypeButton cellType="markdown" size="sm" />
-  <CellTypeButton cellType="sql" size="sm" />
-  <CellTypeButton cellType="ai" size="sm" />
+  <CellTypeButtonDemo cellType="code" size="sm" />
+  <CellTypeButtonDemo cellType="markdown" size="sm" />
+  <CellTypeButtonDemo cellType="sql" size="sm" />
+  <CellTypeButtonDemo cellType="ai" size="sm" />
 </div>
 
 | Prop | Type | Default | Description |
@@ -181,11 +179,11 @@ Execute/interrupt button with state-based icons.
 
 <div className="my-4 flex gap-4 items-center">
   <div className="flex flex-col items-center gap-1">
-    <PlayButton executionState="idle" cellType="code" onExecute={() => {}} onInterrupt={() => {}} />
+    <PlayButtonDemo executionState="idle" cellType="code" />
     <span className="text-xs text-muted-foreground">Idle</span>
   </div>
   <div className="flex flex-col items-center gap-1">
-    <PlayButton executionState="running" cellType="code" onExecute={() => {}} onInterrupt={() => {}} />
+    <PlayButtonDemo executionState="running" cellType="code" />
     <span className="text-xs text-muted-foreground">Running</span>
   </div>
 </div>
