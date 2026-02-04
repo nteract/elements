@@ -1,0 +1,350 @@
+---
+title: Sheet
+description: A slide-out panel component for sidebars and secondary content
+icon: PanelRight
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from '@/registry/primitives/sheet';
+import { Button } from '@/registry/primitives/button';
+
+<div className="my-8">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button>Open Sheet</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Cell Details</SheetTitle>
+        <SheetDescription>
+          View and edit detailed information about this cell.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4">
+        <p className="text-sm">Additional cell information and metadata.</p>
+      </div>
+      <SheetFooter>
+        <SheetClose asChild>
+          <Button variant="outline">Close</Button>
+        </SheetClose>
+      </SheetFooter>
+    </SheetContent>
+  </Sheet>
+</div>
+
+A slide-out panel component built on [Radix UI](https://www.radix-ui.com/) primitives for displaying secondary content, sidebars, and detailed information. Supports four slide directions and responsive sizing.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/sheet.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui lucide-react
+    ```
+    
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+    
+    Make sure you also have the [Button](/docs/ui/button) component installed.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/registry/primitives/sheet"
+import { Button } from "@/registry/primitives/button"
+
+export function Example() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button>Open</Button>
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Title</SheetTitle>
+          <SheetDescription>Description</SheetDescription>
+        </SheetHeader>
+        <div>Content</div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+```
+
+## Examples
+
+### Right Side (Default)
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button>Open from Right</Button>
+    </SheetTrigger>
+    <SheetContent side="right">
+      <SheetHeader>
+        <SheetTitle>Notebook Settings</SheetTitle>
+        <SheetDescription>
+          Configure your notebook preferences.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4">
+        <p className="text-sm">Settings panel content.</p>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button>Open from Right</Button>
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Notebook Settings</SheetTitle>
+      <SheetDescription>Configure your notebook preferences.</SheetDescription>
+    </SheetHeader>
+    <div className="py-4">
+      <p className="text-sm">Settings panel content.</p>
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+### Left Side
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Open from Left</Button>
+    </SheetTrigger>
+    <SheetContent side="left">
+      <SheetHeader>
+        <SheetTitle>File Browser</SheetTitle>
+        <SheetDescription>
+          Browse and manage your notebook files.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4">
+        <p className="text-sm">File browser content.</p>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">Open from Left</Button>
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>File Browser</SheetTitle>
+      <SheetDescription>Browse and manage your notebook files.</SheetDescription>
+    </SheetHeader>
+    <div className="py-4">
+      <p className="text-sm">File browser content.</p>
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+### Top Side
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="secondary">Open from Top</Button>
+    </SheetTrigger>
+    <SheetContent side="top">
+      <SheetHeader>
+        <SheetTitle>Notifications</SheetTitle>
+        <SheetDescription>
+          View your recent notifications and alerts.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4">
+        <p className="text-sm">Notifications content.</p>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="secondary">Open from Top</Button>
+  </SheetTrigger>
+  <SheetContent side="top">
+    <SheetHeader>
+      <SheetTitle>Notifications</SheetTitle>
+      <SheetDescription>View your recent notifications and alerts.</SheetDescription>
+    </SheetHeader>
+    <div className="py-4">
+      <p className="text-sm">Notifications content.</p>
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+### Bottom Side
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="ghost">Open from Bottom</Button>
+    </SheetTrigger>
+    <SheetContent side="bottom">
+      <SheetHeader>
+        <SheetTitle>Console Output</SheetTitle>
+        <SheetDescription>
+          View console logs and debug information.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4">
+        <p className="text-sm">Console output content.</p>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="ghost">Open from Bottom</Button>
+  </SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Console Output</SheetTitle>
+      <SheetDescription>View console logs and debug information.</SheetDescription>
+    </SheetHeader>
+    <div className="py-4">
+      <p className="text-sm">Console output content.</p>
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+### Without Close Button
+
+<div className="my-4">
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Custom Close</Button>
+    </SheetTrigger>
+    <SheetContent showCloseButton={false}>
+      <SheetHeader>
+        <SheetTitle>Custom Actions</SheetTitle>
+        <SheetDescription>
+          Use the buttons below to close this sheet.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="py-4 space-y-2">
+        <SheetClose asChild>
+          <Button className="w-full">Save and Close</Button>
+        </SheetClose>
+        <SheetClose asChild>
+          <Button className="w-full" variant="outline">Cancel</Button>
+        </SheetClose>
+      </div>
+    </SheetContent>
+  </Sheet>
+</div>
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">Custom Close</Button>
+  </SheetTrigger>
+  <SheetContent showCloseButton={false}>
+    <SheetHeader>
+      <SheetTitle>Custom Actions</SheetTitle>
+      <SheetDescription>Use the buttons below to close this sheet.</SheetDescription>
+    </SheetHeader>
+    <div className="space-y-2">
+      <SheetClose asChild>
+        <Button className="w-full">Save and Close</Button>
+      </SheetClose>
+      <SheetClose asChild>
+        <Button className="w-full" variant="outline">Cancel</Button>
+      </SheetClose>
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+## Props
+
+### Sheet
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+| `defaultOpen` | `boolean` | `false` | Initial open state |
+| `modal` | `boolean` | `true` | Whether the sheet is modal |
+
+### SheetContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `"top" \| "right" \| "bottom" \| "left"` | `"right"` | Side from which the sheet slides in |
+| `showCloseButton` | `boolean` | `true` | Whether to show the close button |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Content props |
+
+### SheetTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Render as child element using Radix Slot |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Trigger props |
+
+### SheetClose
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Render as child element using Radix Slot |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Close props |
+
+### SheetHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.HTMLAttributes<HTMLDivElement>` | — | Standard div attributes |
+
+### SheetFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.HTMLAttributes<HTMLDivElement>` | — | Standard div attributes |
+
+### SheetTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Title props |
+
+### SheetDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Description props |

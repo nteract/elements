@@ -1,0 +1,300 @@
+---
+title: Dialog
+description: A modal dialog component for confirmations and important interactions
+icon: MessageSquare
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/registry/primitives/dialog';
+import { Button } from '@/registry/primitives/button';
+
+<div className="my-8">
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button>Open Dialog</Button>
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Notebook Settings</DialogTitle>
+        <DialogDescription>
+          Configure your notebook preferences and execution settings.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="py-4">
+        <p className="text-sm">Your settings content goes here.</p>
+      </div>
+      <DialogFooter showCloseButton>
+        <Button>Save Changes</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+</div>
+
+A modal dialog component built on [Radix UI](https://www.radix-ui.com/) primitives for displaying important information, confirmations, and settings. Features overlay backdrop, focus trapping, and keyboard navigation.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/dialog.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui lucide-react
+    ```
+    
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+    
+    Make sure you also have the [Button](/docs/ui/button) component installed.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/registry/primitives/dialog"
+import { Button } from "@/registry/primitives/button"
+
+export function Example() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Open</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Title</DialogTitle>
+          <DialogDescription>Description</DialogDescription>
+        </DialogHeader>
+        <div>Content</div>
+        <DialogFooter>
+          <Button>Action</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+```
+
+## Examples
+
+### Basic Dialog
+
+<div className="my-4">
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button>Delete Cell</Button>
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogDescription>
+          Are you sure you want to delete this cell? This action cannot be undone.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter showCloseButton>
+        <Button variant="destructive">Delete</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+</div>
+
+```tsx
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Delete Cell</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirm Deletion</DialogTitle>
+      <DialogDescription>
+        Are you sure you want to delete this cell? This action cannot be undone.
+      </DialogDescription>
+    </DialogHeader>
+    <DialogFooter showCloseButton>
+      <Button variant="destructive">Delete</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Without Close Button
+
+<div className="my-4">
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button variant="outline">Custom Actions</Button>
+    </DialogTrigger>
+    <DialogContent showCloseButton={false}>
+      <DialogHeader>
+        <DialogTitle>Choose an Option</DialogTitle>
+        <DialogDescription>
+          Select one of the actions below to continue.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="py-4 space-y-2">
+        <DialogClose asChild>
+          <Button className="w-full" variant="outline">Option 1</Button>
+        </DialogClose>
+        <DialogClose asChild>
+          <Button className="w-full" variant="outline">Option 2</Button>
+        </DialogClose>
+        <DialogClose asChild>
+          <Button className="w-full" variant="outline">Cancel</Button>
+        </DialogClose>
+      </div>
+    </DialogContent>
+  </Dialog>
+</div>
+
+```tsx
+<Dialog>
+  <DialogTrigger asChild>
+    <Button variant="outline">Custom Actions</Button>
+  </DialogTrigger>
+  <DialogContent showCloseButton={false}>
+    <DialogHeader>
+      <DialogTitle>Choose an Option</DialogTitle>
+      <DialogDescription>Select one of the actions below.</DialogDescription>
+    </DialogHeader>
+    <div className="space-y-2">
+      <DialogClose asChild>
+        <Button className="w-full" variant="outline">Option 1</Button>
+      </DialogClose>
+      <DialogClose asChild>
+        <Button className="w-full" variant="outline">Option 2</Button>
+      </DialogClose>
+      <DialogClose asChild>
+        <Button className="w-full" variant="outline">Cancel</Button>
+      </DialogClose>
+    </div>
+  </DialogContent>
+</Dialog>
+```
+
+### Form Dialog
+
+<div className="my-4">
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button variant="secondary">Rename Notebook</Button>
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Rename Notebook</DialogTitle>
+        <DialogDescription>
+          Enter a new name for your notebook.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="py-4">
+        <input
+          type="text"
+          placeholder="Notebook name"
+          className="w-full px-3 py-2 border rounded-md"
+          defaultValue="Untitled"
+        />
+      </div>
+      <DialogFooter showCloseButton>
+        <Button>Save</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+</div>
+
+```tsx
+<Dialog>
+  <DialogTrigger asChild>
+    <Button variant="secondary">Rename Notebook</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Rename Notebook</DialogTitle>
+      <DialogDescription>Enter a new name for your notebook.</DialogDescription>
+    </DialogHeader>
+    <div className="py-4">
+      <input
+        type="text"
+        placeholder="Notebook name"
+        className="w-full px-3 py-2 border rounded-md"
+        defaultValue="Untitled"
+      />
+    </div>
+    <DialogFooter showCloseButton>
+      <Button>Save</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## Props
+
+### Dialog
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+| `defaultOpen` | `boolean` | `false` | Initial open state |
+| `modal` | `boolean` | `true` | Whether the dialog is modal |
+
+### DialogContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showCloseButton` | `boolean` | `true` | Whether to show the close button |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Content props |
+
+### DialogTrigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Render as child element using Radix Slot |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Trigger props |
+
+### DialogClose
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Render as child element using Radix Slot |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Close props |
+
+### DialogHeader
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.HTMLAttributes<HTMLDivElement>` | — | Standard div attributes |
+
+### DialogFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showCloseButton` | `boolean` | `false` | Show a "Close" button in the footer |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.HTMLAttributes<HTMLDivElement>` | — | Standard div attributes |
+
+### DialogTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Title props |
+
+### DialogDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `React.ComponentProps` | — | All Radix Dialog.Description props |
