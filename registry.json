@@ -222,6 +222,18 @@
       ]
     },
     {
+      "name": "cell-header",
+      "type": "registry:component",
+      "title": "CellHeader",
+      "description": "Slot-based header layout for notebook cells with left/right content areas and optional drag support.",
+      "files": [
+        {
+          "path": "registry/cell/CellHeader.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "cell-type-button",
       "type": "registry:component",
       "title": "CellTypeButton",

@@ -1,0 +1,116 @@
+---
+title: CellHeader
+description: Slot-based header layout for notebook cells with left/right content areas
+icon: LayoutPanelTop
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CellHeaderDemo } from '@/app/_components/CellHeaderDemo';
+import { Button } from '@/registry/primitives/button';
+import { Badge } from '@/registry/primitives/badge';
+
+<div className="my-8">
+  <CellHeaderDemo
+    leftContent={<Badge variant="secondary">Code</Badge>}
+    rightContent={<Button variant="ghost" size="sm">Run</Button>}
+  />
+</div>
+
+A flexible header component for notebook cells that provides left and right content slots. Supports optional drag-and-drop functionality for cell reordering.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-header.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/CellHeader.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CellHeader } from "@/registry/cell/CellHeader"
+
+export function MyCell() {
+  return (
+    <CellHeader
+      leftContent={<span>Cell [1]</span>}
+      rightContent={<button>Run</button>}
+    />
+  )
+}
+```
+
+## Examples
+
+### Basic Header
+
+<div className="my-4 border rounded-md">
+  <CellHeaderDemo
+    leftContent={<Badge variant="secondary">Code</Badge>}
+    rightContent={<Button variant="ghost" size="sm">Run</Button>}
+  />
+</div>
+
+```tsx
+<CellHeader
+  leftContent={<Badge variant="secondary">Code</Badge>}
+  rightContent={<Button variant="ghost" size="sm">Run</Button>}
+/>
+```
+
+### With Drag Support
+
+<div className="my-4 border rounded-md">
+  <CellHeaderDemo
+    draggable
+    leftContent={<Badge>Markdown</Badge>}
+    rightContent={<span className="text-muted-foreground text-sm">Drag me</span>}
+  />
+</div>
+
+```tsx
+<CellHeader
+  draggable
+  onDragStart={(e) => {
+    e.dataTransfer.effectAllowed = "move";
+    // Set your drag data here
+  }}
+  leftContent={<Badge>Markdown</Badge>}
+  rightContent={<span>Drag me</span>}
+/>
+```
+
+### With Custom Styling
+
+<div className="my-4 border rounded-md bg-muted">
+  <CellHeaderDemo
+    className="bg-muted/50"
+    leftContent={<Badge variant="outline">SQL</Badge>}
+    rightContent={<Button variant="secondary" size="sm">Execute</Button>}
+  />
+</div>
+
+```tsx
+<CellHeader
+  className="bg-muted/50"
+  leftContent={<Badge variant="outline">SQL</Badge>}
+  rightContent={<Button variant="secondary" size="sm">Execute</Button>}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `leftContent` | `ReactNode` | — | Content displayed on the left side of the header |
+| `rightContent` | `ReactNode` | — | Content displayed on the right side of the header |
+| `className` | `string` | — | Additional CSS classes |
+| `draggable` | `boolean` | — | Whether the header can be dragged |
+| `onDragStart` | `(e: React.DragEvent) => void` | — | Callback when drag starts |
+| `onKeyDown` | `(e: React.KeyboardEvent) => void` | — | Keyboard event handler |
