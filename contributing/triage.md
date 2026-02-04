@@ -23,35 +23,72 @@ Process for evaluating and importing components into nteract-elements.
 | `badge` | Status labels and counts |
 | `button` | Button with variants and sizes |
 | `card` | Content grouping container |
+| `dialog` | Modal dialog windows |
 | `dropdown-menu` | Action list menu |
 | `input` | Text input with focus and validation states |
 | `kbd` | Keyboard shortcut display |
+| `label` | Form labels |
 | `popover` | Floating content panel |
+| `separator` | Visual dividers |
+| `sheet` | Slide-out panels |
 | `spinner` | Loading indicator |
+| `tabs` | Tabbed content panels |
+| `textarea` | Multi-line text input |
 | `tooltip` | Hover information |
 
 ### Cell primitives (`registry/cell/`)
 
 | Component | Description |
 |-----------|-------------|
+| `CellContainer` | Focus/selection wrapper with drag handle support |
 | `CellControls` | Action menu (delete, move, clear outputs) |
 | `CellHeader` | Slot-based header layout (left/right content) |
 | `CellTypeButton` | Code/Markdown/SQL/AI cell type buttons |
+| `ExecutionCount` | Cell execution count display `[1]:` |
 | `ExecutionStatus` | Queued/Running/Error state badges |
+| `OutputArea` | Collapsible output wrapper with copy button |
 | `PlayButton` | Execute/interrupt button |
 | `RuntimeHealthIndicator` | Kernel connection status |
 
-## Priority order for new components
+## Sprint 3 priorities (#46)
 
-### Next up
+### shadcn primitives (via CLI)
 
-1. **More shadcn primitives** — Separator, Label, Textarea (#33), Tabs, Dialog, Sheet (#34)
-2. **Cell composition** — CellContainer (#19), ExecutionCount (#36), CellOutputArea (#35)
-3. **Notebook-level components** — from intheloop (NotebookContent, NotebookSidebar)
+```bash
+pnpm dlx shadcn@latest add avatar command collapsible skeleton switch hover-card slider alert alert-dialog
+```
 
-### Deferred
+| Component | Priority | Notes |
+|-----------|----------|-------|
+| Avatar | High | Needed for collaboration components |
+| Command | High | Searchable list, model selector |
+| HoverCard | High | User info on hover |
+| Collapsible | Medium | Expandable sections |
+| Skeleton | Medium | Loading placeholders |
+| Switch | Medium | Toggle controls |
+| Slider | Low | Range input |
+| Alert | Low | Banners and callouts |
+| AlertDialog | Low | Confirmation dialogs |
 
-- Dynamic registry API route (#10) — not blocking current work
+### Cell components (from intheloop)
+
+| Component | Source | Adaptation needed |
+|-----------|--------|-------------------|
+| CellTypeSelector | `cell/shared/CellTypeSelector.tsx` | Replace `useFeatureFlag` → `enabledTypes` prop |
+
+### Collaboration components (from intheloop)
+
+| Component | Source | Adaptation needed |
+|-----------|--------|-------------------|
+| PresenceBookmarks | `cell/shared/PresenceBookmarks.tsx` | Strip hooks → accept users array as prop |
+| CollaboratorAvatars | `CollaboratorAvatars.tsx` | Strip auth hooks → accept users as prop |
+
+### Layout components (from intheloop)
+
+| Component | Source | Adaptation needed |
+|-----------|--------|-------------------|
+| Empty | `ui/empty.tsx` | Minimal — well-designed slots |
+| ButtonGroup | `ui/button-group.tsx` | Minimal — already generic |
 
 ## Directory structure
 
@@ -87,7 +124,7 @@ After adding via CLI:
 2. Add entry to `registry.json` with correct path
 3. Add MDX documentation under `content/docs/ui/<component>.mdx`
 4. Update `content/docs/ui/meta.json` to include the new component
-5. Open PR with commit message referencing the issue (e.g., `Closes #33`)
+5. Open PR with commit message referencing the issue (e.g., `Closes #46`)
 
 ### For notebook-specific components
 
@@ -97,11 +134,12 @@ These aren't available via shadcn CLI. Copy from `runtimed/intheloop`:
 2. Update imports:
    - Use `@/lib/utils` for `cn()`
    - Use `@/registry/primitives/<component>` for UI primitives
-3. Place in `registry/cell/` for cell components
-4. Verify the build works: `pnpm run types:check`
-5. Add entry to `registry.json`
-6. Add MDX documentation under `content/docs/cell/<component>.mdx`
-7. Open PR
+3. Strip app-specific patterns (see table below)
+4. Place in `registry/cell/` for cell components
+5. Verify the build works: `pnpm run types:check`
+6. Add entry to `registry.json`
+7. Add MDX documentation under `content/docs/cell/<component>.mdx`
+8. Open PR
 
 ## Intake checklist
 
@@ -119,38 +157,17 @@ Before merging a component PR:
 
 ## Source inventory (intheloop)
 
-For notebook-specific components not available via shadcn:
-
-### `src/components/notebook/` — notebook-specific
+### Ready to import (low coupling)
 
 | File | Status | Notes |
 |------|--------|-------|
-| `RuntimeHealthIndicator.tsx` | ✅ Done | #9 |
-| `NotebookContent.tsx` | Not started | Main notebook layout |
-| `NotebookSidebar.tsx` | Not started | Sidebar with panels |
-| `NotebookTitle.tsx` | Not started | Editable title |
-| `NotebookLoadingScreen.tsx` | Not started | Loading state |
-| `EmptyStateCellAdder.tsx` | Not started | Empty notebook state |
+| `ui/empty.tsx` | Sprint 3 | Empty state container |
+| `ui/button-group.tsx` | Sprint 3 | Button grouping |
+| `cell/shared/CellTypeSelector.tsx` | Sprint 3 | Type switcher |
+| `cell/shared/PresenceBookmarks.tsx` | Sprint 3 | Cell presence |
+| `CollaboratorAvatars.tsx` | Sprint 3 | Notebook presence |
 
-### `src/components/notebook/cell/` — cell components
-
-**Completed:**
-
-| File | Issue | Notes |
-|------|-------|-------|
-| `shared/PlayButton.tsx` | #15 ✅ | Execute/interrupt button |
-| `shared/ExecutionStatus.tsx` | #16 ✅ | State badges |
-| `CellTypeButtons.tsx` | #17 ✅ | Cell type buttons |
-| `shared/CellControls.tsx` | #18 ✅ | Action menu |
-| `shared/CellHeader.tsx` | #20 ✅ | Header layout |
-
-**In progress:**
-
-| File | Issue | Notes |
-|------|-------|-------|
-| `shared/CellContainer.tsx` | #19 | Focus/selection wrapper |
-
-**Do NOT import (too coupled):**
+### Do NOT import (too coupled)
 
 | File | Size | Reason |
 |------|------|--------|
@@ -163,7 +180,7 @@ For notebook-specific components not available via shadcn:
 | `toolbars/AiToolbar.tsx` | 13KB | AI streaming, model selection |
 | `toolbars/SqlToolbar.tsx` | 1.7KB | Feature-flagged, SQL-specific |
 
-**App-specific patterns to strip when importing:**
+### App-specific patterns to strip when importing
 
 | Pattern | Found in | Replace with |
 |---------|----------|--------------|
@@ -171,6 +188,9 @@ For notebook-specific components not available via shadcn:
 | `useDragDropCellSort` | CellContainer, CellHeader | Optional callback props |
 | `useFeatureFlag` | CellTypeSelector | Props like `enabledCellTypes` |
 | `useAddCell` | CellAdder, CellBetweener | `onAddCell` callback prop |
+| `useAuthenticatedUser` | CollaboratorAvatars | `currentUserId` prop |
+| `useUserRegistry` | PresenceBookmarks | `users`, `getUserColor` props |
+| `useOrderedCollaboratorInfo` | PresenceBookmarks | Accept pre-sorted array |
 
 ## Dependencies
 
@@ -182,9 +202,19 @@ Already in this repo:
 - `@radix-ui/react-dropdown-menu` — dropdown menu primitive
 - `@radix-ui/react-popover` — popover primitive
 - `@radix-ui/react-tooltip` — tooltip primitive
+- `@radix-ui/react-dialog` — dialog primitive
+- `@radix-ui/react-tabs` — tabs primitive
 - `clsx` — class composition
 
-May need to add for specific components:
-- `cmdk` — command palette
+Will need for Sprint 3:
+- `cmdk` — command palette (for Command component)
+- `@radix-ui/react-avatar` — avatar primitive
+- `@radix-ui/react-collapsible` — collapsible primitive
+- `@radix-ui/react-switch` — switch primitive
+- `@radix-ui/react-hover-card` — hover card primitive
+- `@radix-ui/react-slider` — slider primitive
+- `@radix-ui/react-alert-dialog` — alert dialog primitive
+
+May need for future phases:
 - `sonner` — toast notifications
 - `@codemirror/*` — editor integration (defer to later phase)

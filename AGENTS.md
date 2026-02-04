@@ -168,41 +168,61 @@ export function Example() {
 
 ## Issue Status
 
-Component intake is tracked in issue #4. Cell primitives tracked in #8.
-
-### Sprint 1 Complete ✅
+### Sprint 1 & 2 Complete ✅ (#4 closed)
 
 **UI Primitives (`registry/primitives/`):**
-- #5 — Button, Input ✅
-- #6 — Badge, Kbd, Spinner ✅
-- #7 — Card, Popover, Tooltip ✅
-- #14 — DropdownMenu ✅
+- Badge, Button, Card, Dialog, DropdownMenu, Input, Kbd, Label, Popover, Separator, Sheet, Spinner, Tabs, Textarea, Tooltip
 
 **Cell Primitives (`registry/cell/`):**
-- #9 — RuntimeHealthIndicator ✅
-- #15 — PlayButton ✅
-- #16 — ExecutionStatus ✅
-- #17 — CellTypeButton ✅
-- #18 — CellControls ✅
-- #20 — CellHeader ✅
+- CellContainer, CellControls, CellHeader, CellTypeButton, ExecutionCount, ExecutionStatus, OutputArea, PlayButton, RuntimeHealthIndicator
 
-**Infrastructure:**
-- #27 — Registry restructure ✅
+**Output Renderers (`registry/outputs/`):**
+- ansi-output, html-output, image-output, json-output, markdown-output, svg-output, media-router
 
-### In Progress
+### Sprint 3 In Progress (#46)
 
-- #19 — CellContainer (with composition documentation)
+**shadcn Primitives:**
+- Avatar, Command, Collapsible, Skeleton, Switch, HoverCard, Slider, Alert, AlertDialog
 
-### Next Phase
+**Cell Components:**
+- CellTypeSelector — Type switcher dropdown (from intheloop)
 
-- #33 — Separator, Label, Textarea (shadcn primitives)
-- #34 — Tabs, Dialog, Sheet (shadcn primitives)
-- #35 — CellOutputArea (output wrapper component)
-- #36 — ExecutionCount (cell execution count display)
+**Collaboration Components:**
+- PresenceBookmarks — Show users present on a cell
+- CollaboratorAvatars — Notebook-level presence indicator
+
+**Layout & Empty States:**
+- Empty — Empty state container with slots
+- ButtonGroup — Group buttons with proper borders
 
 ### Deferred
 
 - #10 — Dynamic registry API route
+- Editor integration (CodeMirror) — separate concern
+- Toolbars (AI, SQL) — too coupled to app logic
+- CellAdder / CellBetweener — require hook abstraction
+
+## Source Inventory (intheloop)
+
+### Ready to import (low coupling)
+
+| Component | Source | Notes |
+|-----------|--------|-------|
+| CellTypeSelector | `cell/shared/CellTypeSelector.tsx` | Strip feature flags → use `enabledTypes` prop |
+| PresenceBookmarks | `cell/shared/PresenceBookmarks.tsx` | Strip hooks → accept users as prop |
+| CollaboratorAvatars | `CollaboratorAvatars.tsx` | Strip auth → accept users as prop |
+| Empty | `ui/empty.tsx` | Minimal changes needed |
+| ButtonGroup | `ui/button-group.tsx` | Minimal changes needed |
+
+### Do NOT import (too coupled)
+
+| Component | Reason |
+|-----------|--------|
+| `Cell.tsx` | Router component, not reusable |
+| `ExecutableCell.tsx` | 25KB, deeply coupled to livestore/signals/auth |
+| `MarkdownCell.tsx` | 12KB, coupled to editor integration |
+| `Editor.tsx` | CodeMirror integration — separate concern |
+| `AiToolbar.tsx` | AI streaming, model selection, feature flags |
 
 ## Questions?
 
