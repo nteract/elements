@@ -511,6 +511,19 @@
       ]
     },
     {
+      "name": "presence-bookmarks",
+      "type": "registry:component",
+      "title": "PresenceBookmarks",
+      "description": "Shows stacked user avatars indicating who is present on a cell. Displays a HoverCard with user details and a +N overflow indicator when users exceed the limit.",
+      "registryDependencies": ["avatar", "hover-card"],
+      "files": [
+        {
+          "path": "registry/cell/PresenceBookmarks.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
