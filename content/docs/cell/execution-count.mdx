@@ -1,0 +1,96 @@
+---
+title: ExecutionCount
+description: Displays the classic Jupyter execution count indicator with bracket notation
+icon: Hash
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { ExecutionCount } from '@/registry/cell/ExecutionCount';
+
+<div className="my-8 flex flex-wrap gap-6 items-center">
+  <ExecutionCount count={null} />
+  <ExecutionCount count={null} isExecuting />
+  <ExecutionCount count={1} />
+  <ExecutionCount count={42} />
+</div>
+
+A cell primitive that displays the classic Jupyter execution count indicator. Uses the familiar bracket notation: `[ ]:` for never executed, `[*]:` for currently executing, and `[n]:` for executed cells.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/execution-count.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/ExecutionCount.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { ExecutionCount } from "@/registry/cell/ExecutionCount"
+
+export function CellGutter() {
+  return (
+    <div className="flex items-center">
+      <ExecutionCount count={1} />
+    </div>
+  )
+}
+```
+
+## States
+
+### Never Executed
+
+When `count` is `null` and `isExecuting` is `false`, displays empty brackets.
+
+<div className="my-4 flex gap-4 items-center">
+  <ExecutionCount count={null} />
+  <span className="text-muted-foreground text-sm">[ ]:</span>
+</div>
+
+```tsx
+<ExecutionCount count={null} />
+```
+
+### Executing
+
+When `isExecuting` is `true`, displays an asterisk to indicate the cell is running.
+
+<div className="my-4 flex gap-4 items-center">
+  <ExecutionCount count={null} isExecuting />
+  <span className="text-muted-foreground text-sm">[*]:</span>
+</div>
+
+```tsx
+<ExecutionCount count={null} isExecuting />
+```
+
+### Executed
+
+When `count` is a number, displays the execution count.
+
+<div className="my-4 flex gap-4 items-center">
+  <ExecutionCount count={1} />
+  <ExecutionCount count={5} />
+  <ExecutionCount count={42} />
+</div>
+
+```tsx
+<ExecutionCount count={1} />
+<ExecutionCount count={5} />
+<ExecutionCount count={42} />
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `count` | `number \| null` | — | The execution count. `null` for never executed. |
+| `isExecuting` | `boolean` | `false` | Whether the cell is currently executing |
+| `className` | `string` | — | Additional CSS classes |

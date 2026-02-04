@@ -311,6 +311,18 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "execution-count",
+      "type": "registry:component",
+      "title": "ExecutionCount",
+      "description": "Displays the classic Jupyter execution count indicator with bracket notation. Shows [ ]: for never executed, [*]: for executing, and [n]: for executed cells.",
+      "files": [
+        {
+          "path": "registry/cell/ExecutionCount.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
