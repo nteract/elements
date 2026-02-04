@@ -351,6 +351,20 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "output-area",
+      "type": "registry:component",
+      "title": "OutputArea",
+      "description": "Wrapper component for rendering multiple Jupyter outputs with collapsible state and scroll behavior.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["media-router", "ansi-output"],
+      "files": [
+        {
+          "path": "registry/cell/OutputArea.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
