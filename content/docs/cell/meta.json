@@ -1,4 +1,4 @@
 {
   "title": "Cell",
-  "pages": ["cell-container", "cell-controls", "cell-header", "collaborator-avatars", "output-area", "cell-type-button", "cell-type-selector", "execution-count", "execution-status", "play-button", "runtime-health-indicator"]
+  "pages": ["cell-container", "cell-controls", "cell-header", "collaborator-avatars", "output-area", "cell-type-button", "cell-type-selector", "execution-count", "execution-status", "play-button", "presence-bookmarks", "runtime-health-indicator"]
 }
