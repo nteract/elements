@@ -337,6 +337,11 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
 
     async function mount() {
       try {
+        // Clear any existing content (handles React StrictMode double-mount)
+        if (containerRef.current) {
+          containerRef.current.innerHTML = "";
+        }
+
         // Inject CSS if provided
         if (css) {
           cleanupRef.current.css = injectCSS(modelId, css);
@@ -396,6 +401,10 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
       cleanupRef.current.widget?.();
       cleanupRef.current.css?.();
       cleanupRef.current = {};
+      // Clear container on cleanup
+      if (containerRef.current) {
+        containerRef.current.innerHTML = "";
+      }
       hasMountedRef.current = false;
     };
   }, [modelId, store, sendMessage, getCurrentState, isLoading]);
