@@ -1,0 +1,103 @@
+---
+title: Separator
+description: A visual divider for separating content sections
+icon: Minus
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Separator } from '@/registry/primitives/separator';
+
+<div className="my-8">
+  <div className="space-y-1">
+    <h4 className="text-sm font-medium leading-none">nteract elements</h4>
+    <p className="text-sm text-muted-foreground">Design system for Jupyter frontends</p>
+  </div>
+  <Separator className="my-4" />
+  <div className="flex h-5 items-center space-x-4 text-sm">
+    <div>Docs</div>
+    <Separator orientation="vertical" />
+    <div>Components</div>
+    <Separator orientation="vertical" />
+    <div>GitHub</div>
+  </div>
+</div>
+
+A visual divider component for separating content sections. Supports both horizontal and vertical orientations.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/separator.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Separator } from "@/registry/primitives/separator"
+
+export function Example() {
+  return (
+    <div>
+      <div>Content above</div>
+      <Separator className="my-4" />
+      <div>Content below</div>
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Horizontal (Default)
+
+<div className="my-4">
+  <p className="text-sm">Section 1</p>
+  <Separator className="my-2" />
+  <p className="text-sm">Section 2</p>
+</div>
+
+```tsx
+<p>Section 1</p>
+<Separator className="my-2" />
+<p>Section 2</p>
+```
+
+### Vertical
+
+<div className="my-4 flex h-5 items-center space-x-4 text-sm">
+  <div>Cell</div>
+  <Separator orientation="vertical" />
+  <div>Output</div>
+  <Separator orientation="vertical" />
+  <div>Metadata</div>
+</div>
+
+```tsx
+<div className="flex h-5 items-center space-x-4 text-sm">
+  <div>Cell</div>
+  <Separator orientation="vertical" />
+  <div>Output</div>
+  <Separator orientation="vertical" />
+  <div>Metadata</div>
+</div>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | The orientation of the separator |
+| `decorative` | `boolean` | `true` | Whether the separator is purely decorative |
+| `className` | `string` | — | Additional CSS classes |
+
+## Accessibility
+
+- When `decorative` is true (default), the separator is hidden from screen readers
+- Set `decorative={false}` when the separator has semantic meaning

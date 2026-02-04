@@ -1,0 +1,140 @@
+---
+title: Textarea
+description: A multiline text input for longer content
+icon: AlignLeft
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Textarea } from '@/registry/primitives/textarea';
+import { Label } from '@/registry/primitives/label';
+
+<div className="my-8 max-w-lg">
+  <Textarea placeholder="Enter your code here..." />
+</div>
+
+A multiline text input with consistent styling and focus states. Ideal for code cells, markdown input, and form fields that require longer text.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/textarea.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Textarea } from "@/registry/primitives/textarea"
+
+export function Example() {
+  return <Textarea placeholder="Type your message here..." />
+}
+```
+
+## Examples
+
+### Default
+
+<div className="my-4 max-w-lg">
+  <Textarea placeholder="Enter some text..." />
+</div>
+
+```tsx
+<Textarea placeholder="Enter some text..." />
+```
+
+### With Label
+
+<div className="my-4 max-w-lg space-y-2">
+  <Label htmlFor="markdown">Markdown Content</Label>
+  <Textarea id="markdown" placeholder="# Hello World" />
+</div>
+
+```tsx
+<Label htmlFor="markdown">Markdown Content</Label>
+<Textarea id="markdown" placeholder="# Hello World" />
+```
+
+### Code Input
+
+<div className="my-4 max-w-lg space-y-2">
+  <Label htmlFor="code-cell">Cell Source</Label>
+  <Textarea
+    id="code-cell"
+    className="font-mono"
+    placeholder="import pandas as pd&#10;&#10;df = pd.read_csv('data.csv')"
+  />
+</div>
+
+```tsx
+<Label htmlFor="code-cell">Cell Source</Label>
+<Textarea
+  id="code-cell"
+  className="font-mono"
+  placeholder="import pandas as pd
+
+df = pd.read_csv('data.csv')"
+/>
+```
+
+### Disabled
+
+<div className="my-4 max-w-lg">
+  <Textarea placeholder="This textarea is disabled" disabled />
+</div>
+
+```tsx
+<Textarea placeholder="This textarea is disabled" disabled />
+```
+
+### With Default Value
+
+<div className="my-4 max-w-lg">
+  <Textarea defaultValue="print('Hello, Jupyter!')" />
+</div>
+
+```tsx
+<Textarea defaultValue="print('Hello, Jupyter!')" />
+```
+
+### Invalid State
+
+<div className="my-4 max-w-lg">
+  <Textarea aria-invalid="true" defaultValue="SyntaxError: invalid syntax" />
+</div>
+
+```tsx
+<Textarea aria-invalid="true" defaultValue="SyntaxError: invalid syntax" />
+```
+
+### Custom Rows
+
+<div className="my-4 max-w-lg">
+  <Textarea rows={10} placeholder="Larger text area..." />
+</div>
+
+```tsx
+<Textarea rows={10} placeholder="Larger text area..." />
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` | — | Placeholder text |
+| `disabled` | `boolean` | `false` | Disable the textarea |
+| `rows` | `number` | — | Number of visible text lines |
+| `className` | `string` | — | Additional CSS classes |
+| `...props` | `TextareaHTMLAttributes` | — | All standard textarea attributes |
+
+## Accessibility
+
+- Supports `aria-invalid` for validation states
+- Use with `<Label>` for proper accessibility
+- Has proper focus-visible styles for keyboard navigation
