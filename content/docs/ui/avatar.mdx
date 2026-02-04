@@ -1,0 +1,183 @@
+---
+title: Avatar
+description: A profile picture component with image and fallback support
+icon: User
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, AvatarGroupCount } from '@/registry/primitives/avatar';
+
+<div className="my-8 flex flex-wrap items-center gap-4">
+  <Avatar>
+    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+    <AvatarFallback>CN</AvatarFallback>
+  </Avatar>
+  <Avatar>
+    <AvatarFallback>JD</AvatarFallback>
+  </Avatar>
+  <Avatar size="sm">
+    <AvatarFallback>SM</AvatarFallback>
+  </Avatar>
+  <Avatar size="lg">
+    <AvatarFallback>LG</AvatarFallback>
+  </Avatar>
+</div>
+
+A versatile avatar component built on [Radix UI](https://www.radix-ui.com/) primitives with support for images, fallbacks, badges, and grouping.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/avatar.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui
+    ```
+
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Avatar, AvatarImage, AvatarFallback } from "@/registry/primitives/avatar"
+
+export function Example() {
+  return (
+    <Avatar>
+      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+      <AvatarFallback>CN</AvatarFallback>
+    </Avatar>
+  )
+}
+```
+
+## Sizes
+
+The avatar supports three sizes: `sm`, `default`, and `lg`.
+
+<div className="my-4 flex items-center gap-4">
+  <Avatar size="sm">
+    <AvatarFallback>SM</AvatarFallback>
+  </Avatar>
+  <Avatar size="default">
+    <AvatarFallback>DF</AvatarFallback>
+  </Avatar>
+  <Avatar size="lg">
+    <AvatarFallback>LG</AvatarFallback>
+  </Avatar>
+</div>
+
+```tsx
+<Avatar size="sm">
+  <AvatarFallback>SM</AvatarFallback>
+</Avatar>
+<Avatar size="default">
+  <AvatarFallback>DF</AvatarFallback>
+</Avatar>
+<Avatar size="lg">
+  <AvatarFallback>LG</AvatarFallback>
+</Avatar>
+```
+
+## With Image
+
+<div className="my-4 flex items-center gap-4">
+  <Avatar>
+    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+    <AvatarFallback>CN</AvatarFallback>
+  </Avatar>
+</div>
+
+```tsx
+<Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+```
+
+## With Badge
+
+Use `AvatarBadge` to add a status indicator or notification badge.
+
+<div className="my-4 flex items-center gap-4">
+  <Avatar>
+    <AvatarFallback>JD</AvatarFallback>
+    <AvatarBadge />
+  </Avatar>
+  <Avatar size="lg">
+    <AvatarFallback>JD</AvatarFallback>
+    <AvatarBadge />
+  </Avatar>
+</div>
+
+```tsx
+<Avatar>
+  <AvatarFallback>JD</AvatarFallback>
+  <AvatarBadge />
+</Avatar>
+```
+
+## Avatar Group
+
+Use `AvatarGroup` to display multiple avatars in a stacked layout.
+
+<div className="my-4">
+  <AvatarGroup>
+    <Avatar>
+      <AvatarFallback>A</AvatarFallback>
+    </Avatar>
+    <Avatar>
+      <AvatarFallback>B</AvatarFallback>
+    </Avatar>
+    <Avatar>
+      <AvatarFallback>C</AvatarFallback>
+    </Avatar>
+    <AvatarGroupCount>+5</AvatarGroupCount>
+  </AvatarGroup>
+</div>
+
+```tsx
+<AvatarGroup>
+  <Avatar>
+    <AvatarFallback>A</AvatarFallback>
+  </Avatar>
+  <Avatar>
+    <AvatarFallback>B</AvatarFallback>
+  </Avatar>
+  <Avatar>
+    <AvatarFallback>C</AvatarFallback>
+  </Avatar>
+  <AvatarGroupCount>+5</AvatarGroupCount>
+</AvatarGroup>
+```
+
+## Props
+
+### Avatar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `"sm" \| "default" \| "lg"` | `"default"` | Avatar size |
+| `className` | `string` | — | Additional CSS classes |
+
+### AvatarImage
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` | — | Image source URL |
+| `alt` | `string` | — | Alt text for the image |
+| `className` | `string` | — | Additional CSS classes |
+
+### AvatarFallback
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Fallback content (typically initials) |
+| `className` | `string` | — | Additional CSS classes |
