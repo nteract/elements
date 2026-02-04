@@ -1,145 +1,230 @@
 ---
-title: CellContainer
-description: A focus and selection wrapper for notebook cells with optional drag-and-drop support
+title: Cell Components
+description: Composable components for building notebook cell interfaces
 icon: Box
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CellDemo, NotebookDemo } from '@/app/_components/CellDemo';
 import { CellContainer } from '@/registry/cell/CellContainer';
+import { CellHeader } from '@/registry/cell/CellHeader';
+import { CellControls } from '@/registry/cell/CellControls';
+import { CellTypeButton, CodeCellButton, MarkdownCellButton } from '@/registry/cell/CellTypeButton';
+import { PlayButton } from '@/registry/cell/PlayButton';
+import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
 
-<div className="my-8 space-y-4">
-  <CellContainer id="demo-1" isFocused={false}>
-    <div className="p-4">Unfocused cell</div>
-  </CellContainer>
-  <CellContainer id="demo-2" isFocused={true}>
-    <div className="p-4">Focused cell</div>
-  </CellContainer>
+<div className="my-8">
+  <CellDemo cellType="code" initialFocused />
 </div>
 
-A wrapper component for notebook cells that handles:
-- Focus/selection border styling
-- `data-cell-id` attribute for cell identification
-- Optional drag-and-drop event handlers
+The cell components work together to create notebook cell interfaces. Click the **play button** above to see it in action.
+
+## Composition Pattern
+
+A notebook cell is built from composable parts:
+
+```
+CellContainer          <- Focus wrapper with selection border
+└── CellHeader         <- Toolbar layout (left/right slots)
+    ├── PlayButton     <- Execute/interrupt control
+    ├── CellTypeButton <- Cell type indicator (code, markdown, etc.)
+    ├── ExecutionStatus<- Running/queued/error badges
+    └── CellControls   <- Source toggle, move, delete actions
+└── [Source content]   <- Your editor component
+└── [Output content]   <- Your output renderer
+```
+
+## Full Example
+
+Here's how to compose a complete cell:
+
+```tsx
+import { CellContainer } from "@/registry/cell/CellContainer";
+import { CellHeader } from "@/registry/cell/CellHeader";
+import { CellControls } from "@/registry/cell/CellControls";
+import { CellTypeButton } from "@/registry/cell/CellTypeButton";
+import { PlayButton } from "@/registry/cell/PlayButton";
+import { ExecutionStatus } from "@/registry/cell/ExecutionStatus";
+
+function NotebookCell({ cell, isFocused, onFocus }) {
+  const [sourceVisible, setSourceVisible] = useState(true);
+
+  return (
+    <CellContainer
+      id={cell.id}
+      isFocused={isFocused}
+      onFocus={onFocus}
+    >
+      <CellHeader
+        leftContent={
+          <>
+            <PlayButton
+              executionState={cell.executionState}
+              cellType={cell.type}
+              isFocused={isFocused}
+              onExecute={() => executeCell(cell.id)}
+              onInterrupt={() => interruptCell(cell.id)}
+            />
+            <CellTypeButton cellType={cell.type} size="sm" />
+            <ExecutionStatus executionState={cell.executionState} />
+          </>
+        }
+        rightContent={
+          <CellControls
+            sourceVisible={sourceVisible}
+            toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
+            onDeleteCell={() => deleteCell(cell.id)}
+            onClearOutputs={() => clearOutputs(cell.id)}
+            hasOutputs={cell.outputs.length > 0}
+            forceVisible={isFocused}
+          />
+        }
+      />
+      {sourceVisible && <CodeEditor value={cell.source} />}
+      {cell.outputs.map(output => <OutputRenderer output={output} />)}
+    </CellContainer>
+  );
+}
+```
+
+## Multiple Cells
+
+Click different cells to see focus behavior:
+
+<div className="my-8">
+  <NotebookDemo />
+</div>
 
 ## Installation
+
+Install all cell components:
 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
     npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-container.json
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-header.json
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-controls.json
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-type-button.json
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/play-button.json
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/execution-status.json
     ```
   </Tab>
   <Tab value="Manual">
-    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/CellContainer.tsx).
+    Copy from [nteract/elements](https://github.com/nteract/elements/tree/main/registry/cell).
   </Tab>
 </Tabs>
 
-## Usage
+---
 
-```tsx
-import { CellContainer } from "@/registry/cell/CellContainer"
+## Component Reference
 
-export function NotebookCell({ cellId, isFocused, onFocus }) {
-  return (
-    <CellContainer
-      id={cellId}
-      isFocused={isFocused}
-      onFocus={onFocus}
-    >
-      {/* Cell content */}
-    </CellContainer>
-  )
-}
-```
+### CellContainer
 
-## Examples
+The outer wrapper that provides focus styling and the `data-cell-id` attribute.
 
-### Unfocused State
-
-<div className="my-4">
-  <CellContainer id="example-unfocused" isFocused={false}>
-    <div className="p-4">Cell content here</div>
+<div className="my-4 space-y-2">
+  <CellContainer id="unfocused" isFocused={false}>
+    <div className="p-4 text-sm text-muted-foreground">Unfocused cell (hover to see border)</div>
+  </CellContainer>
+  <CellContainer id="focused" isFocused={true}>
+    <div className="p-4 text-sm">Focused cell with selection border</div>
   </CellContainer>
 </div>
-
-```tsx
-<CellContainer id="cell-1" isFocused={false}>
-  <div className="p-4">Cell content here</div>
-</CellContainer>
-```
-
-### Focused State
-
-<div className="my-4">
-  <CellContainer id="example-focused" isFocused={true}>
-    <div className="p-4">Cell content here</div>
-  </CellContainer>
-</div>
-
-```tsx
-<CellContainer id="cell-1" isFocused={true}>
-  <div className="p-4">Cell content here</div>
-</CellContainer>
-```
-
-### With Drag-and-Drop
-
-```tsx
-<CellContainer
-  id="cell-1"
-  isFocused={false}
-  onDragStart={(e) => {
-    e.dataTransfer.setData("text/plain", "cell-1");
-  }}
-  onDragOver={(e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  }}
-  onDrop={(e) => {
-    e.preventDefault();
-    const draggedId = e.dataTransfer.getData("text/plain");
-    // Handle reordering
-  }}
->
-  <div className="p-4">Draggable cell</div>
-</CellContainer>
-```
-
-### Custom Focus Colors
-
-<div className="my-4">
-  <CellContainer
-    id="example-custom"
-    isFocused={true}
-    focusBgColor="bg-blue-50"
-    focusBorderColor="border-blue-400"
-  >
-    <div className="p-4">Custom focus colors</div>
-  </CellContainer>
-</div>
-
-```tsx
-<CellContainer
-  id="cell-1"
-  isFocused={true}
-  focusBgColor="bg-blue-50"
-  focusBorderColor="border-blue-400"
->
-  <div className="p-4">Custom focus colors</div>
-</CellContainer>
-```
-
-## Props
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `id` | `string` | — | Cell identifier, used for `data-cell-id` attribute |
-| `isFocused` | `boolean` | `false` | Whether the cell is currently focused |
-| `onFocus` | `() => void` | — | Callback when cell is clicked |
+| `id` | `string` | — | Cell identifier for `data-cell-id` |
+| `isFocused` | `boolean` | `false` | Shows focus border when true |
+| `onFocus` | `() => void` | — | Called on mousedown |
 | `children` | `ReactNode` | — | Cell content |
-| `onDragStart` | `(e: React.DragEvent) => void` | — | Drag start handler (enables draggable) |
-| `onDragOver` | `(e: React.DragEvent) => void` | — | Drag over handler |
-| `onDrop` | `(e: React.DragEvent) => void` | — | Drop handler |
-| `className` | `string` | — | Additional CSS classes |
-| `focusBgColor` | `string` | `"bg-primary/5"` | Background color when focused |
-| `focusBorderColor` | `string` | `"border-primary/60"` | Border color when focused |
+| `onDragStart` | `(e: DragEvent) => void` | — | Enables dragging when provided |
+| `onDragOver` | `(e: DragEvent) => void` | — | Drag over handler |
+| `onDrop` | `(e: DragEvent) => void` | — | Drop handler |
+| `className` | `string` | — | Additional classes |
+| `focusBgColor` | `string` | `"bg-primary/5"` | Focus background |
+| `focusBorderColor` | `string` | `"border-primary/60"` | Focus border |
+
+### CellHeader
+
+Slot-based layout for the cell toolbar.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `leftContent` | `ReactNode` | Left side (play button, type, status) |
+| `rightContent` | `ReactNode` | Right side (controls) |
+| `draggable` | `boolean` | Enable drag handle |
+| `onDragStart` | `(e: DragEvent) => void` | Drag handler |
+| `className` | `string` | Additional classes |
+
+### CellTypeButton
+
+Color-coded button showing cell type. Also exports convenience components: `CodeCellButton`, `MarkdownCellButton`, `SqlCellButton`, `AiCellButton`.
+
+<div className="my-4 flex gap-2 flex-wrap">
+  <CellTypeButton cellType="code" size="sm" />
+  <CellTypeButton cellType="markdown" size="sm" />
+  <CellTypeButton cellType="sql" size="sm" />
+  <CellTypeButton cellType="ai" size="sm" />
+</div>
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `cellType` | `"code" \| "markdown" \| "sql" \| "ai"` | — | Cell type |
+| `showIcon` | `boolean` | `true` | Show type icon |
+| `showPlus` | `boolean` | `false` | Show + icon (for add buttons) |
+| `label` | `string` | — | Custom label |
+
+### PlayButton
+
+Execute/interrupt button with state-based icons.
+
+<div className="my-4 flex gap-4 items-center">
+  <div className="flex flex-col items-center gap-1">
+    <PlayButton executionState="idle" cellType="code" onExecute={() => {}} onInterrupt={() => {}} />
+    <span className="text-xs text-muted-foreground">Idle</span>
+  </div>
+  <div className="flex flex-col items-center gap-1">
+    <PlayButton executionState="running" cellType="code" onExecute={() => {}} onInterrupt={() => {}} />
+    <span className="text-xs text-muted-foreground">Running</span>
+  </div>
+</div>
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `executionState` | `"idle" \| "queued" \| "running" \| "completed" \| "error"` | Current state |
+| `cellType` | `string` | For tooltip text |
+| `isFocused` | `boolean` | Highlight when focused |
+| `onExecute` | `() => void` | Run callback |
+| `onInterrupt` | `() => void` | Stop callback |
+| `isAutoLaunching` | `boolean` | Show loading spinner |
+
+### ExecutionStatus
+
+Badge showing execution state.
+
+<div className="my-4 flex gap-4 items-center">
+  <ExecutionStatus executionState="queued" />
+  <ExecutionStatus executionState="running" />
+  <ExecutionStatus executionState="error" />
+</div>
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `executionState` | `string` | Shows badge for "queued", "running", "error" |
+
+### CellControls
+
+Action buttons for source visibility, move, delete operations.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `sourceVisible` | `boolean` | Current visibility state |
+| `toggleSourceVisibility` | `() => void` | Toggle callback |
+| `onDeleteCell` | `() => void` | Delete callback |
+| `onClearOutputs` | `() => void` | Clear outputs callback |
+| `hasOutputs` | `boolean` | Enable clear outputs |
+| `playButton` | `ReactNode` | Optional play button slot |
+| `onMoveUp/Down/ToTop/ToBottom` | `() => void` | Move callbacks |
+| `canMoveUp/Down` | `boolean` | Enable move buttons |
+| `forceVisible` | `boolean` | Always show (bypass hover) |
