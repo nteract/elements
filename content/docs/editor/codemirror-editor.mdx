@@ -5,8 +5,15 @@ icon: Code
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CodeMirrorEditorDemo, SimpleEditorDemo, ThemeComparisonDemo } from '@/app/components/CodeMirrorEditorDemo';
+
+<div className="my-8">
+  <CodeMirrorEditorDemo />
+</div>
 
 The `CodeMirrorEditor` component provides a full-featured code editor built on CodeMirror 6. It includes syntax highlighting, key bindings, and support for multiple languages out of the box.
+
+Try the editor above — switch languages, edit the code, and toggle between light/dark mode to see the theme adapt.
 
 ## Installation
 
@@ -109,6 +116,12 @@ Force a specific theme:
 // Always dark
 <CodeMirrorEditor theme="dark" ... />
 ```
+
+### Theme Comparison
+
+<div className="my-8">
+  <ThemeComparisonDemo />
+</div>
 
 ### Theme Utilities
 
