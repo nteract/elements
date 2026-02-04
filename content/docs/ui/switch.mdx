@@ -1,0 +1,148 @@
+---
+title: Switch
+description: A toggle switch component for boolean settings
+icon: ToggleLeft
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Switch } from '@/registry/primitives/switch';
+import { Label } from '@/registry/primitives/label';
+
+<div className="my-8 flex items-center gap-8">
+  <Switch />
+  <Switch defaultChecked />
+  <Switch disabled />
+</div>
+
+A toggle switch component for boolean settings. Built on Radix UI Switch for accessible keyboard navigation and screen reader support. Supports default and small sizes.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/switch.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui
+    ```
+
+    Copy the component from this repository's `registry/primitives/switch.tsx`.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Switch } from "@/registry/primitives/switch"
+
+export function Example() {
+  return <Switch />
+}
+```
+
+## Examples
+
+### With Label
+
+<div className="my-4 flex items-center gap-2">
+  <Switch id="airplane-mode" />
+  <Label htmlFor="airplane-mode">Airplane Mode</Label>
+</div>
+
+```tsx
+<div className="flex items-center gap-2">
+  <Switch id="airplane-mode" />
+  <Label htmlFor="airplane-mode">Airplane Mode</Label>
+</div>
+```
+
+### Sizes
+
+<div className="my-4 flex items-center gap-8">
+  <div className="flex items-center gap-2">
+    <Switch size="sm" id="size-sm" />
+    <Label htmlFor="size-sm" className="text-sm">Small</Label>
+  </div>
+  <div className="flex items-center gap-2">
+    <Switch size="default" id="size-default" />
+    <Label htmlFor="size-default" className="text-sm">Default</Label>
+  </div>
+</div>
+
+```tsx
+<Switch size="sm" />
+<Switch size="default" />
+```
+
+### Disabled
+
+<div className="my-4 flex items-center gap-8">
+  <Switch disabled />
+  <Switch disabled defaultChecked />
+</div>
+
+```tsx
+<Switch disabled />
+<Switch disabled defaultChecked />
+```
+
+## Notebook Examples
+
+### Auto-execute Cells
+
+<div className="my-4 flex items-center justify-between rounded-lg border p-4">
+  <div className="space-y-0.5">
+    <Label htmlFor="auto-execute" className="text-sm font-medium">Auto-execute cells</Label>
+    <p className="text-xs text-muted-foreground">Run cells automatically when dependencies change</p>
+  </div>
+  <Switch id="auto-execute" />
+</div>
+
+```tsx
+<div className="flex items-center justify-between rounded-lg border p-4">
+  <div className="space-y-0.5">
+    <Label htmlFor="auto-execute">Auto-execute cells</Label>
+    <p className="text-xs text-muted-foreground">
+      Run cells automatically when dependencies change
+    </p>
+  </div>
+  <Switch id="auto-execute" />
+</div>
+```
+
+### Show Line Numbers
+
+<div className="my-4 flex items-center justify-between rounded-lg border p-4">
+  <div className="space-y-0.5">
+    <Label htmlFor="line-numbers" className="text-sm font-medium">Show line numbers</Label>
+    <p className="text-xs text-muted-foreground">Display line numbers in code cells</p>
+  </div>
+  <Switch id="line-numbers" defaultChecked />
+</div>
+
+```tsx
+<div className="flex items-center justify-between rounded-lg border p-4">
+  <div className="space-y-0.5">
+    <Label htmlFor="line-numbers">Show line numbers</Label>
+    <p className="text-xs text-muted-foreground">
+      Display line numbers in code cells
+    </p>
+  </div>
+  <Switch id="line-numbers" defaultChecked />
+</div>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `"sm" \| "default"` | `"default"` | Switch size |
+| `checked` | `boolean` | — | Controlled checked state |
+| `defaultChecked` | `boolean` | `false` | Default checked state |
+| `onCheckedChange` | `(checked: boolean) => void` | — | Callback when checked state changes |
+| `disabled` | `boolean` | `false` | Whether the switch is disabled |
+| `className` | `string` | — | Additional CSS classes |

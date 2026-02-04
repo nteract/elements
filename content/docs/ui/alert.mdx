@@ -1,0 +1,226 @@
+---
+title: Alert
+description: A callout component for displaying important messages
+icon: AlertCircle
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Alert, AlertTitle, AlertDescription } from '@/registry/primitives/alert';
+import { AlertCircle, Terminal, Info } from 'lucide-react';
+
+<div className="my-8 space-y-4">
+  <Alert>
+    <Terminal className="h-4 w-4" />
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription>
+      You can add components to your app using the CLI.
+    </AlertDescription>
+  </Alert>
+  <Alert variant="destructive">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>
+      Your session has expired. Please log in again.
+    </AlertDescription>
+  </Alert>
+</div>
+
+A callout component for displaying important messages to users. Supports default and destructive variants with optional icons.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/alert.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install class-variance-authority
+    ```
+
+    Copy the component from this repository's `registry/primitives/alert.tsx`.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Alert, AlertTitle, AlertDescription } from "@/registry/primitives/alert"
+
+export function Example() {
+  return (
+    <Alert>
+      <AlertTitle>Heads up!</AlertTitle>
+      <AlertDescription>
+        You can add components to your app using the CLI.
+      </AlertDescription>
+    </Alert>
+  )
+}
+```
+
+## Examples
+
+### Default
+
+<div className="my-4">
+  <Alert>
+    <Terminal className="h-4 w-4" />
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription>
+      You can add components to your app using the CLI.
+    </AlertDescription>
+  </Alert>
+</div>
+
+```tsx
+<Alert>
+  <Terminal className="h-4 w-4" />
+  <AlertTitle>Heads up!</AlertTitle>
+  <AlertDescription>
+    You can add components to your app using the CLI.
+  </AlertDescription>
+</Alert>
+```
+
+### Destructive
+
+<div className="my-4">
+  <Alert variant="destructive">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>
+      Your session has expired. Please log in again.
+    </AlertDescription>
+  </Alert>
+</div>
+
+```tsx
+<Alert variant="destructive">
+  <AlertCircle className="h-4 w-4" />
+  <AlertTitle>Error</AlertTitle>
+  <AlertDescription>
+    Your session has expired. Please log in again.
+  </AlertDescription>
+</Alert>
+```
+
+### Without Icon
+
+<div className="my-4">
+  <Alert>
+    <AlertTitle>Note</AlertTitle>
+    <AlertDescription>
+      This is an alert without an icon.
+    </AlertDescription>
+  </Alert>
+</div>
+
+```tsx
+<Alert>
+  <AlertTitle>Note</AlertTitle>
+  <AlertDescription>
+    This is an alert without an icon.
+  </AlertDescription>
+</Alert>
+```
+
+## Notebook Examples
+
+### Kernel Warning
+
+<div className="my-4">
+  <Alert>
+    <Info className="h-4 w-4" />
+    <AlertTitle>Kernel restarted</AlertTitle>
+    <AlertDescription>
+      The kernel was restarted. All variables have been cleared.
+    </AlertDescription>
+  </Alert>
+</div>
+
+```tsx
+<Alert>
+  <Info className="h-4 w-4" />
+  <AlertTitle>Kernel restarted</AlertTitle>
+  <AlertDescription>
+    The kernel was restarted. All variables have been cleared.
+  </AlertDescription>
+</Alert>
+```
+
+### Execution Error
+
+<div className="my-4">
+  <Alert variant="destructive">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>NameError</AlertTitle>
+    <AlertDescription>
+      name 'undefined_variable' is not defined
+    </AlertDescription>
+  </Alert>
+</div>
+
+```tsx
+<Alert variant="destructive">
+  <AlertCircle className="h-4 w-4" />
+  <AlertTitle>NameError</AlertTitle>
+  <AlertDescription>
+    name 'undefined_variable' is not defined
+  </AlertDescription>
+</Alert>
+```
+
+### Unsaved Changes
+
+<div className="my-4">
+  <Alert>
+    <Terminal className="h-4 w-4" />
+    <AlertTitle>Unsaved changes</AlertTitle>
+    <AlertDescription>
+      You have unsaved changes in this notebook. Save before closing to avoid losing work.
+    </AlertDescription>
+  </Alert>
+</div>
+
+```tsx
+<Alert>
+  <Terminal className="h-4 w-4" />
+  <AlertTitle>Unsaved changes</AlertTitle>
+  <AlertDescription>
+    You have unsaved changes in this notebook.
+  </AlertDescription>
+</Alert>
+```
+
+## Components
+
+| Component | Description |
+| --- | --- |
+| `Alert` | Root container with role="alert" |
+| `AlertTitle` | Bold title text |
+| `AlertDescription` | Description text |
+
+## Props
+
+### Alert
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "destructive"` | `"default"` | Alert variant |
+| `className` | `string` | — | Additional CSS classes |
+
+### AlertTitle
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |
+
+### AlertDescription
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes |

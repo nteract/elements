@@ -1,0 +1,344 @@
+---
+title: Alert Dialog
+description: A modal dialog for critical confirmations that require user acknowledgment
+icon: AlertTriangle
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/registry/primitives/alert-dialog';
+import { Button } from '@/registry/primitives/button';
+
+<div className="my-8">
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button variant="outline">Show Alert Dialog</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your account
+          and remove your data from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction>Continue</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</div>
+
+A modal dialog for critical confirmations that require user acknowledgment before proceeding. Unlike regular dialogs, alert dialogs interrupt the user and require explicit action. Built on Radix UI AlertDialog for accessible focus management and keyboard navigation.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/alert-dialog.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install radix-ui
+    ```
+
+    Copy the component from this repository's `registry/primitives/alert-dialog.tsx`.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/registry/primitives/alert-dialog"
+
+export function Example() {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>Open</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+```
+
+## Examples
+
+### Destructive Action
+
+<div className="my-4">
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button variant="destructive">Delete</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Delete this item?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete the item.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</div>
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="destructive">Delete</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Delete this item?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+### Small Size
+
+<div className="my-4">
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button variant="outline">Discard Changes</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent size="sm">
+      <AlertDialogHeader>
+        <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+        <AlertDialogDescription>
+          Your unsaved changes will be lost.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Keep Editing</AlertDialogCancel>
+        <AlertDialogAction variant="destructive">Discard</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</div>
+
+```tsx
+<AlertDialogContent size="sm">
+  <AlertDialogHeader>
+    <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+    <AlertDialogDescription>
+      Your unsaved changes will be lost.
+    </AlertDialogDescription>
+  </AlertDialogHeader>
+  <AlertDialogFooter>
+    <AlertDialogCancel>Keep Editing</AlertDialogCancel>
+    <AlertDialogAction variant="destructive">Discard</AlertDialogAction>
+  </AlertDialogFooter>
+</AlertDialogContent>
+```
+
+## Notebook Examples
+
+### Delete Notebook
+
+<div className="my-4">
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button variant="destructive">Delete Notebook</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Delete notebook?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This will permanently delete "analysis.ipynb" and all its cells. This action cannot be undone.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction variant="destructive">Delete Notebook</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</div>
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="destructive">Delete Notebook</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Delete notebook?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This will permanently delete "{notebook.name}" and all its cells.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction variant="destructive">Delete Notebook</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+### Restart Kernel
+
+<div className="my-4">
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button variant="outline">Restart Kernel</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Restart kernel?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This will restart the kernel and clear all variables. Running cells will be interrupted.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction>Restart</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</div>
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="outline">Restart Kernel</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Restart kernel?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This will restart the kernel and clear all variables.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction>Restart</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+### Clear All Outputs
+
+<div className="my-4">
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button variant="outline">Clear All Outputs</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent size="sm">
+      <AlertDialogHeader>
+        <AlertDialogTitle>Clear all outputs?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This will remove outputs from all cells in the notebook.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction>Clear Outputs</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</div>
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="outline">Clear All Outputs</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent size="sm">
+    <AlertDialogHeader>
+      <AlertDialogTitle>Clear all outputs?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This will remove outputs from all cells.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction>Clear Outputs</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+## Components
+
+| Component | Description |
+| --- | --- |
+| `AlertDialog` | Root component managing open state |
+| `AlertDialogTrigger` | Element that opens the dialog |
+| `AlertDialogContent` | Modal container with overlay |
+| `AlertDialogHeader` | Container for title and description |
+| `AlertDialogFooter` | Container for action buttons |
+| `AlertDialogTitle` | Accessible title element |
+| `AlertDialogDescription` | Accessible description element |
+| `AlertDialogAction` | Confirmation button that closes dialog |
+| `AlertDialogCancel` | Cancel button that closes dialog |
+
+## Props
+
+### AlertDialog
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state |
+| `defaultOpen` | `boolean` | `false` | Default open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+
+### AlertDialogContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `"default" \| "sm"` | `"default"` | Dialog size |
+| `className` | `string` | — | Additional CSS classes |
+
+### AlertDialogAction / AlertDialogCancel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `ButtonVariant` | `"default"` / `"outline"` | Button variant |
+| `size` | `ButtonSize` | `"default"` | Button size |
+| `className` | `string` | — | Additional CSS classes |

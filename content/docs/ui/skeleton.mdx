@@ -1,0 +1,148 @@
+---
+title: Skeleton
+description: A placeholder loading component that shows a pulsing animation
+icon: Square
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Skeleton } from '@/registry/primitives/skeleton';
+
+<div className="my-8 flex flex-col gap-4">
+  <div className="flex items-center gap-4">
+    <Skeleton className="h-12 w-12 rounded-full" />
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-[250px]" />
+      <Skeleton className="h-4 w-[200px]" />
+    </div>
+  </div>
+</div>
+
+A placeholder loading component that shows a pulsing animation while content is loading. Use skeletons to reduce perceived loading time and prevent layout shift.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/skeleton.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the component from this repository's `registry/primitives/skeleton.tsx`.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { Skeleton } from "@/registry/primitives/skeleton"
+
+export function Example() {
+  return <Skeleton className="h-4 w-[200px]" />
+}
+```
+
+## Examples
+
+### Basic Shapes
+
+<div className="my-4 flex items-center gap-4">
+  <Skeleton className="h-12 w-12 rounded-full" />
+  <Skeleton className="h-12 w-12" />
+  <Skeleton className="h-4 w-[200px]" />
+</div>
+
+```tsx
+<Skeleton className="h-12 w-12 rounded-full" />
+<Skeleton className="h-12 w-12" />
+<Skeleton className="h-4 w-[200px]" />
+```
+
+### Card Loading State
+
+<div className="my-4 rounded-lg border p-4">
+  <div className="flex items-center gap-4">
+    <Skeleton className="h-12 w-12 rounded-full" />
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-[150px]" />
+      <Skeleton className="h-4 w-[100px]" />
+    </div>
+  </div>
+  <div className="mt-4 space-y-2">
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-3/4" />
+  </div>
+</div>
+
+```tsx
+<div className="rounded-lg border p-4">
+  <div className="flex items-center gap-4">
+    <Skeleton className="h-12 w-12 rounded-full" />
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-[150px]" />
+      <Skeleton className="h-4 w-[100px]" />
+    </div>
+  </div>
+  <div className="mt-4 space-y-2">
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-3/4" />
+  </div>
+</div>
+```
+
+## Notebook Examples
+
+### Cell Output Loading
+
+<div className="my-4 rounded-lg border p-4">
+  <div className="space-y-3">
+    <Skeleton className="h-4 w-1/2" />
+    <Skeleton className="h-32 w-full" />
+    <Skeleton className="h-4 w-3/4" />
+  </div>
+</div>
+
+```tsx
+<div className="rounded-lg border p-4">
+  <div className="space-y-3">
+    <Skeleton className="h-4 w-1/2" />
+    <Skeleton className="h-32 w-full" />
+    <Skeleton className="h-4 w-3/4" />
+  </div>
+</div>
+```
+
+### Kernel List Loading
+
+<div className="my-4 space-y-2">
+  {[1, 2, 3].map((i) => (
+    <div key={i} className="flex items-center gap-3 p-3 rounded-md border">
+      <Skeleton className="h-8 w-8 rounded" />
+      <div className="space-y-1.5 flex-1">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-3 w-16" />
+      </div>
+    </div>
+  ))}
+</div>
+
+```tsx
+{kernels.map((_, i) => (
+  <div key={i} className="flex items-center gap-3 p-3 rounded-md border">
+    <Skeleton className="h-8 w-8 rounded" />
+    <div className="space-y-1.5 flex-1">
+      <Skeleton className="h-4 w-24" />
+      <Skeleton className="h-3 w-16" />
+    </div>
+  </div>
+))}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Additional CSS classes for sizing and shape |
+| `...props` | `React.ComponentProps<"div">` | — | All div element props |
