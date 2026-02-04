@@ -299,6 +299,18 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "cell-container",
+      "type": "registry:component",
+      "title": "CellContainer",
+      "description": "A focus and selection wrapper for notebook cells. Handles focus styling, data-cell-id attribute, and optional drag-and-drop callbacks.",
+      "files": [
+        {
+          "path": "registry/cell/CellContainer.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
