@@ -133,6 +133,20 @@
       ]
     },
     {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "ButtonGroup",
+      "description": "Group buttons together with merged borders. Includes ButtonGroupSeparator and ButtonGroupText.",
+      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
+      "registryDependencies": ["separator"],
+      "files": [
+        {
+          "path": "registry/primitives/button-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
