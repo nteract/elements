@@ -1,0 +1,179 @@
+---
+title: Widget Output
+description: Component for rendering Jupyter widgets (ipywidgets and anywidgets) using the HTMLManager
+icon: Puzzle
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { WidgetOutputDemo, WidgetOutputInteractiveDemo } from '@/app/components/WidgetOutputDemo';
+
+<div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
+  <WidgetOutputDemo />
+</div>
+
+Component for rendering Jupyter widgets (ipywidgets and anywidgets) using the HTMLManager. Handles the `application/vnd.jupyter.widget-view+json` MIME type and manages bidirectional communication with the kernel.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-output.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Install the dependencies:
+    ```bash
+    npm install @jupyter-widgets/html-manager @jupyter-widgets/base
+    ```
+
+    Copy the components to your project from the registry source:
+    - [widget-output.tsx](https://github.com/nteract/elements/blob/main/registry/outputs/widget-output.tsx)
+    - [widget-manager.ts](https://github.com/nteract/elements/blob/main/lib/widget-manager.ts)
+    - [widget-context.tsx](https://github.com/nteract/elements/blob/main/lib/widget-context.tsx)
+  </Tab>
+</Tabs>
+
+## Architecture
+
+Widget support requires three pieces working together:
+
+| Component | Purpose |
+| --- | --- |
+| `WidgetProvider` | React context that manages the HTMLManager instance |
+| `useWidgetManager` | Hook that handles Jupyter comm protocol messages |
+| `WidgetOutput` | Renders the actual widget view |
+
+## Usage
+
+### Setting Up the Provider
+
+Wrap your application with `WidgetProvider` and connect it to your kernel:
+
+```tsx
+import { WidgetProvider, useWidget } from "@/lib/widget-context"
+
+function NotebookApp() {
+  // Your transport - WebSocket, fetch, Tauri IPC, etc.
+  const sendMessage = useCallback((msg: JupyterMessage) => {
+    websocket.send(JSON.stringify(msg))
+  }, [websocket])
+
+  return (
+    <WidgetProvider sendMessage={sendMessage}>
+      <NotebookContent />
+    </WidgetProvider>
+  )
+}
+```
+
+### Handling Kernel Messages
+
+Inside the provider, use the `handleMessage` function to process incoming kernel messages:
+
+```tsx
+function NotebookContent() {
+  const { handleMessage } = useWidgetRequired()
+
+  useEffect(() => {
+    // Subscribe to kernel messages
+    const unsubscribe = kernelConnection.onMessage((msg) => {
+      // handleMessage processes comm_open, comm_msg, and comm_close
+      handleMessage(msg)
+    })
+    return unsubscribe
+  }, [handleMessage])
+
+  return <OutputArea outputs={outputs} />
+}
+```
+
+### Rendering Widgets
+
+The `WidgetOutput` component renders widgets when it receives widget view data:
+
+```tsx
+import { WidgetOutput } from "@/registry/outputs/widget-output"
+
+function CellOutput({ output }) {
+  const widgetData = output.data["application/vnd.jupyter.widget-view+json"]
+
+  if (widgetData) {
+    return <WidgetOutput data={widgetData} />
+  }
+
+  return <MediaRouter data={output.data} />
+}
+```
+
+### With MediaRouter
+
+Register the widget renderer with MediaRouter for automatic handling:
+
+```tsx
+import { MediaRouter } from "@/registry/outputs/media-router"
+import { widgetRenderer } from "@/registry/outputs/widget-output"
+
+<MediaRouter
+  data={output.data}
+  metadata={output.metadata}
+  renderers={{
+    "application/vnd.jupyter.widget-view+json": widgetRenderer,
+  }}
+/>
+```
+
+## Interactive Demo
+
+<WidgetOutputInteractiveDemo />
+
+## Props
+
+### WidgetOutput
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `WidgetViewData \| unknown` | — | Widget view data containing `model_id` |
+| `metadata` | `Record<string, unknown>` | `{}` | Optional metadata |
+| `className` | `string` | `""` | Additional CSS classes |
+
+### WidgetProvider
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Child components |
+| `sendMessage` | `(msg: JupyterMessage) => void` | — | Function to send messages to the kernel |
+
+## Message Types
+
+The widget manager handles these Jupyter message types:
+
+| Message Type | Purpose |
+| --- | --- |
+| `comm_open` | Creates a new widget model |
+| `comm_msg` | Updates widget state |
+| `comm_close` | Destroys a widget model |
+
+## States
+
+The component handles different states:
+
+| State | Display |
+| --- | --- |
+| Loading | Spinner while fetching the widget model |
+| Ready | The rendered widget view |
+| Error | Error message if widget fails to load |
+| Not Configured | Placeholder when no WidgetProvider is present |
+
+<Callout type="info">
+  Widgets require a WidgetProvider ancestor to function. Without one, the component displays a placeholder with the model ID.
+</Callout>
+
+## Supported Widgets
+
+This component supports any widget compatible with the Jupyter Widget Protocol 2.0:
+
+- **ipywidgets** - IntSlider, FloatSlider, Button, Dropdown, etc.
+- **anywidget** - Custom widgets built with anywidget
+- **Custom widgets** - Any widget implementing the comm protocol
