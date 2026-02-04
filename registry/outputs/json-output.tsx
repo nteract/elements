@@ -92,6 +92,7 @@ export function JsonOutput({
   if (data === undefined || data === null) {
     return (
       <div
+        data-slot="json-output"
         className={cn(
           "not-prose py-2 font-mono text-sm text-muted-foreground",
           className
@@ -106,7 +107,7 @@ export function JsonOutput({
     <JsonViewerContext.Provider
       value={{ expandedPaths, togglePath, displayDataTypes }}
     >
-      <div className={cn("not-prose py-2", className)}>
+      <div data-slot="json-output" className={cn("not-prose py-2", className)}>
         <div className="rounded-lg border bg-background p-3 font-mono text-sm">
           <JsonValue value={data} path="$" keyName={null} isLast />
         </div>
@@ -468,5 +469,3 @@ function JsonTypeLabel({ type }: { type: string }) {
     </span>
   );
 }
-
-export default JsonOutput;

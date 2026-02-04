@@ -62,7 +62,7 @@ export function CollaboratorAvatars({
   const overflowUsers = displayUsers.slice(limit);
 
   return (
-    <AvatarGroup className={className}>
+    <AvatarGroup data-slot="collaborator-avatars" className={className}>
       {visibleUsers.map((user) => (
         <HoverCard key={user.id} openDelay={200} closeDelay={100}>
           <HoverCardTrigger asChild>

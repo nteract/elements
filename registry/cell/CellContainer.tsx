@@ -33,6 +33,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
     return (
       <div
         ref={ref}
+        data-slot="cell-container"
         data-cell-id={id}
         className={cn(
           "cell-container group relative border-2 transition-all duration-200",

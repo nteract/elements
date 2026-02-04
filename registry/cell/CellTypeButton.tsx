@@ -51,6 +51,7 @@ export function CellTypeButton({
 
   return (
     <Button
+      data-slot="cell-type-button"
       variant="outline"
       className={cn(
         cellTypeStyles[cellType],

@@ -13,13 +13,14 @@ export const ExecutionStatus: React.FC<ExecutionStatusProps> = ({
       return null;
     case "queued":
       return (
-        <Badge variant="secondary" className="h-5 text-xs">
+        <Badge data-slot="execution-status" variant="secondary" className="h-5 text-xs">
           Queued
         </Badge>
       );
     case "running":
       return (
         <Badge
+          data-slot="execution-status"
           variant="outline"
           className="h-5 border-blue-200 bg-blue-50 text-xs text-blue-700"
         >
@@ -30,6 +31,7 @@ export const ExecutionStatus: React.FC<ExecutionStatusProps> = ({
     case "error":
       return (
         <Badge
+          data-slot="execution-status"
           variant="outline"
           className="h-5 border-red-200 bg-red-50 text-xs text-red-700"
         >

@@ -157,7 +157,7 @@ export function OutputArea({
   const outputCount = outputs.length;
 
   return (
-    <div className={cn("output-area", className)}>
+    <div data-slot="output-area" className={cn("output-area", className)}>
       {/* Collapse toggle */}
       {hasCollapseControl && (
         <button
@@ -198,5 +198,3 @@ export function OutputArea({
     </div>
   );
 }
-
-export default OutputArea;

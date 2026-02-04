@@ -13,7 +13,10 @@ export function ExecutionCount({
 }: ExecutionCountProps) {
   const display = isExecuting ? "*" : count ?? " ";
   return (
-    <span className={cn("font-mono text-sm text-muted-foreground", className)}>
+    <span
+      data-slot="execution-count"
+      className={cn("font-mono text-sm text-muted-foreground", className)}
+    >
       [{display}]:
     </span>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface SvgOutputProps {
   /**
@@ -50,9 +51,8 @@ export function SvgOutput({ data, className = "" }: SvgOutputProps) {
   return (
     <div
       ref={ref}
-      className={`not-prose py-2 max-w-full overflow-auto ${className}`.trim()}
+      data-slot="svg-output"
+      className={cn("not-prose py-2 max-w-full overflow-auto", className)}
     />
   );
 }
-
-export default SvgOutput;

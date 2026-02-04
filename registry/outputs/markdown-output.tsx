@@ -9,6 +9,7 @@ import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Copy } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 import "katex/dist/katex.min.css";
 
@@ -132,7 +133,7 @@ export function MarkdownOutput({
   const rehypePlugins = unsafe ? [rehypeKatex, rehypeRaw] : [rehypeKatex];
 
   return (
-    <div className={`not-prose py-2 ${className}`.trim()}>
+    <div data-slot="markdown-output" className={cn("not-prose py-2", className)}>
       <ReactMarkdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}
@@ -347,5 +348,3 @@ export function MarkdownOutput({
     </div>
   );
 }
-
-export default MarkdownOutput;

@@ -86,6 +86,7 @@ export const RuntimeHealthIndicator: React.FC<RuntimeHealthIndicatorProps> = ({
     return (
       <button
         type="button"
+        data-slot="runtime-health-indicator"
         onClick={onClick}
         className={cn(
           "flex items-center gap-1 rounded-md border border-input bg-background px-2 py-1 text-sm transition-colors hover:bg-accent hover:text-accent-foreground sm:gap-2",
@@ -98,7 +99,10 @@ export const RuntimeHealthIndicator: React.FC<RuntimeHealthIndicatorProps> = ({
   }
 
   return (
-    <div className={cn("flex items-center gap-1 sm:gap-2", className)}>
+    <div
+      data-slot="runtime-health-indicator"
+      className={cn("flex items-center gap-1 sm:gap-2", className)}
+    >
       {content}
     </div>
   );

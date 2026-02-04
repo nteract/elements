@@ -344,5 +344,3 @@ export function getSelectedMimeType(
 ): string | null {
   return selectMimeType(data, priority);
 }
-
-export default MediaRouter;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface HtmlOutputProps {
   /**
@@ -82,12 +83,11 @@ export function HtmlOutput({
   return (
     <div
       ref={ref}
-      className={`not-prose py-2 max-w-none overflow-auto ${className}`.trim()}
+      data-slot="html-output"
+      className={cn("not-prose py-2 max-w-none overflow-auto", className)}
       // For SSR/initial render, use dangerouslySetInnerHTML
       // The useEffect will take over on the client
       dangerouslySetInnerHTML={unsafe ? undefined : { __html: content }}
     />
   );
 }
-
-export default HtmlOutput;

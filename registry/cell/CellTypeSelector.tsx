@@ -55,6 +55,7 @@ export function CellTypeSelector({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
+          data-slot="cell-type-selector"
           variant="outline"
           size="sm"
           className={cn(
