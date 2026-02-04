@@ -1,0 +1,97 @@
+---
+title: CellTypeSelector
+description: Dropdown selector for changing cell types in notebook interfaces
+icon: ListFilter
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { CellTypeSelectorDemo, CellTypeSelectorLimitedDemo } from '@/app/components/CellTypeSelectorDemo';
+
+<div className="my-8">
+  <CellTypeSelectorDemo />
+</div>
+
+A dropdown selector for changing cell types. Displays the current type with color-coded styling and allows users to switch between available types.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-type-selector.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/cell/CellTypeSelector.tsx).
+
+    Requires the `Button`, `DropdownMenu`, and `CellTypeButton` components from the nteract registry.
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { CellTypeSelector } from "@/registry/cell/CellTypeSelector"
+
+export function Example() {
+  const [cellType, setCellType] = useState<CellType>("code")
+
+  return (
+    <CellTypeSelector
+      currentType={cellType}
+      onTypeChange={setCellType}
+    />
+  )
+}
+```
+
+## All Cell Types
+
+The selector shows all cell types by default:
+
+<div className="my-4">
+  <CellTypeSelectorDemo />
+</div>
+
+```tsx
+<CellTypeSelector
+  currentType="code"
+  onTypeChange={(type) => console.log(type)}
+/>
+```
+
+## Limited Types
+
+Restrict available types using the `enabledTypes` prop:
+
+<div className="my-4">
+  <CellTypeSelectorLimitedDemo />
+</div>
+
+```tsx
+<CellTypeSelector
+  currentType="code"
+  onTypeChange={(type) => console.log(type)}
+  enabledTypes={["code", "markdown"]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `currentType` | `CellType` | Required | The currently selected cell type |
+| `onTypeChange` | `(type: CellType) => void` | Required | Callback when the type changes |
+| `enabledTypes` | `CellType[]` | All types | Types available in the dropdown |
+
+## Types
+
+```tsx
+type CellType = "code" | "markdown" | "sql" | "ai";
+
+interface CellTypeSelectorProps {
+  currentType: CellType;
+  onTypeChange: (type: CellType) => void;
+  enabledTypes?: CellType[];
+}
+```

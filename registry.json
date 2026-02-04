@@ -482,6 +482,20 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "cell-type-selector",
+      "type": "registry:component",
+      "title": "CellTypeSelector",
+      "description": "A dropdown selector for changing cell types in notebook interfaces. Supports filtering available types and displays the current type with color-coded styling.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "dropdown-menu", "cell-type-button"],
+      "files": [
+        {
+          "path": "registry/cell/CellTypeSelector.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
