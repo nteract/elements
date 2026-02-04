@@ -292,7 +292,9 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { store, sendMessage } = useWidgetStoreRequired();
   const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+
+  // Use reactive model hook - triggers re-render when model changes
+  const model = useWidgetModel(modelId);
 
   // Track cleanup functions and mount state
   const cleanupRef = useRef<{
@@ -308,22 +310,11 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
   );
 
   useEffect(() => {
-    if (!containerRef.current || hasMountedRef.current) return;
+    // Wait for container and model to be ready
+    if (!containerRef.current || !model) return;
 
-    // Get model from store (non-reactive read)
-    const model = store.getModel(modelId);
-    if (!model) {
-      // Model not ready yet - wait for it
-      const unsubscribe = store.subscribe(() => {
-        const m = store.getModel(modelId);
-        if (m && !hasMountedRef.current) {
-          unsubscribe();
-          // Trigger re-render to mount
-          setIsLoading((v) => !v);
-        }
-      });
-      return unsubscribe;
-    }
+    // Prevent double-mount
+    if (hasMountedRef.current) return;
 
     const esm = model.state._esm as string | undefined;
     if (!esm) {
@@ -337,7 +328,7 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
 
     async function mount() {
       try {
-        // Clear any existing content (handles React StrictMode double-mount)
+        // Clear any existing content
         if (containerRef.current) {
           containerRef.current.innerHTML = "";
         }
@@ -353,7 +344,7 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
         // Check if cancelled after async load
         if (isCancelled) return;
 
-        // Create the AFM model proxy (model is guaranteed to exist here)
+        // Create the AFM model proxy
         const modelProxy = createAFMModelProxy(
           model!,
           store,
@@ -384,8 +375,6 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
         if (typeof result === "function") {
           cleanupRef.current.widget = result;
         }
-
-        setIsLoading(false);
       } catch (err) {
         if (!isCancelled) {
           setError(err instanceof Error ? err : new Error(String(err)));
@@ -407,10 +396,12 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
       }
       hasMountedRef.current = false;
     };
-  }, [modelId, store, sendMessage, getCurrentState, isLoading]);
+    // Note: model.id is used instead of the full model object to prevent
+    // re-running when model state changes (we only want to mount once)
+  }, [modelId, model?.id, store, sendMessage, getCurrentState]);
 
-  // Check if model exists (for loading state)
-  const modelExists = store.getModel(modelId) !== undefined;
+  // Model not ready yet
+  const modelExists = model !== undefined;
 
   if (error) {
     return (
