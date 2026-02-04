@@ -222,6 +222,46 @@
       ]
     },
     {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "A tabbed interface component for switching between different views or content panels. Supports horizontal and vertical orientations with default and line variants.",
+      "dependencies": ["radix-ui", "class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/primitives/tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "A modal dialog component for confirmations, forms, and focused interactions. Includes overlay, header, footer, and close button.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "registry/primitives/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "A slide-out panel component for sidebars, details panels, and mobile navigation. Supports sliding from any edge of the screen.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/primitives/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "cell-header",
       "type": "registry:component",
       "title": "CellHeader",
