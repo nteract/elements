@@ -1,4 +1,5 @@
 import Ansi from "ansi-to-react";
+import { cn } from "@/lib/utils";
 
 interface AnsiOutputProps {
   children: string;
@@ -20,12 +21,15 @@ export function AnsiOutput({
     return null;
   }
 
-  const baseClasses = `not-prose font-mono text-sm whitespace-pre-wrap leading-relaxed ${className}`;
-  const errorClasses = isError ? "text-red-600" : "";
-  const finalClasses = `${baseClasses} ${errorClasses}`.trim();
-
   return (
-    <div className={finalClasses}>
+    <div
+      data-slot="ansi-output"
+      className={cn(
+        "not-prose font-mono text-sm whitespace-pre-wrap leading-relaxed",
+        isError && "text-red-600",
+        className
+      )}
+    >
       <Ansi useClasses={false}>{children}</Ansi>
     </div>
   );
@@ -49,7 +53,10 @@ export function AnsiStreamOutput({
   const streamClasses = isStderr ? "text-red-600" : "text-gray-700";
 
   return (
-    <div className={`not-prose py-2 ${streamClasses} ${className}`}>
+    <div
+      data-slot="ansi-stream-output"
+      className={cn("not-prose py-2", streamClasses, className)}
+    >
       <AnsiOutput isError={isStderr}>{text}</AnsiOutput>
     </div>
   );
@@ -73,7 +80,8 @@ export function AnsiErrorOutput({
 }: AnsiErrorOutputProps) {
   return (
     <div
-      className={`not-prose border-l-2 border-red-200 py-3 pl-1 ${className}`}
+      data-slot="ansi-error-output"
+      className={cn("not-prose border-l-2 border-red-200 py-3 pl-1", className)}
     >
       {ename && evalue && (
         <div className="mb-1 font-semibold text-red-700">

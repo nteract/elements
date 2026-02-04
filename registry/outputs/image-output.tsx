@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 interface ImageOutputProps {
   /**
    * Image data - can be base64 encoded string, data URL, or regular URL
@@ -59,7 +61,7 @@ export function ImageOutput({
   if (height) sizeProps.height = height;
 
   return (
-    <div className={`not-prose py-2 ${className}`.trim()}>
+    <div data-slot="image-output" className={cn("not-prose py-2", className)}>
       <img
         src={src}
         alt={alt}
@@ -70,5 +72,3 @@ export function ImageOutput({
     </div>
   );
 }
-
-export default ImageOutput;

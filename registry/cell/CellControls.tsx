@@ -71,6 +71,7 @@ export const CellControls: React.FC<CellControlsProps> = ({
 }) => {
   return (
     <div
+      data-slot="cell-controls"
       className={cn(
         "cell-controls flex items-center gap-0.5 transition-opacity",
         forceVisible

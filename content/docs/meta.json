@@ -3,11 +3,11 @@
   "pages": [
     "---Getting Started---",
     "index",
-    "---UI---",
-    "...ui",
     "---Cell---",
     "...cell",
     "---Outputs---",
-    "...outputs"
+    "...outputs",
+    "---UI---",
+    "...ui"
   ]
 }

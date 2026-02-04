@@ -32,6 +32,7 @@ export const PlayButton: React.FC<PlayButtonProps> = ({
 
   return (
     <button
+      data-slot="play-button"
       onClick={isRunning ? onInterrupt : onExecute}
       disabled={isAutoLaunching}
       className={cn(
