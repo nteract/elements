@@ -50,6 +50,8 @@ export interface WidgetStore {
   ) => void;
   /** Delete a model (on comm_close) */
   deleteModel: (commId: string) => void;
+  /** Check if a model was explicitly closed (vs never existed) */
+  wasModelClosed: (modelId: string) => boolean;
   /** Subscribe to a specific key on a specific model */
   subscribeToKey: (
     modelId: string,
@@ -117,6 +119,9 @@ export function createWidgetStore(): WidgetStore {
   // Internal state - using Map for O(1) lookups
   let models = new Map<string, WidgetModel>();
 
+  // Track explicitly closed models (for distinguishing from "never existed")
+  const closedModels = new Set<string>();
+
   // Global listeners (for useSyncExternalStore)
   const listeners = new Set<Listener>();
 
@@ -167,6 +172,9 @@ export function createWidgetStore(): WidgetStore {
       state: Record<string, unknown>,
       buffers: ArrayBuffer[] = [],
     ): void {
+      // Handle re-open: remove from closed set if re-opening
+      closedModels.delete(commId);
+
       // Extract model metadata from state
       const modelName = (state._model_name as string) || "UnknownModel";
       const modelModule = (state._model_module as string) || "";
@@ -214,6 +222,9 @@ export function createWidgetStore(): WidgetStore {
 
     deleteModel(commId: string): void {
       if (!models.has(commId)) return;
+
+      // Track that this model was explicitly closed
+      closedModels.add(commId);
 
       // Create new Map without the deleted model
       models = new Map(models);
@@ -292,6 +303,10 @@ export function createWidgetStore(): WidgetStore {
           customListeners.delete(commId);
         }
       };
+    },
+
+    wasModelClosed(modelId: string): boolean {
+      return closedModels.has(modelId);
     },
   };
 }
