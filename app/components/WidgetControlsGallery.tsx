@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import {
   type JupyterCommMessage,
   useWidgetModels,
@@ -350,6 +351,22 @@ const CONTAINER_SETUP = {
       name: "CheckboxModel",
       state: { value: false, description: "Panel 2 option" },
     },
+    // tqdm-like progress bar children (matches actual tqdm output format)
+    {
+      id: "tqdm-label",
+      name: "HTMLModel",
+      state: { value: "Downloading model.safetensors:  42%" },
+    },
+    {
+      id: "tqdm-progress",
+      name: "FloatProgressModel",
+      state: { value: 42, min: 0, max: 100, bar_style: "success" },
+    },
+    {
+      id: "tqdm-stats",
+      name: "HTMLModel",
+      state: { value: " 1.2G/2.8G [00:19&lt;00:26, 62.1MB/s]" },
+    },
   ],
   containers: [
     {
@@ -406,6 +423,19 @@ const CONTAINER_SETUP = {
         children: ["IPY_MODEL_container-acc-1", "IPY_MODEL_container-acc-2"],
         _titles: ["Expandable Panel 1", "Expandable Panel 2"],
         selected_index: 0,
+      },
+    },
+    {
+      id: "gallery-tqdm",
+      name: "HBoxModel",
+      label: "tqdm-style Progress",
+      span: 2, // Full width to show progress bar properly
+      state: {
+        children: [
+          "IPY_MODEL_tqdm-label",
+          "IPY_MODEL_tqdm-progress",
+          "IPY_MODEL_tqdm-stats",
+        ],
       },
     },
   ],
@@ -488,7 +518,10 @@ function GalleryContent() {
           {CONTAINER_SETUP.containers.map((container) => (
             <div
               key={container.id}
-              className="border rounded-lg p-4 bg-background"
+              className={cn(
+                "border rounded-lg p-4 bg-background",
+                container.span === 2 && "md:col-span-2",
+              )}
             >
               <div className="text-xs font-mono text-muted-foreground mb-3">
                 {container.label}
