@@ -682,8 +682,8 @@
       "name": "widget-controls",
       "type": "registry:component",
       "title": "Widget Controls",
-      "description": "Built-in shadcn-backed widget components for standard ipywidgets (IntSlider, FloatSlider, IntProgress, Button, Checkbox, Text, Textarea).",
-      "registryDependencies": ["@nteract/widget-view", "slider", "progress", "button", "checkbox", "input", "textarea", "label"],
+      "description": "Built-in shadcn-backed widget components for standard ipywidgets (IntSlider, FloatSlider, IntProgress, Button, Checkbox, Text, Textarea, Dropdown, RadioButtons, ToggleButton, ToggleButtons, SelectMultiple).",
+      "registryDependencies": ["@nteract/widget-view", "slider", "progress", "button", "checkbox", "input", "textarea", "label", "select", "radio-group", "toggle", "toggle-group"],
       "files": [
         {
           "path": "registry/widgets/controls/index.ts",
@@ -720,6 +720,26 @@
         {
           "path": "registry/widgets/controls/textarea-widget.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/dropdown-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/radio-buttons-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/select-multiple-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/toggle-button-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/toggle-buttons-widget.tsx",
+          "type": "registry:component"
         }
       ]
     },
@@ -743,6 +763,59 @@
       "files": [
         {
           "path": "registry/primitives/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Select dropdown component built on Radix UI Select primitive.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/primitives/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Radio group component built on Radix UI RadioGroup primitive.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/primitives/radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "Toggle button component built on Radix UI Toggle primitive.",
+      "dependencies": ["radix-ui", "class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/primitives/toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle Group",
+      "description": "Toggle button group component built on Radix UI ToggleGroup primitive.",
+      "dependencies": ["radix-ui", "class-variance-authority"],
+      "registryDependencies": ["@nteract/toggle"],
+      "files": [
+        {
+          "path": "registry/primitives/toggle-group.tsx",
           "type": "registry:ui"
         }
       ]

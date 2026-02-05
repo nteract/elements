@@ -16,6 +16,12 @@ import { ButtonWidget } from "./button-widget";
 import { CheckboxWidget } from "./checkbox-widget";
 import { TextWidget } from "./text-widget";
 import { TextareaWidget } from "./textarea-widget";
+// Selection widgets
+import { DropdownWidget } from "./dropdown-widget";
+import { RadioButtonsWidget } from "./radio-buttons-widget";
+import { SelectMultipleWidget } from "./select-multiple-widget";
+import { ToggleButtonWidget } from "./toggle-button-widget";
+import { ToggleButtonsWidget } from "./toggle-buttons-widget";
 
 // Import layout widget components
 import { VBoxWidget } from "./vbox-widget";
@@ -34,6 +40,12 @@ registerWidget("ButtonModel", ButtonWidget);
 registerWidget("CheckboxModel", CheckboxWidget);
 registerWidget("TextModel", TextWidget);
 registerWidget("TextareaModel", TextareaWidget);
+// Selection widgets
+registerWidget("DropdownModel", DropdownWidget);
+registerWidget("RadioButtonsModel", RadioButtonsWidget);
+registerWidget("SelectMultipleModel", SelectMultipleWidget);
+registerWidget("ToggleButtonModel", ToggleButtonWidget);
+registerWidget("ToggleButtonsModel", ToggleButtonsWidget);
 
 // Register layout widgets
 registerWidget("VBoxModel", VBoxWidget);
@@ -52,6 +64,12 @@ export { ButtonWidget } from "./button-widget";
 export { CheckboxWidget } from "./checkbox-widget";
 export { TextWidget } from "./text-widget";
 export { TextareaWidget } from "./textarea-widget";
+// Selection widgets
+export { DropdownWidget } from "./dropdown-widget";
+export { RadioButtonsWidget } from "./radio-buttons-widget";
+export { SelectMultipleWidget } from "./select-multiple-widget";
+export { ToggleButtonWidget } from "./toggle-button-widget";
+export { ToggleButtonsWidget } from "./toggle-buttons-widget";
 
 // Re-export layout widgets
 export { VBoxWidget } from "./vbox-widget";
