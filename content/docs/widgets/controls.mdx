@@ -168,6 +168,18 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 **Common props:** `children` (array of `IPY_MODEL_<id>` references), `box_style`
 **Tab/Accordion props:** `_titles`, `selected_index`
 
+### Gamepad Controller
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| Controller | `ControllerModel` | Gamepad input via Web Gamepad API |
+| ControllerButton | `ControllerButtonModel` | Individual button state |
+| ControllerAxis | `ControllerAxisModel` | Individual axis value (-1 to 1) |
+
+**Controller props:** `index`, `connected`, `name`, `mapping`, `buttons`, `axes`, `timestamp`
+**ControllerButton props:** `pressed` (boolean), `value` (float 0-1)
+**ControllerAxis props:** `value` (float -1 to 1)
+
 ## Customizing Widgets
 
 ### Override a widget globally
