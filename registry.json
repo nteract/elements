@@ -666,23 +666,28 @@
       "files": [
         {
           "path": "registry/editor/codemirror-editor.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/editor/codemirror-editor.tsx"
         },
         {
           "path": "registry/editor/extensions.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/editor/extensions.ts"
         },
         {
           "path": "registry/editor/languages.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/editor/languages.ts"
         },
         {
           "path": "registry/editor/themes.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/editor/themes.ts"
         },
         {
           "path": "registry/editor/index.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/editor/index.ts"
         }
       ]
     },
@@ -694,19 +699,23 @@
       "files": [
         {
           "path": "registry/widgets/widget-store.ts",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/widget-store.ts"
         },
         {
           "path": "registry/widgets/widget-store-context.tsx",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/widget-store-context.tsx"
         },
         {
           "path": "registry/widgets/use-comm-router.ts",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/use-comm-router.ts"
         },
         {
           "path": "registry/widgets/buffer-utils.ts",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/buffer-utils.ts"
         }
       ]
     },
@@ -721,7 +730,8 @@
       "files": [
         {
           "path": "registry/widgets/anywidget-view.tsx",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/anywidget-view.tsx"
         }
       ]
     },
@@ -737,11 +747,13 @@
       "files": [
         {
           "path": "registry/widgets/widget-view.tsx",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/widget-view.tsx"
         },
         {
           "path": "registry/widgets/widget-registry.ts",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/widget-registry.ts"
         }
       ]
     },
@@ -769,99 +781,123 @@
       "files": [
         {
           "path": "registry/widgets/controls/index.ts",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "components/widgets/controls/index.ts"
         },
         {
           "path": "registry/widgets/controls/int-slider.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/int-slider.tsx"
         },
         {
           "path": "registry/widgets/controls/float-slider.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/float-slider.tsx"
         },
         {
           "path": "registry/widgets/controls/int-range-slider.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/int-range-slider.tsx"
         },
         {
           "path": "registry/widgets/controls/float-range-slider.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/float-range-slider.tsx"
         },
         {
           "path": "registry/widgets/controls/int-progress.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/int-progress.tsx"
         },
         {
           "path": "registry/widgets/controls/float-progress.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/float-progress.tsx"
         },
         {
           "path": "registry/widgets/controls/button-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/button-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/checkbox-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/checkbox-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/text-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/text-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/textarea-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/textarea-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/html-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/html-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/color-picker.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/color-picker.tsx"
         },
         {
           "path": "registry/widgets/controls/dropdown-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/dropdown-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/radio-buttons-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/radio-buttons-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/select-multiple-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/select-multiple-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/toggle-button-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/toggle-button-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/toggle-buttons-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/toggle-buttons-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/vbox-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/vbox-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/hbox-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/hbox-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/box-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/box-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/gridbox-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/gridbox-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/accordion-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/accordion-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/tab-widget.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/widgets/controls/tab-widget.tsx"
         }
       ]
     },
