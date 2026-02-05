@@ -749,7 +749,7 @@
       "name": "widget-controls",
       "type": "registry:component",
       "title": "Widget Controls",
-      "description": "Built-in shadcn-backed widget components for standard ipywidgets including controls (IntSlider, FloatSlider, IntProgress, Button, Checkbox, Text, Textarea, Dropdown, RadioButtons, ToggleButton, ToggleButtons, SelectMultiple) and layout containers (VBox, HBox, Box, GridBox, Accordion, Tab).",
+      "description": "Built-in shadcn-backed widget components for standard ipywidgets including controls (IntSlider, FloatSlider, IntRangeSlider, FloatRangeSlider, IntProgress, Button, Checkbox, Text, Textarea, HTML, ColorPicker, Dropdown, RadioButtons, ToggleButton, ToggleButtons, SelectMultiple) and layout containers (VBox, HBox, Box, GridBox, Accordion, Tab).",
       "registryDependencies": [
         "https://nteract-elements.vercel.app/r/widget-view.json",
         "slider",
@@ -780,6 +780,14 @@
           "type": "registry:component"
         },
         {
+          "path": "registry/widgets/controls/int-range-slider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/float-range-slider.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "registry/widgets/controls/int-progress.tsx",
           "type": "registry:component"
         },
@@ -801,6 +809,14 @@
         },
         {
           "path": "registry/widgets/controls/textarea-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/html-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/color-picker.tsx",
           "type": "registry:component"
         },
         {
