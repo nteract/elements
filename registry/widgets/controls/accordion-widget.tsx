@@ -8,18 +8,18 @@
 
 import { cn } from "@/lib/utils";
 import {
-  useWidgetModelValue,
-  useWidgetStoreRequired,
-  parseModelRef,
-} from "../widget-store-context";
-import { WidgetView } from "../widget-view";
-import type { WidgetComponentProps } from "../widget-registry";
-import {
   Accordion,
+  AccordionContent,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
 } from "@/registry/primitives/accordion";
+import type { WidgetComponentProps } from "../widget-registry";
+import {
+  parseModelRef,
+  useWidgetModelValue,
+  useWidgetStoreRequired,
+} from "../widget-store-context";
+import { WidgetView } from "../widget-view";
 
 export function AccordionWidget({ modelId, className }: WidgetComponentProps) {
   const { sendUpdate } = useWidgetStoreRequired();
@@ -29,7 +29,7 @@ export function AccordionWidget({ modelId, className }: WidgetComponentProps) {
   const titles = useWidgetModelValue<string[]>(modelId, "_titles") ?? [];
   const selectedIndex = useWidgetModelValue<number | null>(
     modelId,
-    "selected_index"
+    "selected_index",
   );
 
   const handleValueChange = (value: string) => {

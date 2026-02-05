@@ -7,13 +7,13 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Slider } from "@/registry/primitives/slider";
 import { Label } from "@/registry/primitives/label";
+import { Slider } from "@/registry/primitives/slider";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function FloatSlider({ modelId, className }: WidgetComponentProps) {
   const { sendUpdate } = useWidgetStoreRequired();
@@ -55,14 +55,12 @@ export function FloatSlider({ modelId, className }: WidgetComponentProps) {
       className={cn(
         "flex gap-3",
         isVertical ? "flex-col items-center" : "items-center",
-        className
+        className,
       )}
       data-widget-id={modelId}
       data-widget-type="FloatSlider"
     >
-      {description && (
-        <Label className="shrink-0 text-sm">{description}</Label>
-      )}
+      {description && <Label className="shrink-0 text-sm">{description}</Label>}
       <Slider
         value={[value]}
         min={min}

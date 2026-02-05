@@ -11,7 +11,7 @@ export function ExecutionCount({
   isExecuting,
   className,
 }: ExecutionCountProps) {
-  const display = isExecuting ? "*" : count ?? " ";
+  const display = isExecuting ? "*" : (count ?? " ");
   return (
     <span
       data-slot="execution-count"

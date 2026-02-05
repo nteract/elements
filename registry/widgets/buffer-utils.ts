@@ -27,7 +27,7 @@
 export function applyBufferPaths(
   data: Record<string, unknown>,
   bufferPaths: string[][] | undefined,
-  buffers: ArrayBuffer[] | undefined
+  buffers: ArrayBuffer[] | undefined,
 ): Record<string, unknown> {
   if (!bufferPaths || !buffers || bufferPaths.length === 0) {
     return data;
@@ -69,7 +69,7 @@ export function applyBufferPaths(
  */
 export function extractBuffers(
   data: Record<string, unknown>,
-  bufferPaths: string[][] | undefined
+  bufferPaths: string[][] | undefined,
 ): ArrayBuffer[] {
   if (!bufferPaths || bufferPaths.length === 0) {
     return [];
@@ -108,9 +108,17 @@ export function extractBuffers(
         buffers.push(value);
         // Replace with null in the data (per protocol spec)
         current[finalKey] = null;
-      } else if (ArrayBuffer.isView(value) && value.buffer instanceof ArrayBuffer) {
+      } else if (
+        ArrayBuffer.isView(value) &&
+        value.buffer instanceof ArrayBuffer
+      ) {
         // Handle typed arrays (Uint8Array, etc.) with ArrayBuffer backing
-        buffers.push(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength));
+        buffers.push(
+          value.buffer.slice(
+            value.byteOffset,
+            value.byteOffset + value.byteLength,
+          ),
+        );
         current[finalKey] = null;
       } else {
         // Path exists but value is not a buffer
@@ -136,7 +144,7 @@ export function extractBuffers(
  */
 export function findBufferPaths(
   data: Record<string, unknown>,
-  prefix: string[] = []
+  prefix: string[] = [],
 ): string[][] {
   const paths: string[][] = [];
 
@@ -145,9 +153,15 @@ export function findBufferPaths(
 
     if (value instanceof ArrayBuffer || ArrayBuffer.isView(value)) {
       paths.push(currentPath);
-    } else if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+    } else if (
+      value !== null &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
       // Recurse into nested objects
-      paths.push(...findBufferPaths(value as Record<string, unknown>, currentPath));
+      paths.push(
+        ...findBufferPaths(value as Record<string, unknown>, currentPath),
+      );
     }
   }
 

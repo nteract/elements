@@ -1,7 +1,7 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority";
+import type * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const emptyVariants = cva(
   "flex flex-col items-center justify-center text-center",
@@ -16,8 +16,8 @@ const emptyVariants = cva(
     defaultVariants: {
       size: "default",
     },
-  }
-)
+  },
+);
 
 function Empty({
   className,
@@ -30,7 +30,7 @@ function Empty({
       className={cn(emptyVariants({ size }), className)}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyIcon({ className, ...props }: React.ComponentProps<"div">) {
@@ -39,11 +39,11 @@ function EmptyIcon({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="empty-icon"
       className={cn(
         "flex items-center justify-center text-muted-foreground [&>svg]:size-10",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyTitle({ className, ...props }: React.ComponentProps<"h3">) {
@@ -53,7 +53,7 @@ function EmptyTitle({ className, ...props }: React.ComponentProps<"h3">) {
       className={cn("text-lg font-semibold", className)}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
@@ -63,7 +63,7 @@ function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
       className={cn("text-sm text-muted-foreground max-w-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyActions({ className, ...props }: React.ComponentProps<"div">) {
@@ -73,7 +73,7 @@ function EmptyActions({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex items-center gap-2 mt-2", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -83,4 +83,4 @@ export {
   EmptyDescription,
   EmptyActions,
   emptyVariants,
-}
+};

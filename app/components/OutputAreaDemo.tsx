@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { OutputArea, type JupyterOutput } from "@/registry/cell/OutputArea";
+import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
 
 const sampleOutputs: JupyterOutput[] = [
   {

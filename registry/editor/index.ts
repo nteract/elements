@@ -1,29 +1,29 @@
 export {
   CodeMirrorEditor,
-  type CodeMirrorEditorRef,
   type CodeMirrorEditorProps,
+  type CodeMirrorEditorRef,
 } from "./codemirror-editor";
 export {
-  getLanguageExtension,
-  detectLanguage,
-  languageDisplayNames,
-  fileExtensionToLanguage,
-  type SupportedLanguage,
-} from "./languages";
-export {
   coreSetup,
-  minimalSetup,
   defaultExtensions,
   minimalExtensions,
+  minimalSetup,
   notebookEditorTheme,
 } from "./extensions";
 export {
-  lightTheme,
+  detectLanguage,
+  fileExtensionToLanguage,
+  getLanguageExtension,
+  languageDisplayNames,
+  type SupportedLanguage,
+} from "./languages";
+export {
   darkTheme,
-  getTheme,
-  getAutoTheme,
-  isDarkMode,
-  prefersDarkMode,
   documentHasDarkMode,
+  getAutoTheme,
+  getTheme,
+  isDarkMode,
+  lightTheme,
+  prefersDarkMode,
   type ThemeMode,
 } from "./themes";

@@ -8,18 +8,18 @@
 
 import { cn } from "@/lib/utils";
 import {
-  useWidgetModelValue,
-  useWidgetStoreRequired,
-  parseModelRef,
-} from "../widget-store-context";
-import { WidgetView } from "../widget-view";
-import type { WidgetComponentProps } from "../widget-registry";
-import {
   Tabs,
+  TabsContent,
   TabsList,
   TabsTrigger,
-  TabsContent,
 } from "@/registry/primitives/tabs";
+import type { WidgetComponentProps } from "../widget-registry";
+import {
+  parseModelRef,
+  useWidgetModelValue,
+  useWidgetStoreRequired,
+} from "../widget-store-context";
+import { WidgetView } from "../widget-view";
 
 export function TabWidget({ modelId, className }: WidgetComponentProps) {
   const { sendUpdate } = useWidgetStoreRequired();

@@ -6,15 +6,15 @@
  * Maps to ipywidgets TextareaModel.
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Textarea } from "@/registry/primitives/textarea";
 import { Label } from "@/registry/primitives/label";
+import { Textarea } from "@/registry/primitives/textarea";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function TextareaWidget({ modelId, className }: WidgetComponentProps) {
   const { sendUpdate } = useWidgetStoreRequired();
@@ -45,7 +45,7 @@ export function TextareaWidget({ modelId, className }: WidgetComponentProps) {
         sendUpdate(modelId, { value: newValue });
       }
     },
-    [modelId, continuousUpdate, sendUpdate]
+    [modelId, continuousUpdate, sendUpdate],
   );
 
   const handleBlur = useCallback(() => {

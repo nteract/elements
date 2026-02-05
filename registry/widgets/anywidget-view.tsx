@@ -11,9 +11,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  type SendMessage,
   useWidgetModel,
   useWidgetStoreRequired,
-  type SendMessage,
   type WidgetModel,
   type WidgetStore,
 } from "./widget-store-context";
@@ -39,7 +39,7 @@ export interface AnyWidgetModel {
   send(
     content: Record<string, unknown>,
     callbacks?: Record<string, unknown>,
-    buffers?: ArrayBuffer[]
+    buffers?: ArrayBuffer[],
   ): void;
   /** Access to other widget models */
   widget_manager: {
@@ -54,7 +54,7 @@ type WidgetLifecycle = {
   render?(context: {
     model: AnyWidgetModel;
     el: HTMLElement;
-  }): void | (() => void) | Promise<void | (() => void)>;
+  }): void | (() => void) | Promise<undefined | (() => void)>;
   initialize?(context: { model: AnyWidgetModel }): void | Promise<void>;
 };
 
@@ -73,7 +73,7 @@ interface AnyWidgetModule {
   render?(context: {
     model: AnyWidgetModel;
     el: HTMLElement;
-  }): void | (() => void) | Promise<void | (() => void)>;
+  }): void | (() => void) | Promise<undefined | (() => void)>;
   initialize?(context: { model: AnyWidgetModel }): void | Promise<void>;
 }
 
@@ -159,7 +159,7 @@ export function createAFMModelProxy(
   model: WidgetModel,
   store: WidgetStore,
   sendMessage: SendMessage,
-  getCurrentState: () => Record<string, unknown>
+  getCurrentState: () => Record<string, unknown>,
 ): AnyWidgetModel {
   // Buffer for local changes (set but not yet saved)
   const pendingChanges: Record<string, unknown> = {};
@@ -219,7 +219,7 @@ export function createAFMModelProxy(
       if (!listeners.has(event)) {
         listeners.set(event, new Set());
       }
-      listeners.get(event)!.add(callback);
+      listeners.get(event)?.add(callback);
 
       // Handle change:* events by subscribing to the store
       if (event.startsWith("change:")) {
@@ -255,7 +255,7 @@ export function createAFMModelProxy(
             if (msgListeners) {
               msgListeners.forEach((cb) => cb(content, buffers));
             }
-          }
+          },
         );
       }
     },
@@ -265,7 +265,7 @@ export function createAFMModelProxy(
 
       if (callback) {
         // Remove specific callback
-        listeners.get(event)!.delete(callback);
+        listeners.get(event)?.delete(callback);
       } else {
         // Remove all callbacks for this event
         listeners.delete(event);
@@ -276,7 +276,7 @@ export function createAFMModelProxy(
         const key = event.slice(7);
         const keyEvent = `change:${key}`;
 
-        if (!listeners.has(keyEvent) || listeners.get(keyEvent)!.size === 0) {
+        if (!listeners.has(keyEvent) || listeners.get(keyEvent)?.size === 0) {
           const unsubscribe = keyUnsubscribers.get(key);
           if (unsubscribe) {
             unsubscribe();
@@ -287,7 +287,10 @@ export function createAFMModelProxy(
 
       // Clean up custom message subscription if no listeners remain
       if (event === "msg:custom") {
-        if (!listeners.has("msg:custom") || listeners.get("msg:custom")!.size === 0) {
+        if (
+          !listeners.has("msg:custom") ||
+          listeners.get("msg:custom")?.size === 0
+        ) {
           if (customMessageUnsubscriber) {
             customMessageUnsubscriber();
             customMessageUnsubscriber = null;
@@ -299,10 +302,11 @@ export function createAFMModelProxy(
     send(
       content: Record<string, unknown>,
       _callbacks?: Record<string, unknown>,
-      buffers?: ArrayBuffer[]
+      buffers?: ArrayBuffer[],
     ): void {
       // Send custom message to kernel
       // Full Jupyter protocol message format for strongly-typed backends
+      // Note: ipywidgets expects content to be nested in data.content, not spread
       sendMessage({
         header: createHeader("comm_msg"),
         parent_header: null,
@@ -311,9 +315,8 @@ export function createAFMModelProxy(
           comm_id: model.id,
           data: {
             method: "custom",
-            ...content,
-            buffer_paths: [],
-          } as Record<string, unknown>,
+            content: content, // Wrap content properly for ipywidgets protocol
+          },
         },
         buffers: buffers ?? [],
         channel: "shell",
@@ -327,8 +330,11 @@ export function createAFMModelProxy(
           throw new Error(`Model not found: ${modelId}`);
         }
         // Create a proxy for the referenced model
-        return createAFMModelProxy(refModel, store, sendMessage, () =>
-          store.getModel(modelId)?.state ?? {}
+        return createAFMModelProxy(
+          refModel,
+          store,
+          sendMessage,
+          () => store.getModel(modelId)?.state ?? {},
         );
       },
     },
@@ -377,7 +383,7 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
   // Get current state for the proxy (needs to be a function to get fresh state)
   const getCurrentState = useCallback(
     () => store.getModel(modelId)?.state ?? {},
-    [store, modelId]
+    [store, modelId],
   );
 
   useEffect(() => {
@@ -423,7 +429,7 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
           model!,
           store,
           sendMessage,
-          getCurrentState
+          getCurrentState,
         );
 
         // Resolve widget definition - handles both standard and factory patterns
@@ -484,7 +490,16 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
       hasMountedRef.current = false;
     };
     // Dependencies include esm so we re-run when _esm arrives via comm_msg update
-  }, [modelId, model?.id, esm, css, store, sendMessage, getCurrentState]);
+  }, [
+    modelId,
+    model?.id,
+    esm,
+    css,
+    store,
+    sendMessage,
+    getCurrentState,
+    model,
+  ]);
 
   // Model not ready yet
   const modelExists = model !== undefined;

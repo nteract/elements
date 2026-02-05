@@ -1,4 +1,30 @@
 {
   "title": "UI",
-  "pages": ["alert", "alert-dialog", "avatar", "badge", "button", "button-group", "card", "command", "dialog", "dropdown-menu", "empty", "hover-card", "input", "kbd", "label", "popover", "separator", "sheet", "skeleton", "slider", "spinner", "switch", "tabs", "textarea", "tooltip"]
+  "pages": [
+    "alert",
+    "alert-dialog",
+    "avatar",
+    "badge",
+    "button",
+    "button-group",
+    "card",
+    "command",
+    "dialog",
+    "dropdown-menu",
+    "empty",
+    "hover-card",
+    "input",
+    "kbd",
+    "label",
+    "popover",
+    "separator",
+    "sheet",
+    "skeleton",
+    "slider",
+    "spinner",
+    "switch",
+    "tabs",
+    "textarea",
+    "tooltip"
+  ]
 }

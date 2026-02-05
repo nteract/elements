@@ -1,10 +1,13 @@
 "use client";
 
-import { ReactNode, useId } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { type ReactNode, useId } from "react";
 import { cn } from "@/lib/utils";
+import {
+  AnsiErrorOutput,
+  AnsiStreamOutput,
+} from "@/registry/outputs/ansi-output";
 import { MediaRouter } from "@/registry/outputs/media-router";
-import { AnsiErrorOutput, AnsiStreamOutput } from "@/registry/outputs/ansi-output";
 
 /**
  * Jupyter output types based on the nbformat spec.
@@ -52,7 +55,15 @@ interface OutputAreaProps {
   /**
    * Custom renderers passed to MediaRouter.
    */
-  renderers?: Record<string, (props: { data: unknown; metadata: Record<string, unknown>; mimeType: string; className?: string }) => ReactNode>;
+  renderers?: Record<
+    string,
+    (props: {
+      data: unknown;
+      metadata: Record<string, unknown>;
+      mimeType: string;
+      className?: string;
+    }) => ReactNode
+  >;
   /**
    * Custom MIME type priority order.
    */
@@ -89,7 +100,12 @@ function renderOutput(
         <MediaRouter
           key={key}
           data={output.data}
-          metadata={output.metadata as Record<string, Record<string, unknown> | undefined>}
+          metadata={
+            output.metadata as Record<
+              string,
+              Record<string, unknown> | undefined
+            >
+          }
           renderers={renderers}
           priority={priority}
           unsafe={unsafe}
@@ -184,14 +200,11 @@ export function OutputArea({
       {!collapsed && (
         <div
           id={id}
-          className={cn(
-            "space-y-2",
-            maxHeight && "overflow-y-auto"
-          )}
+          className={cn("space-y-2", maxHeight && "overflow-y-auto")}
           style={maxHeight ? { maxHeight: `${maxHeight}px` } : undefined}
         >
           {outputs.map((output, index) =>
-            renderOutput(output, index, renderers, priority, unsafe)
+            renderOutput(output, index, renderers, priority, unsafe),
           )}
         </div>
       )}

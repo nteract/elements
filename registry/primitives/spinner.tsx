@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { LoaderIcon, type LucideProps } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export type SpinnerSize = "sm" | "md" | "lg";
 
@@ -16,7 +16,7 @@ export const Spinner = ({ className, size = "sm", ...props }: SpinnerProps) => (
         "text-muted-foreground/50 size-4": size === "md",
         "text-muted-foreground/70 size-6": size === "lg",
       },
-      className
+      className,
     )}
     {...props}
   />
