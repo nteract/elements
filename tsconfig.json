@@ -17,6 +17,7 @@
     "incremental": true,
     "paths": {
       "@/*": ["./*"],
+      "@/components/ui/*": ["./registry/primitives/*"],
       "fumadocs-mdx:collections/*": [".source/*"]
     },
     "plugins": [

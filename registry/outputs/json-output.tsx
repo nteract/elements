@@ -7,12 +7,12 @@ import {
   useContext,
   useState,
 } from "react";
-import { cn } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/registry/primitives/collapsible";
+} from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 interface JsonViewerContextType {
   expandedPaths: Set<string>;
