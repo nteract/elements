@@ -613,38 +613,18 @@ const CONTAINER_SETUP = {
       name: "HTMLModel",
       state: { value: " 1.2G/2.8G [00:19&lt;00:26, 62.1MB/s]" },
     },
-    // Controller button children (simulated gamepad buttons)
-    {
-      id: "gamepad-btn-0",
+    // Controller button children - standard gamepad has up to 16 buttons
+    ...Array.from({ length: 16 }, (_, i) => ({
+      id: `gamepad-btn-${i}`,
       name: "ControllerButtonModel",
       state: { pressed: false, value: 0 },
-    },
-    {
-      id: "gamepad-btn-1",
-      name: "ControllerButtonModel",
-      state: { pressed: true, value: 1 },
-    },
-    {
-      id: "gamepad-btn-2",
-      name: "ControllerButtonModel",
-      state: { pressed: false, value: 0 },
-    },
-    {
-      id: "gamepad-btn-3",
-      name: "ControllerButtonModel",
-      state: { pressed: false, value: 0.5 },
-    },
-    // Controller axis children
-    {
-      id: "gamepad-axis-0",
+    })),
+    // Controller axis children - standard gamepad has 4 axes (2 sticks)
+    ...Array.from({ length: 4 }, (_, i) => ({
+      id: `gamepad-axis-${i}`,
       name: "ControllerAxisModel",
-      state: { value: 0.3 },
-    },
-    {
-      id: "gamepad-axis-1",
-      name: "ControllerAxisModel",
-      state: { value: -0.7 },
-    },
+      state: { value: 0 },
+    })),
   ],
   containers: [
     {
@@ -723,17 +703,16 @@ const CONTAINER_SETUP = {
     label: "Controller (Gamepad)",
     state: {
       index: 0,
-      connected: true, // Simulated as connected for demo
-      name: "Demo Gamepad",
-      mapping: "standard",
-      buttons: [
-        "IPY_MODEL_gamepad-btn-0",
-        "IPY_MODEL_gamepad-btn-1",
-        "IPY_MODEL_gamepad-btn-2",
-        "IPY_MODEL_gamepad-btn-3",
-      ],
-      axes: ["IPY_MODEL_gamepad-axis-0", "IPY_MODEL_gamepad-axis-1"],
-      timestamp: Date.now(),
+      connected: false, // Starts disconnected - connect a real gamepad!
+      name: "",
+      mapping: "",
+      // Standard gamepad: 16 buttons, 4 axes
+      buttons: Array.from(
+        { length: 16 },
+        (_, i) => `IPY_MODEL_gamepad-btn-${i}`,
+      ),
+      axes: Array.from({ length: 4 }, (_, i) => `IPY_MODEL_gamepad-axis-${i}`),
+      timestamp: 0,
     },
   },
 };
