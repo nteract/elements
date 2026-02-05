@@ -12,7 +12,8 @@
       "files": [
         {
           "path": "registry/outputs/ansi-output.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/ansi-output.tsx"
         }
       ]
     },
@@ -24,7 +25,8 @@
       "files": [
         {
           "path": "registry/outputs/image-output.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/image-output.tsx"
         }
       ]
     },
@@ -36,7 +38,8 @@
       "files": [
         {
           "path": "registry/outputs/html-output.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/html-output.tsx"
         }
       ]
     },
@@ -48,7 +51,8 @@
       "files": [
         {
           "path": "registry/outputs/svg-output.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/svg-output.tsx"
         }
       ]
     },
@@ -69,7 +73,8 @@
       "files": [
         {
           "path": "registry/outputs/markdown-output.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/markdown-output.tsx"
         }
       ]
     },
@@ -83,7 +88,8 @@
       "files": [
         {
           "path": "registry/outputs/json-output.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/json-output.tsx"
         }
       ]
     },
@@ -103,7 +109,8 @@
       "files": [
         {
           "path": "registry/outputs/media-router.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/outputs/media-router.tsx"
         }
       ]
     },
@@ -115,7 +122,8 @@
       "files": [
         {
           "path": "registry/cell/CellHeader.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/CellHeader.tsx"
         }
       ]
     },
@@ -129,7 +137,8 @@
       "files": [
         {
           "path": "registry/cell/CellTypeButton.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/CellTypeButton.tsx"
         }
       ]
     },
@@ -142,7 +151,8 @@
       "files": [
         {
           "path": "registry/cell/ExecutionStatus.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/ExecutionStatus.tsx"
         }
       ]
     },
@@ -155,7 +165,8 @@
       "files": [
         {
           "path": "registry/cell/PlayButton.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/PlayButton.tsx"
         }
       ]
     },
@@ -168,7 +179,8 @@
       "files": [
         {
           "path": "registry/cell/RuntimeHealthIndicator.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/RuntimeHealthIndicator.tsx"
         }
       ]
     },
@@ -182,7 +194,8 @@
       "files": [
         {
           "path": "registry/cell/CellControls.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/CellControls.tsx"
         }
       ]
     },
@@ -194,7 +207,8 @@
       "files": [
         {
           "path": "registry/cell/CellContainer.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/CellContainer.tsx"
         }
       ]
     },
@@ -208,7 +222,8 @@
       "files": [
         {
           "path": "registry/cell/OutputArea.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/OutputArea.tsx"
         }
       ]
     },
@@ -220,7 +235,8 @@
       "files": [
         {
           "path": "registry/cell/ExecutionCount.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/ExecutionCount.tsx"
         }
       ]
     },
@@ -233,7 +249,8 @@
       "files": [
         {
           "path": "registry/cell/CollaboratorAvatars.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/CollaboratorAvatars.tsx"
         }
       ]
     },
@@ -246,7 +263,8 @@
       "files": [
         {
           "path": "registry/cell/PresenceBookmarks.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/PresenceBookmarks.tsx"
         }
       ]
     },
@@ -639,7 +657,8 @@
       "files": [
         {
           "path": "registry/cell/CellTypeSelector.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/cell/CellTypeSelector.tsx"
         }
       ]
     },
