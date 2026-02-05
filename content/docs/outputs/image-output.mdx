@@ -35,7 +35,7 @@ Component for rendering images in notebook outputs. Handles base64-encoded image
 ## Usage
 
 ```tsx
-import { ImageOutput } from "@/registry/outputs/image-output"
+import { ImageOutput } from "@/components/outputs/image-output"
 
 export function Example() {
   // Base64 encoded image data from Jupyter kernel
@@ -78,7 +78,7 @@ The component accepts image data in several formats:
 When working with Jupyter outputs, image data typically comes from `display_data` or `execute_result` messages:
 
 ```tsx
-import { ImageOutput } from "@/registry/outputs/image-output"
+import { ImageOutput } from "@/components/outputs/image-output"
 
 function renderOutput(output: JupyterOutput) {
   const data = output.data;

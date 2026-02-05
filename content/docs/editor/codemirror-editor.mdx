@@ -38,7 +38,7 @@ Try the editor above — switch languages, edit the code, and toggle between lig
 ## Usage
 
 ```tsx
-import { CodeMirrorEditor } from "@/registry/editor";
+import { CodeMirrorEditor } from "@/components/editor";
 
 export function MyCell() {
   const [source, setSource] = useState("print('Hello, world!')");
@@ -130,7 +130,7 @@ Force a specific theme:
 Access theme utilities directly:
 
 ```tsx
-import { lightTheme, darkTheme, isDarkMode } from "@/registry/editor";
+import { lightTheme, darkTheme, isDarkMode } from "@/components/editor";
 
 // Check current dark mode state
 if (isDarkMode()) {
@@ -215,7 +215,7 @@ import { lineNumbers } from "@codemirror/view";
 For AI prompt inputs or simpler use cases:
 
 ```tsx
-import { minimalExtensions } from "@/registry/editor";
+import { minimalExtensions } from "@/components/editor";
 
 <CodeMirrorEditor
   value={prompt}
@@ -232,7 +232,7 @@ import { minimalExtensions } from "@/registry/editor";
 Detect language from filename:
 
 ```tsx
-import { detectLanguage } from "@/registry/editor";
+import { detectLanguage } from "@/components/editor";
 
 const language = detectLanguage("script.py"); // "python"
 const language = detectLanguage("README.md"); // "markdown"
@@ -243,11 +243,11 @@ const language = detectLanguage("README.md"); // "markdown"
 Combine with cell components for a complete notebook cell:
 
 ```tsx
-import { CellContainer } from "@/registry/cell/CellContainer";
-import { CellHeader } from "@/registry/cell/CellHeader";
-import { PlayButton } from "@/registry/cell/PlayButton";
-import { CodeMirrorEditor } from "@/registry/editor";
-import { OutputArea } from "@/registry/cell/OutputArea";
+import { CellContainer } from "@/components/cell/CellContainer";
+import { CellHeader } from "@/components/cell/CellHeader";
+import { PlayButton } from "@/components/cell/PlayButton";
+import { CodeMirrorEditor } from "@/components/editor";
+import { OutputArea } from "@/components/cell/OutputArea";
 
 function CodeCell({ cell, outputs }) {
   const [source, setSource] = useState(cell.source);

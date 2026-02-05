@@ -44,7 +44,7 @@ React component for rendering [anywidget](https://anywidget.dev) ESM modules. Im
 ### Basic Usage
 
 ```tsx
-import { AnyWidgetView } from "@/registry/widgets/anywidget-view"
+import { AnyWidgetView } from "@/components/widgets/anywidget-view"
 
 function WidgetOutput({ modelId }: { modelId: string }) {
   return <AnyWidgetView modelId={modelId} />
@@ -56,8 +56,8 @@ function WidgetOutput({ modelId }: { modelId: string }) {
 The component requires `WidgetStoreProvider` to be present in the component tree:
 
 ```tsx
-import { WidgetStoreProvider } from "@/registry/widgets/widget-store-context"
-import { AnyWidgetView } from "@/registry/widgets/anywidget-view"
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { AnyWidgetView } from "@/components/widgets/anywidget-view"
 
 function App() {
   return (
@@ -177,7 +177,7 @@ export default {
 Use `isAnyWidget` to check if a model is an anywidget:
 
 ```tsx
-import { isAnyWidget } from "@/registry/widgets/anywidget-view"
+import { isAnyWidget } from "@/components/widgets/anywidget-view"
 
 function WidgetRouter({ model }) {
   if (isAnyWidget(model)) {

@@ -40,7 +40,7 @@ The CollaboratorAvatars component displays a row of user avatars showing who is 
 ## Usage
 
 ```tsx
-import { CollaboratorAvatars } from "@/registry/cell/CollaboratorAvatars";
+import { CollaboratorAvatars } from "@/components/cell/CollaboratorAvatars";
 
 const users = [
   { id: "1", name: "Alice Smith", picture: "https://example.com/alice.jpg", color: "#e91e63" },
@@ -128,8 +128,8 @@ Colors can be used to indicate cursor positions or user-specific highlighting in
 ### In a Cell Header
 
 ```tsx
-import { CellHeader } from "@/registry/cell/CellHeader";
-import { CollaboratorAvatars } from "@/registry/cell/CollaboratorAvatars";
+import { CellHeader } from "@/components/cell/CellHeader";
+import { CollaboratorAvatars } from "@/components/cell/CollaboratorAvatars";
 
 <CellHeader
   leftContent={<PlayButton />}

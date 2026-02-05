@@ -33,7 +33,7 @@ Automatically selects the best renderer for Jupyter outputs based on MIME type p
 ### Basic
 
 ```tsx
-import { MediaRouter } from "@/registry/outputs/media-router"
+import { MediaRouter } from "@/components/outputs/media-router"
 
 export function CellOutput({ output }) {
   return <MediaRouter data={output.data} metadata={output.metadata} />
@@ -60,7 +60,7 @@ Metadata is keyed by MIME type, same as data. Used for image dimensions, JSON di
 Register custom renderers for MIME types not supported by the built-ins, or override built-ins:
 
 ```tsx
-import { MediaRouter, DEFAULT_PRIORITY } from "@/registry/outputs/media-router"
+import { MediaRouter, DEFAULT_PRIORITY } from "@/components/outputs/media-router"
 import { PlotlyChart } from "./plotly-chart"
 import { VegaLiteChart } from "./vega-lite-chart"
 
@@ -125,7 +125,7 @@ Custom renderers receive their metadata directly and can use any keys.
 The default MIME type priority (higher = preferred):
 
 ```tsx
-import { DEFAULT_PRIORITY } from "@/registry/outputs/media-router"
+import { DEFAULT_PRIORITY } from "@/components/outputs/media-router"
 
 // DEFAULT_PRIORITY = [
 //   "application/vnd.jupyter.widget-view+json",
@@ -151,7 +151,7 @@ priority={["application/x-custom", ...DEFAULT_PRIORITY]}
 ## Jupyter Integration
 
 ```tsx
-import { MediaRouter } from "@/registry/outputs/media-router"
+import { MediaRouter } from "@/components/outputs/media-router"
 
 function CellOutput({ output }) {
   // execute_result and display_data outputs
@@ -183,7 +183,7 @@ For HTML and Markdown outputs that contain scripts, use `unsafe={true}`. This re
 Use `getSelectedMimeType` to inspect which MIME type would be selected:
 
 ```tsx
-import { getSelectedMimeType, DEFAULT_PRIORITY } from "@/registry/outputs/media-router"
+import { getSelectedMimeType, DEFAULT_PRIORITY } from "@/components/outputs/media-router"
 
 const mimeType = getSelectedMimeType(
   { "text/plain": "Hello", "text/html": "<b>Hello</b>" },
