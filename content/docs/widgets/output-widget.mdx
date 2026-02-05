@@ -7,6 +7,11 @@ icon: Monitor
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Callout } from 'fumadocs-ui/components/callout';
+import { OutputWidgetDemo } from '@/app/components/OutputWidgetDemo';
+
+<div className="my-8">
+  <OutputWidgetDemo />
+</div>
 
 Implements the ipywidgets `OutputModel` (`@jupyter-widgets/output`). Captures and displays Jupyter cell outputs inside the widget tree, enabling patterns like output capture in interactive widgets.
 
