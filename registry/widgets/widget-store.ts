@@ -22,9 +22,11 @@ export interface WidgetModel {
 
 type Listener = () => void;
 type KeyListener = (value: unknown) => void;
+// Anywidgets expect DataView[] so they can access .buffer for the underlying ArrayBuffer
+// This matches JupyterLab services which deserializes buffers as DataView[]
 type CustomMessageCallback = (
   content: Record<string, unknown>,
-  buffers?: ArrayBuffer[],
+  buffers?: DataView[],
 ) => void;
 
 export interface WidgetStore {
@@ -262,7 +264,12 @@ export function createWidgetStore(): WidgetStore {
     ): void {
       const callbacks = customListeners.get(commId);
       if (callbacks) {
-        callbacks.forEach((cb) => cb(content, buffers));
+        // Convert ArrayBuffer[] to DataView[] for anywidget compatibility
+        // Anywidgets access the underlying buffer via .buffer property
+        const dataViewBuffers = buffers?.map((b) =>
+          b instanceof DataView ? b : new DataView(b),
+        );
+        callbacks.forEach((cb) => cb(content, dataViewBuffers));
       }
     },
 

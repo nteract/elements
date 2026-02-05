@@ -306,6 +306,7 @@ export function createAFMModelProxy(
     ): void {
       // Send custom message to kernel
       // Full Jupyter protocol message format for strongly-typed backends
+      // Note: ipywidgets expects content to be nested in data.content, not spread
       sendMessage({
         header: createHeader("comm_msg"),
         parent_header: null,
@@ -314,9 +315,8 @@ export function createAFMModelProxy(
           comm_id: model.id,
           data: {
             method: "custom",
-            ...content,
-            buffer_paths: [],
-          } as Record<string, unknown>,
+            content: content, // Wrap content properly for ipywidgets protocol
+          },
         },
         buffers: buffers ?? [],
         channel: "shell",
