@@ -122,13 +122,12 @@ Brief description paragraph.
 
 ## Installation
 
-<RegistrySetup />
-
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
     npx shadcn@latest add @nteract/component-name
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).

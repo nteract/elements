@@ -24,13 +24,12 @@ A pure React state store for managing Jupyter widget models. This replaces the B
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
-<RegistrySetup />
-
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
     npx shadcn@latest add @nteract/widget-store
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy the files to your project from [the registry source](https://github.com/nteract/elements/tree/main/registry/widgets):
