@@ -1,4 +1,10 @@
 {
   "title": "Widgets",
-  "pages": ["widget-store", "anywidget-view", "widget-view"]
+  "pages": [
+    "index",
+    "widget-store",
+    "widget-view",
+    "anywidget-view",
+    "controls"
+  ]
 }
