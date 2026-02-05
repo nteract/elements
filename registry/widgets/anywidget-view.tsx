@@ -48,16 +48,28 @@ export interface AnyWidgetModel {
 }
 
 /**
+ * Lifecycle methods that a widget definition provides.
+ */
+type WidgetLifecycle = {
+  render?(context: {
+    model: AnyWidgetModel;
+    el: HTMLElement;
+  }): void | (() => void) | Promise<void | (() => void)>;
+  initialize?(context: { model: AnyWidgetModel }): void | Promise<void>;
+};
+
+/**
+ * Factory function pattern - default export is a function that returns lifecycle methods.
+ * Per AFM spec: "The default export can also be an async function returning this interface."
+ */
+type WidgetFactory = () => WidgetLifecycle | Promise<WidgetLifecycle>;
+
+/**
  * The expected structure of an anywidget ESM module.
+ * Supports both standard pattern (object with render) and factory pattern (function returning object).
  */
 interface AnyWidgetModule {
-  default?: {
-    render?(context: {
-      model: AnyWidgetModel;
-      el: HTMLElement;
-    }): void | (() => void) | Promise<void | (() => void)>;
-    initialize?(context: { model: AnyWidgetModel }): void | Promise<void>;
-  };
+  default?: WidgetLifecycle | WidgetFactory;
   render?(context: {
     model: AnyWidgetModel;
     el: HTMLElement;
@@ -379,15 +391,28 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
           getCurrentState
         );
 
-        // Get the render function (could be on default export or top-level)
-        const render = module.default?.render ?? module.render;
+        // Resolve widget definition - handles both standard and factory patterns
+        // Standard: export default { render, initialize }
+        // Factory: export default () => ({ render, initialize })
+        let widgetDef: WidgetLifecycle | undefined;
+
+        if (typeof module.default === "function") {
+          // Factory pattern - call function to get widget definition
+          widgetDef = await (module.default as WidgetFactory)();
+        } else if (module.default) {
+          // Standard object pattern
+          widgetDef = module.default as WidgetLifecycle;
+        }
+
+        // Get lifecycle methods (from resolved default or top-level exports)
+        const render = widgetDef?.render ?? module.render;
+        const initialize = widgetDef?.initialize ?? module.initialize;
 
         if (!render) {
           throw new Error("ESM module has no render function");
         }
 
         // Call initialize if available
-        const initialize = module.default?.initialize ?? module.initialize;
         if (initialize) {
           await initialize({ model: modelProxy });
         }
