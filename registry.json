@@ -750,7 +750,10 @@
         "toggle",
         "toggle-group",
         "accordion",
-        "tabs"
+        "tabs",
+        "command",
+        "popover",
+        "badge"
       ],
       "files": [
         {
