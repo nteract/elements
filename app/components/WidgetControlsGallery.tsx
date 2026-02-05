@@ -409,11 +409,47 @@ const WIDGET_CATEGORIES = {
       {
         id: "gallery-button",
         name: "ButtonModel",
-        label: "Button",
+        label: "Button (primary)",
         state: {
-          description: "Click me!",
+          description: "Primary",
           button_style: "primary",
-          tooltip: "A clickable button",
+          tooltip: "A primary button",
+        },
+      },
+      {
+        id: "gallery-button-info",
+        name: "ButtonModel",
+        label: "Button (info)",
+        state: {
+          description: "Info",
+          button_style: "info",
+        },
+      },
+      {
+        id: "gallery-button-success",
+        name: "ButtonModel",
+        label: "Button (success)",
+        state: {
+          description: "Success",
+          button_style: "success",
+        },
+      },
+      {
+        id: "gallery-button-warning",
+        name: "ButtonModel",
+        label: "Button (warning)",
+        state: {
+          description: "Warning",
+          button_style: "warning",
+        },
+      },
+      {
+        id: "gallery-button-danger",
+        name: "ButtonModel",
+        label: "Button (danger)",
+        state: {
+          description: "Danger",
+          button_style: "danger",
         },
       },
       {
