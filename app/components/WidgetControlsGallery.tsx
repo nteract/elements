@@ -138,7 +138,7 @@ const WIDGET_CATEGORIES = {
   },
   text: {
     title: "Text Input",
-    description: "Text and HTML content",
+    description: "Text input fields",
     widgets: [
       {
         id: "gallery-text",
@@ -162,12 +162,101 @@ const WIDGET_CATEGORIES = {
         },
       },
       {
+        id: "gallery-password",
+        name: "PasswordModel",
+        label: "Password",
+        state: {
+          value: "",
+          description: "Secret:",
+          placeholder: "Enter password...",
+        },
+      },
+    ],
+  },
+  numeric: {
+    title: "Numeric Input",
+    description: "Number input fields",
+    widgets: [
+      {
+        id: "gallery-int-text",
+        name: "IntTextModel",
+        label: "IntText",
+        state: {
+          value: 42,
+          description: "Count:",
+          step: 1,
+        },
+      },
+      {
+        id: "gallery-float-text",
+        name: "FloatTextModel",
+        label: "FloatText",
+        state: {
+          value: 3.14,
+          description: "Value:",
+          step: 0.1,
+        },
+      },
+      {
+        id: "gallery-bounded-int-text",
+        name: "BoundedIntTextModel",
+        label: "BoundedIntText",
+        state: {
+          value: 50,
+          min: 0,
+          max: 100,
+          step: 5,
+          description: "Bounded:",
+        },
+      },
+      {
+        id: "gallery-bounded-float-text",
+        name: "BoundedFloatTextModel",
+        label: "BoundedFloatText",
+        state: {
+          value: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+          description: "Ratio:",
+        },
+      },
+    ],
+  },
+  display: {
+    title: "Display",
+    description: "Output and display widgets",
+    widgets: [
+      {
+        id: "gallery-label",
+        name: "LabelModel",
+        label: "Label",
+        state: {
+          value: "Plain text display",
+          description: "Status:",
+        },
+      },
+      {
         id: "gallery-html",
         name: "HTMLModel",
         label: "HTML",
         state: {
           value: "<strong>Bold</strong> and <em>italic</em> text",
           description: "Output:",
+        },
+      },
+      {
+        id: "gallery-image",
+        name: "ImageModel",
+        label: "Image",
+        state: {
+          // Small 2x2 red PNG image (base64)
+          value:
+            "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAADklEQVQIW2P4z8DwHwAFAAH/q842AAAAAElFTkSuQmCC",
+          format: "png",
+          width: "64px",
+          height: "64px",
+          description: "Preview:",
         },
       },
     ],
@@ -212,6 +301,17 @@ const WIDGET_CATEGORIES = {
         },
       },
       {
+        id: "gallery-select",
+        name: "SelectModel",
+        label: "Select",
+        state: {
+          index: 1,
+          _options_labels: ["First", "Second", "Third", "Fourth"],
+          description: "Pick one:",
+          rows: 4,
+        },
+      },
+      {
         id: "gallery-radio",
         name: "RadioButtonsModel",
         label: "RadioButtons",
@@ -237,7 +337,7 @@ const WIDGET_CATEGORIES = {
         name: "SelectMultipleModel",
         label: "SelectMultiple",
         state: {
-          value: ["Item 2"],
+          index: [1],
           _options_labels: ["Item 1", "Item 2", "Item 3", "Item 4"],
           description: "Select many:",
           rows: 4,
@@ -247,7 +347,7 @@ const WIDGET_CATEGORIES = {
   },
   other: {
     title: "Other Controls",
-    description: "Buttons and color picker",
+    description: "Buttons, color picker, and validation",
     widgets: [
       {
         id: "gallery-button",
@@ -267,6 +367,26 @@ const WIDGET_CATEGORIES = {
           value: "#3b82f6",
           description: "Color:",
           concise: false,
+        },
+      },
+      {
+        id: "gallery-valid",
+        name: "ValidModel",
+        label: "Valid",
+        state: {
+          value: true,
+          description: "Status:",
+          readout: "All checks passed",
+        },
+      },
+      {
+        id: "gallery-invalid",
+        name: "ValidModel",
+        label: "Valid (invalid)",
+        state: {
+          value: false,
+          description: "Status:",
+          readout: "Validation failed",
         },
       },
     ],
