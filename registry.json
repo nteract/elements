@@ -872,6 +872,106 @@
           "path": "registry/widgets/controls/tab-widget.tsx",
           "type": "registry:component",
           "target": "components/widgets/controls/tab-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/label-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/label-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/image-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/image-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/int-text-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/int-text-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/float-text-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/float-text-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/bounded-int-text-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/bounded-int-text-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/bounded-float-text-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/bounded-float-text-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/password-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/password-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/valid-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/valid-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/select-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/select-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/html-math-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/html-math-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/date-picker-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/date-picker-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/time-picker-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/time-picker-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/float-log-slider.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/float-log-slider.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/play-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/play-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/combobox-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/combobox-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/selection-slider-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/selection-slider-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/selection-range-slider-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/selection-range-slider-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/file-upload-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/file-upload-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/tags-input-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/tags-input-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/colors-input-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/colors-input-widget.tsx"
         }
       ]
     },
