@@ -70,9 +70,31 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 |--------|------------|-------------|
 | Text | `TextModel` | Single-line text input |
 | Textarea | `TextareaModel` | Multi-line text input |
-| HTML | `HTMLModel` | Rendered HTML content |
+| Password | `PasswordModel` | Masked text input |
 
-**Common props:** `value`, `description`, `placeholder`, `disabled`
+**Common props:** `value`, `description`, `placeholder`, `disabled`, `continuous_update`
+
+### Numeric Input
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| IntText | `IntTextModel` | Integer text input |
+| FloatText | `FloatTextModel` | Float text input |
+| BoundedIntText | `BoundedIntTextModel` | Bounded integer text input |
+| BoundedFloatText | `BoundedFloatTextModel` | Bounded float text input |
+
+**Common props:** `value`, `min`, `max`, `step`, `description`, `disabled`, `continuous_update`
+
+### Display
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| Label | `LabelModel` | Plain text display |
+| HTML | `HTMLModel` | Rendered HTML content |
+| Image | `ImageModel` | Image display from kernel |
+
+**Label/HTML props:** `value`, `description`, `placeholder`
+**Image props:** `value` (base64), `format`, `width`, `height`, `description`
 
 ### Boolean
 
@@ -88,11 +110,12 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 | Widget | Model Name | Description |
 |--------|------------|-------------|
 | Dropdown | `DropdownModel` | Single-select dropdown |
+| Select | `SelectModel` | Single-select listbox |
 | RadioButtons | `RadioButtonsModel` | Radio button group |
 | ToggleButtons | `ToggleButtonsModel` | Button group for selection |
 | SelectMultiple | `SelectMultipleModel` | Multi-select listbox |
 
-**Common props:** `value`, `_options_labels`, `description`, `disabled`
+**Common props:** `index`, `_options_labels`, `description`, `disabled`, `rows`
 
 ### Other
 
@@ -100,9 +123,11 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 |--------|------------|-------------|
 | Button | `ButtonModel` | Clickable button |
 | ColorPicker | `ColorPickerModel` | Color selection input |
+| Valid | `ValidModel` | Validation indicator (checkmark/X) |
 
 **Button props:** `description` (button text), `button_style`, `tooltip`, `disabled`
 **ColorPicker props:** `value` (hex color), `description`, `concise`, `disabled`
+**Valid props:** `value` (boolean), `readout` (status message), `description`
 
 ### Layout Containers
 
