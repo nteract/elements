@@ -21,7 +21,7 @@ export function HTMLWidget({ modelId, className }: WidgetComponentProps) {
 
   return (
     <div
-      className={cn("flex items-start gap-3", className)}
+      className={cn("flex shrink-0 items-start gap-3", className)}
       data-widget-id={modelId}
       data-widget-type="HTML"
     >
