@@ -104,6 +104,43 @@ const WIDGET_CATEGORIES = {
           readout_format: ".2f",
         },
       },
+      {
+        id: "gallery-float-log-slider",
+        name: "FloatLogSliderModel",
+        label: "FloatLogSlider",
+        state: {
+          value: 100,
+          base: 10,
+          min: 0,
+          max: 4,
+          step: 0.1,
+          description: "Log:",
+          readout: true,
+          readout_format: ".3g",
+        },
+      },
+      {
+        id: "gallery-selection-slider",
+        name: "SelectionSliderModel",
+        label: "SelectionSlider",
+        state: {
+          index: 1,
+          _options_labels: ["Small", "Medium", "Large", "XL"],
+          description: "Size:",
+          readout: true,
+        },
+      },
+      {
+        id: "gallery-selection-range-slider",
+        name: "SelectionRangeSliderModel",
+        label: "SelectionRangeSlider",
+        state: {
+          index: [0, 2],
+          _options_labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+          description: "Days:",
+          readout: true,
+        },
+      },
     ],
   },
   progress: {
@@ -259,6 +296,15 @@ const WIDGET_CATEGORIES = {
           description: "Preview:",
         },
       },
+      {
+        id: "gallery-html-math",
+        name: "HTMLMathModel",
+        label: "HTMLMath",
+        state: {
+          value: "Euler's identity: $e^{i\\pi} + 1 = 0$",
+          description: "Math:",
+        },
+      },
     ],
   },
   boolean: {
@@ -343,6 +389,17 @@ const WIDGET_CATEGORIES = {
           rows: 4,
         },
       },
+      {
+        id: "gallery-combobox",
+        name: "ComboboxModel",
+        label: "Combobox",
+        state: {
+          value: "",
+          options: ["Apple", "Banana", "Cherry", "Date", "Elderberry"],
+          description: "Fruit:",
+          placeholder: "Type or select...",
+        },
+      },
     ],
   },
   other: {
@@ -387,6 +444,70 @@ const WIDGET_CATEGORIES = {
           value: false,
           description: "Status:",
           readout: "Validation failed",
+        },
+      },
+      {
+        id: "gallery-play",
+        name: "PlayModel",
+        label: "Play",
+        state: {
+          value: 0,
+          min: 0,
+          max: 10,
+          step: 1,
+          interval: 500,
+          _playing: false,
+          repeat: true,
+          description: "Frame:",
+        },
+      },
+      {
+        id: "gallery-date-picker",
+        name: "DatePickerModel",
+        label: "DatePicker",
+        state: {
+          value: null,
+          description: "Date:",
+        },
+      },
+      {
+        id: "gallery-time-picker",
+        name: "TimePickerModel",
+        label: "TimePicker",
+        state: {
+          value: null,
+          description: "Time:",
+        },
+      },
+      {
+        id: "gallery-file-upload",
+        name: "FileUploadModel",
+        label: "FileUpload",
+        state: {
+          value: [],
+          description: "Upload",
+          accept: ".txt,.csv",
+          multiple: true,
+          button_style: "primary",
+        },
+      },
+      {
+        id: "gallery-tags-input",
+        name: "TagsInputModel",
+        label: "TagsInput",
+        state: {
+          value: ["Python", "TypeScript"],
+          description: "Tags:",
+          placeholder: "Add tag...",
+        },
+      },
+      {
+        id: "gallery-colors-input",
+        name: "ColorsInputModel",
+        label: "ColorsInput",
+        state: {
+          value: ["#ef4444", "#3b82f6", "#22c55e"],
+          description: "Colors:",
         },
       },
     ],
