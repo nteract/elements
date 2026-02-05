@@ -47,9 +47,9 @@ Universal widget view component that routes widget models to the appropriate ren
 ### Basic Usage
 
 ```tsx
-import { WidgetView } from "@/registry/widgets/widget-view"
+import { WidgetView } from "@/components/widgets/widget-view"
 // Import to register built-in widgets
-import "@/registry/widgets/controls"
+import "@/components/widgets/controls"
 
 function NotebookOutput({ modelId }: { modelId: string }) {
   return <WidgetView modelId={modelId} />
@@ -59,9 +59,9 @@ function NotebookOutput({ modelId }: { modelId: string }) {
 ### With Provider
 
 ```tsx
-import { WidgetStoreProvider } from "@/registry/widgets/widget-store-context"
-import { WidgetView } from "@/registry/widgets/widget-view"
-import "@/registry/widgets/controls"
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { WidgetView } from "@/components/widgets/widget-view"
+import "@/components/widgets/controls"
 
 function App() {
   return (
@@ -95,7 +95,7 @@ Model exists?
 
 ## Built-in Widgets
 
-24 ipywidgets are supported out of the box when you import `@/registry/widgets/controls`:
+24 ipywidgets are supported out of the box when you import `@/components/widgets/controls`:
 
 - **Sliders:** IntSlider, FloatSlider, IntRangeSlider, FloatRangeSlider
 - **Progress:** IntProgress, FloatProgress
@@ -114,7 +114,7 @@ Model exists?
 You can register your own widget components:
 
 ```tsx
-import { registerWidget } from "@/registry/widgets/widget-registry"
+import { registerWidget } from "@/components/widgets/widget-registry"
 
 // Create your component
 function MyCustomWidget({ modelId, className }: WidgetComponentProps) {

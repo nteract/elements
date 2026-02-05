@@ -51,7 +51,7 @@ This package exports three components:
 The base component for rendering any text with ANSI escape sequences.
 
 ```tsx
-import { AnsiOutput } from "@/registry/outputs/ansi-output"
+import { AnsiOutput } from "@/components/outputs/ansi-output"
 
 export function Example() {
   const text = "\x1b[32mSuccess:\x1b[0m Operation completed"
@@ -83,7 +83,7 @@ Here's a more colorful example:
 Renders stdout or stderr output with appropriate styling.
 
 ```tsx
-import { AnsiStreamOutput } from "@/registry/outputs/ansi-output"
+import { AnsiStreamOutput } from "@/components/outputs/ansi-output"
 
 export function StreamExample() {
   return (
@@ -125,7 +125,7 @@ export function StreamExample() {
 Renders Python-style error tracebacks with proper formatting.
 
 ```tsx
-import { AnsiErrorOutput } from "@/registry/outputs/ansi-output"
+import { AnsiErrorOutput } from "@/components/outputs/ansi-output"
 
 export function ErrorExample() {
   return (

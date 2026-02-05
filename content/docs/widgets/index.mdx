@@ -99,9 +99,9 @@ npx shadcn@latest add @nteract/widget-controls
 <RegistrySetup />
 
 ```tsx
-import { WidgetStoreProvider } from "@/lib/widget-store-context"
-import { WidgetView } from "@/lib/widget-view"
-import "@/lib/controls" // Register built-in widgets
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { WidgetView } from "@/components/widgets/widget-view"
+import "@/components/widgets/controls" // Register built-in widgets
 
 function NotebookApp({ kernel }) {
   // Route kernel messages to the widget store
@@ -133,7 +133,7 @@ Every built-in widget uses shadcn/ui primitives. Customize them by:
 3. **Fork and modify** - Copy a widget file and adjust as needed
 
 ```tsx
-import { registerWidget } from "@/lib/widget-registry"
+import { registerWidget } from "@/components/widgets/widget-registry"
 
 // Replace the default IntSlider with your custom version
 registerWidget("IntSliderModel", MyCustomSlider)

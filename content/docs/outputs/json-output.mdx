@@ -44,7 +44,7 @@ Component for rendering JSON data in an interactive, expandable tree view. Usefu
 ## Usage
 
 ```tsx
-import { JsonOutput } from "@/registry/outputs/json-output"
+import { JsonOutput } from "@/components/outputs/json-output"
 
 export function Example() {
   const data = {
@@ -115,7 +115,7 @@ When receiving JSON as a string (e.g., from user input or text fields), parse it
 "use client";
 
 import { useState } from "react";
-import { JsonOutput } from "@/registry/outputs/json-output";
+import { JsonOutput } from "@/components/outputs/json-output";
 
 export function JsonStringViewer() {
   const [input, setInput] = useState('{"name": "example", "count": 42}');

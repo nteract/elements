@@ -36,10 +36,10 @@ Import the controls module to register all built-in widgets:
 
 ```tsx
 // Import to register all built-in widgets
-import "@/lib/controls"
+import "@/components/widgets/controls"
 
 // Or import specific widgets
-import { IntSlider, Button, VBox } from "@/lib/controls"
+import { IntSlider, Button, VBox } from "@/components/widgets/controls"
 ```
 
 ## Widget Reference
@@ -187,8 +187,8 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 Register your own component to replace any built-in widget:
 
 ```tsx
-import { registerWidget } from "@/lib/widget-registry"
-import { useWidgetModelValue, useWidgetStoreRequired } from "@/lib/widget-store-context"
+import { registerWidget } from "@/components/widgets/widget-registry"
+import { useWidgetModelValue, useWidgetStoreRequired } from "@/components/widgets/widget-store-context"
 
 function MyFancySlider({ modelId, className }) {
   const { sendUpdate } = useWidgetStoreRequired()

@@ -34,7 +34,7 @@ A component that displays kernel connection status with color-coded indicators. 
 ## Usage
 
 ```tsx
-import { RuntimeHealthIndicator } from "@/registry/cell/RuntimeHealthIndicator"
+import { RuntimeHealthIndicator } from "@/components/cell/RuntimeHealthIndicator"
 
 export function NotebookToolbar() {
   return (
@@ -131,7 +131,7 @@ import {
   getStatusText,
   getStatusTextColor,
   type RuntimeStatus
-} from "@/registry/cell/RuntimeHealthIndicator"
+} from "@/components/cell/RuntimeHealthIndicator"
 
 // Get the Tailwind color class for a status
 getStatusColor("idle") // "text-green-500"

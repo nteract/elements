@@ -45,7 +45,7 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 Wrap your app with `WidgetStoreProvider`:
 
 ```tsx
-import { WidgetStoreProvider } from "@/registry/widgets/widget-store-context"
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
 
 function App() {
   const sendMessage = (msg) => {
@@ -66,7 +66,7 @@ function App() {
 Route incoming comm messages to the store:
 
 ```tsx
-import { useWidgetStoreRequired } from "@/lib/widget-store-context"
+import { useWidgetStoreRequired } from "@/components/widgets/widget-store-context"
 
 function KernelMessageHandler({ kernel }) {
   const { handleMessage } = useWidgetStoreRequired()
@@ -91,7 +91,7 @@ import {
   useWidgetModels,
   useWidgetModel,
   useWidgetModelValue,
-} from "@/lib/widget-store-context"
+} from "@/components/widgets/widget-store-context"
 
 // Subscribe to ALL models (re-renders on any change)
 function ModelList() {

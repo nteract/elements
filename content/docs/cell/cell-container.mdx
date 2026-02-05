@@ -38,12 +38,12 @@ CellContainer          <- Focus wrapper with selection border
 Here's how to compose a complete cell:
 
 ```tsx
-import { CellContainer } from "@/registry/cell/CellContainer";
-import { CellHeader } from "@/registry/cell/CellHeader";
-import { CellControls } from "@/registry/cell/CellControls";
-import { CellTypeButton } from "@/registry/cell/CellTypeButton";
-import { PlayButton } from "@/registry/cell/PlayButton";
-import { ExecutionStatus } from "@/registry/cell/ExecutionStatus";
+import { CellContainer } from "@/components/cell/CellContainer";
+import { CellHeader } from "@/components/cell/CellHeader";
+import { CellControls } from "@/components/cell/CellControls";
+import { CellTypeButton } from "@/components/cell/CellTypeButton";
+import { PlayButton } from "@/components/cell/PlayButton";
+import { ExecutionStatus } from "@/components/cell/ExecutionStatus";
 
 function NotebookCell({ cell, isFocused, onFocus }) {
   const [sourceVisible, setSourceVisible] = useState(true);
