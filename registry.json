@@ -589,6 +589,32 @@
       ]
     },
     {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "A vertically stacked set of interactive headings that reveal or hide associated content. Built on Radix UI.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/primitives/accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "A component that can expand or collapse content. Built on Radix UI Collapsible primitive.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/primitives/collapsible.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "codemirror-editor",
       "type": "registry:component",
       "title": "CodeMirror Editor",
@@ -636,7 +662,7 @@
       "name": "widget-store",
       "type": "registry:lib",
       "title": "Widget Store",
-      "description": "Pure React state management for Jupyter widget models. Handles comm_open, comm_msg, and comm_close messages with fine-grained subscriptions via useSyncExternalStore.",
+      "description": "Pure React state management for Jupyter widget models. Handles comm_open, comm_msg, and comm_close messages with fine-grained subscriptions via useSyncExternalStore. Includes comm protocol router and buffer utilities.",
       "files": [
         {
           "path": "registry/widgets/widget-store.ts",
@@ -644,6 +670,14 @@
         },
         {
           "path": "registry/widgets/widget-store-context.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/widgets/use-comm-router.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/widgets/buffer-utils.ts",
           "type": "registry:lib"
         }
       ]
@@ -682,8 +716,8 @@
       "name": "widget-controls",
       "type": "registry:component",
       "title": "Widget Controls",
-      "description": "Built-in shadcn-backed widget components for standard ipywidgets (IntSlider, FloatSlider, IntProgress, Button, Checkbox, Text, Textarea, Dropdown, RadioButtons, ToggleButton, ToggleButtons, SelectMultiple).",
-      "registryDependencies": ["@nteract/widget-view", "slider", "progress", "button", "checkbox", "input", "textarea", "label", "select", "radio-group", "toggle", "toggle-group"],
+      "description": "Built-in shadcn-backed widget components for standard ipywidgets including controls (IntSlider, FloatSlider, IntProgress, Button, Checkbox, Text, Textarea, Dropdown, RadioButtons, ToggleButton, ToggleButtons, SelectMultiple) and layout containers (VBox, HBox, Box, GridBox, Accordion, Tab).",
+      "registryDependencies": ["@nteract/widget-view", "slider", "progress", "button", "checkbox", "input", "textarea", "label", "select", "radio-group", "toggle", "toggle-group", "accordion", "tabs"],
       "files": [
         {
           "path": "registry/widgets/controls/index.ts",
@@ -739,6 +773,30 @@
         },
         {
           "path": "registry/widgets/controls/toggle-buttons-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/vbox-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/hbox-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/box-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/gridbox-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/accordion-widget.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/widgets/controls/tab-widget.tsx",
           "type": "registry:component"
         }
       ]
