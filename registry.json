@@ -1069,6 +1069,30 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "all",
+      "type": "registry:component",
+      "title": "All nteract Components",
+      "description": "Install all Jupyter frontend components: outputs, cell primitives, widgets, and editor.",
+      "registryDependencies": [
+        "@nteract/media-router",
+        "@nteract/output-area",
+        "@nteract/cell-container",
+        "@nteract/cell-header",
+        "@nteract/cell-controls",
+        "@nteract/cell-type-button",
+        "@nteract/cell-type-selector",
+        "@nteract/execution-count",
+        "@nteract/execution-status",
+        "@nteract/play-button",
+        "@nteract/runtime-health-indicator",
+        "@nteract/collaborator-avatars",
+        "@nteract/presence-bookmarks",
+        "@nteract/widget-controls",
+        "@nteract/codemirror-editor"
+      ],
+      "files": []
     }
   ]
 }

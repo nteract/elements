@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@10.12.1",
   "scripts": {
-    "build": "shadcn build && next build",
+    "build": "shadcn build && cp registry.json public/r/registry.json && next build",
     "dev": "next dev",
     "start": "next start",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
