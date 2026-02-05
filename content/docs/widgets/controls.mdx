@@ -50,10 +50,15 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 |--------|------------|-------------|
 | IntSlider | `IntSliderModel` | Integer value with draggable handle |
 | FloatSlider | `FloatSliderModel` | Floating point value with handle |
+| FloatLogSlider | `FloatLogSliderModel` | Logarithmic scale slider |
 | IntRangeSlider | `IntRangeSliderModel` | Integer range with two handles |
 | FloatRangeSlider | `FloatRangeSliderModel` | Float range with two handles |
+| SelectionSlider | `SelectionSliderModel` | Discrete option slider |
+| SelectionRangeSlider | `SelectionRangeSliderModel` | Discrete option range slider |
 
 **Common props:** `value`, `min`, `max`, `step`, `description`, `disabled`, `orientation`, `readout`, `readout_format`
+**FloatLogSlider props:** `base` (default 10), `value`, `min`, `max` (exponents)
+**Selection sliders:** `index`, `_options_labels`, `readout`
 
 ### Progress Bars
 
@@ -91,9 +96,11 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 |--------|------------|-------------|
 | Label | `LabelModel` | Plain text display |
 | HTML | `HTMLModel` | Rendered HTML content |
+| HTMLMath | `HTMLMathModel` | HTML with LaTeX math rendering |
 | Image | `ImageModel` | Image display from kernel |
 
 **Label/HTML props:** `value`, `description`, `placeholder`
+**HTMLMath props:** `value` (supports $...$ and $$...$$ math), `description`
 **Image props:** `value` (base64), `format`, `width`, `height`, `description`
 
 ### Boolean
@@ -111,11 +118,13 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 |--------|------------|-------------|
 | Dropdown | `DropdownModel` | Single-select dropdown |
 | Select | `SelectModel` | Single-select listbox |
+| Combobox | `ComboboxModel` | Text input with autocomplete |
 | RadioButtons | `RadioButtonsModel` | Radio button group |
 | ToggleButtons | `ToggleButtonsModel` | Button group for selection |
 | SelectMultiple | `SelectMultipleModel` | Multi-select listbox |
 
 **Common props:** `index`, `_options_labels`, `description`, `disabled`, `rows`
+**Combobox props:** `value`, `options`, `placeholder`, `ensure_option`, `continuous_update`
 
 ### Other
 
@@ -124,10 +133,26 @@ import { IntSlider, Button, VBox } from "@/lib/controls"
 | Button | `ButtonModel` | Clickable button |
 | ColorPicker | `ColorPickerModel` | Color selection input |
 | Valid | `ValidModel` | Validation indicator (checkmark/X) |
+| Play | `PlayModel` | Animation control with play/pause |
+| DatePicker | `DatePickerModel` | Date input field |
+| TimePicker | `TimePickerModel` | Time input field |
+| FileUpload | `FileUploadModel` | File upload button |
 
 **Button props:** `description` (button text), `button_style`, `tooltip`, `disabled`
 **ColorPicker props:** `value` (hex color), `description`, `concise`, `disabled`
 **Valid props:** `value` (boolean), `readout` (status message), `description`
+**Play props:** `value`, `min`, `max`, `step`, `interval` (ms), `_playing`, `repeat`
+**DatePicker/TimePicker props:** `value`, `min`, `max`, `description`, `disabled`
+**FileUpload props:** `value` (file array), `accept`, `multiple`, `button_style`
+
+### Multi-value Inputs
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| TagsInput | `TagsInputModel` | Multi-value tag input |
+| ColorsInput | `ColorsInputModel` | Multi-value color picker |
+
+**Common props:** `value` (array), `description`, `allow_duplicates`, `allowed_tags`, `placeholder`
 
 ### Layout Containers
 
