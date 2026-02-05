@@ -26,7 +26,7 @@ Install the widget controls along with the widget view infrastructure:
   <Tab value="Manual">
     Copy the [controls/](https://github.com/nteract/elements/tree/main/registry/widgets/controls) directory to your project.
 
-    **Requires:** [Widget View](/docs/widgets/widget-view)
+    **Requires:** [Widget Store](/docs/widgets/widget-store)
   </Tab>
 </Tabs>
 
@@ -181,6 +181,17 @@ import { IntSlider, Button, VBox } from "@/components/widgets/controls"
 **ControllerAxis props:** `value` (float -1 to 1)
 
 ## Customizing Widgets
+
+### Custom widget props
+
+All widget components (built-in and custom) receive `WidgetComponentProps`:
+
+```typescript
+interface WidgetComponentProps {
+  modelId: string;    // The comm_id of the widget
+  className?: string; // Optional CSS classes
+}
+```
 
 ### Override a widget globally
 

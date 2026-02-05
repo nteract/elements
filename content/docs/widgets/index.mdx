@@ -63,12 +63,26 @@ The foundation. A pure React store that manages widget model state with:
 - Fine-grained subscriptions (subscribe to a single key, not the whole model)
 - IPY_MODEL_ reference resolution
 
-### [Widget View](/docs/widgets/widget-view)
+### Widget View
 
-The router. Automatically renders the right component for each widget:
-- Routes anywidgets (with `_esm`) to the ESM loader
-- Routes standard ipywidgets to built-in shadcn components
-- Shows helpful fallback for unsupported models
+The router. Given a `modelId`, it renders the right component for each widget:
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `modelId` | `string` | The comm_id of the widget model |
+| `className` | `string` | Additional CSS classes for the container |
+
+```
+Model closed? (e.g. tqdm with leave=False)
+├── Yes → Render nothing
+└── No → Model exists?
+    ├── No → Show loading state
+    └── Yes → Has _esm field?
+        ├── Yes → Render with AnyWidgetView
+        └── No → Has registered component?
+            ├── Yes → Render built-in component
+            └── No → Show unsupported widget fallback
+```
 
 ### [AnyWidget View](/docs/widgets/anywidget-view)
 
@@ -99,24 +113,29 @@ npx shadcn@latest add @nteract/widget-controls
 <RegistrySetup />
 
 ```tsx
-import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { WidgetStoreProvider, useWidgetStoreRequired } from "@/components/widgets/widget-store-context"
 import { WidgetView } from "@/components/widgets/widget-view"
 import "@/components/widgets/controls" // Register built-in widgets
 
 function NotebookApp({ kernel }) {
-  // Route kernel messages to the widget store
-  const { handleMessage } = useWidgetStore()
-
-  useEffect(() => {
-    kernel.onMessage(handleMessage)
-  }, [kernel])
-
   return (
     <WidgetStoreProvider sendMessage={(msg) => kernel.send(msg)}>
+      <KernelBridge kernel={kernel} />
       {/* Render widgets by their comm_id */}
       <WidgetView modelId="widget-123" />
     </WidgetStoreProvider>
   )
+}
+
+// Must be inside WidgetStoreProvider to access the store
+function KernelBridge({ kernel }) {
+  const { handleMessage } = useWidgetStoreRequired()
+
+  useEffect(() => {
+    kernel.onMessage(handleMessage)
+  }, [kernel, handleMessage])
+
+  return null
 }
 ```
 
