@@ -1,12 +1,3 @@
-import { Button } from "@/registry/primitives/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/registry/primitives/dropdown-menu";
-import { cn } from "@/lib/utils";
 import {
   ArrowDown,
   ArrowDownToLine,
@@ -20,7 +11,16 @@ import {
   MoreVertical,
   X,
 } from "lucide-react";
-import React from "react";
+import type React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/registry/primitives/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/registry/primitives/dropdown-menu";
 
 interface CellControlsProps {
   sourceVisible: boolean;
@@ -77,7 +77,7 @@ export const CellControls: React.FC<CellControlsProps> = ({
         forceVisible
           ? "opacity-100"
           : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
-        className
+        className,
       )}
     >
       {/* Mobile Play Button */}
@@ -90,7 +90,7 @@ export const CellControls: React.FC<CellControlsProps> = ({
         onClick={toggleSourceVisibility}
         className={cn(
           "hover:bg-muted/80 h-8 w-8 p-0 sm:h-7 sm:w-7",
-          !sourceVisible && "text-muted-foreground/60"
+          !sourceVisible && "text-muted-foreground/60",
         )}
         title={sourceVisible ? "Hide source" : "Show source"}
       >
@@ -109,7 +109,7 @@ export const CellControls: React.FC<CellControlsProps> = ({
           onClick={toggleAiContextVisibility}
           className={cn(
             "hover:bg-muted/80 h-8 w-8 p-0 sm:h-7 sm:w-7",
-            aiContextVisible ? "text-purple-600" : "text-gray-500"
+            aiContextVisible ? "text-purple-600" : "text-gray-500",
           )}
           title={
             aiContextVisible ? "Hide from AI context" : "Show in AI context"

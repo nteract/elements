@@ -6,14 +6,14 @@
  * Maps to ipywidgets SelectMultipleModel.
  */
 
+import { CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/registry/primitives/label";
-import { CheckIcon } from "lucide-react";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function SelectMultipleWidget({
   modelId,
@@ -58,7 +58,7 @@ export function SelectMultipleWidget({
         aria-disabled={disabled}
         className={cn(
           "w-48 overflow-y-auto rounded-md border border-input bg-background shadow-xs",
-          disabled && "opacity-50 cursor-not-allowed"
+          disabled && "opacity-50 cursor-not-allowed",
         )}
         style={{ maxHeight }}
       >
@@ -74,7 +74,7 @@ export function SelectMultipleWidget({
                 "flex items-center gap-2 px-3 py-1.5 text-sm cursor-pointer select-none",
                 "hover:bg-accent hover:text-accent-foreground",
                 isSelected && "bg-accent/50",
-                disabled && "pointer-events-none"
+                disabled && "pointer-events-none",
               )}
             >
               <span className="flex size-4 items-center justify-center">

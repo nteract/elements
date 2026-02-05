@@ -1,7 +1,7 @@
 "use client";
 
-import { CellHeader } from "@/registry/cell/CellHeader";
 import type { ComponentProps } from "react";
+import { CellHeader } from "@/registry/cell/CellHeader";
 
 type CellHeaderDemoProps = Omit<
   ComponentProps<typeof CellHeader>,

@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { Circle, Terminal } from "lucide-react";
-import React from "react";
+import type React from "react";
+import { cn } from "@/lib/utils";
 
 export type RuntimeStatus = "idle" | "busy" | "disconnected" | "connecting";
 
@@ -20,7 +20,6 @@ export function getStatusColor(status: RuntimeStatus): string {
       return "text-amber-500";
     case "connecting":
       return "text-blue-500";
-    case "disconnected":
     default:
       return "text-red-500";
   }
@@ -34,7 +33,6 @@ export function getStatusText(status: RuntimeStatus): string {
       return "Busy";
     case "connecting":
       return "Connecting...";
-    case "disconnected":
     default:
       return "Disconnected";
   }
@@ -48,7 +46,6 @@ export function getStatusTextColor(status: RuntimeStatus): string {
       return "text-amber-600";
     case "connecting":
       return "text-blue-600";
-    case "disconnected":
     default:
       return "text-red-600";
   }
@@ -71,9 +68,7 @@ export const RuntimeHealthIndicator: React.FC<RuntimeHealthIndicatorProps> = ({
           </span>
         </>
       )}
-      <Circle
-        className={cn("size-2 fill-current", getStatusColor(status))}
-      />
+      <Circle className={cn("size-2 fill-current", getStatusColor(status))} />
       {showStatus && (
         <span className={cn("text-xs", getStatusTextColor(status))}>
           {getStatusText(status)}
@@ -90,7 +85,7 @@ export const RuntimeHealthIndicator: React.FC<RuntimeHealthIndicatorProps> = ({
         onClick={onClick}
         className={cn(
           "flex items-center gap-1 rounded-md border border-input bg-background px-2 py-1 text-sm transition-colors hover:bg-accent hover:text-accent-foreground sm:gap-2",
-          className
+          className,
         )}
       >
         {content}

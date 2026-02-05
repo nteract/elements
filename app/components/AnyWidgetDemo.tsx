@@ -12,14 +12,14 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import {
-  WidgetStoreProvider,
-  useWidgetStoreRequired,
-  useWidgetModels,
-  type JupyterCommMessage,
-} from "@/registry/widgets/widget-store-context";
-import { AnyWidgetView } from "@/registry/widgets/anywidget-view";
 import { Button } from "@/registry/primitives/button";
+import { AnyWidgetView } from "@/registry/widgets/anywidget-view";
+import {
+  type JupyterCommMessage,
+  useWidgetModels,
+  useWidgetStoreRequired,
+  WidgetStoreProvider,
+} from "@/registry/widgets/widget-store-context";
 
 // === Example anywidget ESM code ===
 
@@ -231,7 +231,7 @@ const FACTORY_CSS = `
 
 const createAnyWidgetMessage = (
   commId: string,
-  count: number = 0
+  count: number = 0,
 ): JupyterCommMessage => ({
   header: {
     msg_id: crypto.randomUUID(),
@@ -256,7 +256,7 @@ const createAnyWidgetMessage = (
 
 const updateCountMessage = (
   commId: string,
-  count: number
+  count: number,
 ): JupyterCommMessage => ({
   header: {
     msg_id: crypto.randomUUID(),
@@ -273,7 +273,7 @@ const updateCountMessage = (
 
 const customMessage = (
   commId: string,
-  content: Record<string, unknown>
+  content: Record<string, unknown>,
 ): JupyterCommMessage => ({
   header: {
     msg_id: crypto.randomUUID(),
@@ -311,7 +311,7 @@ const createConfettiWidgetMessage = (commId: string): JupyterCommMessage => ({
 
 const createFactoryWidgetMessage = (
   commId: string,
-  count: number = 0
+  count: number = 0,
 ): JupyterCommMessage => ({
   header: {
     msg_id: crypto.randomUUID(),
@@ -392,7 +392,11 @@ function CounterDemo() {
           </Button>
         ) : (
           <>
-            <Button onClick={simulateKernelUpdate} variant="secondary" size="sm">
+            <Button
+              onClick={simulateKernelUpdate}
+              variant="secondary"
+              size="sm"
+            >
               Kernel Update
             </Button>
             <Button onClick={sendCustomToWidget} variant="secondary" size="sm">
@@ -466,7 +470,8 @@ function FactoryDemo() {
       <div>
         <h4 className="font-medium mb-1">Factory Pattern Widget</h4>
         <p className="text-xs text-muted-foreground mb-3">
-          Demonstrates the factory pattern (like quak) where default export is a function returning {"{"} initialize, render {"}"}.
+          Demonstrates the factory pattern (like quak) where default export is a
+          function returning {"{"} initialize, render {"}"}.
         </p>
       </div>
       {!hasWidget ? (
@@ -493,57 +498,70 @@ interface KernelLogEntry {
  */
 export function AnyWidgetDemo() {
   const [kernelLog, setKernelLog] = useState<KernelLogEntry[]>([]);
-  const handleMessageRef = useRef<((msg: JupyterCommMessage) => void) | null>(null);
+  const handleMessageRef = useRef<((msg: JupyterCommMessage) => void) | null>(
+    null,
+  );
 
-  const addKernelLog = useCallback((entry: Omit<KernelLogEntry, "timestamp">) => {
-    setKernelLog((prev) => [...prev.slice(-9), { ...entry, timestamp: Date.now() }]);
-  }, []);
+  const addKernelLog = useCallback(
+    (entry: Omit<KernelLogEntry, "timestamp">) => {
+      setKernelLog((prev) => [
+        ...prev.slice(-9),
+        { ...entry, timestamp: Date.now() },
+      ]);
+    },
+    [],
+  );
 
   // Kernel message handler - receives messages from widgets
-  const sendMessage = useCallback((msg: JupyterCommMessage) => {
-    const method = msg.content.data?.method;
-    const commId = msg.content.comm_id;
+  const sendMessage = useCallback(
+    (msg: JupyterCommMessage) => {
+      const method = msg.content.data?.method;
+      const commId = msg.content.comm_id;
 
-    // Log the incoming message
-    if (method === "update") {
-      addKernelLog({
-        direction: "in",
-        type: "update",
-        data: msg.content.data?.state,
-      });
-    } else if (method === "custom") {
-      const content = msg.content.data as Record<string, unknown>;
-      addKernelLog({
-        direction: "in",
-        type: "custom",
-        data: content,
-      });
+      // Log the incoming message
+      if (method === "update") {
+        addKernelLog({
+          direction: "in",
+          type: "update",
+          data: msg.content.data?.state,
+        });
+      } else if (method === "custom") {
+        const content = msg.content.data as Record<string, unknown>;
+        addKernelLog({
+          direction: "in",
+          type: "custom",
+          data: content,
+        });
 
-      // Auto-respond to ping with pong (simulating kernel behavior)
-      if (content?.type === "ping" && commId && handleMessageRef.current) {
-        setTimeout(() => {
-          const response = customMessage(commId, {
-            type: "pong",
-            message: "Kernel received your ping!",
-            originalTimestamp: content.timestamp,
-            responseTimestamp: Date.now(),
-          });
-          addKernelLog({
-            direction: "out",
-            type: "pong",
-            data: response.content.data,
-          });
-          handleMessageRef.current?.(response);
-        }, 100); // Small delay to simulate network
+        // Auto-respond to ping with pong (simulating kernel behavior)
+        if (content?.type === "ping" && commId && handleMessageRef.current) {
+          setTimeout(() => {
+            const response = customMessage(commId, {
+              type: "pong",
+              message: "Kernel received your ping!",
+              originalTimestamp: content.timestamp,
+              responseTimestamp: Date.now(),
+            });
+            addKernelLog({
+              direction: "out",
+              type: "pong",
+              data: response.content.data,
+            });
+            handleMessageRef.current?.(response);
+          }, 100); // Small delay to simulate network
+        }
       }
-    }
-  }, [addKernelLog]);
+    },
+    [addKernelLog],
+  );
 
   return (
     <WidgetStoreProvider sendMessage={sendMessage}>
       <AnyWidgetDemoInner
         kernelLog={kernelLog}
-        setHandleMessage={(fn) => { handleMessageRef.current = fn; }}
+        setHandleMessage={(fn) => {
+          handleMessageRef.current = fn;
+        }}
       />
     </WidgetStoreProvider>
   );
@@ -575,7 +593,8 @@ function AnyWidgetDemoInner({
       <div className="border rounded-lg p-4">
         <h4 className="font-medium mb-2">Kernel Log</h4>
         <p className="text-xs text-muted-foreground mb-3">
-          Messages between widgets and the simulated kernel. The kernel auto-responds to "ping" with "pong".
+          Messages between widgets and the simulated kernel. The kernel
+          auto-responds to "ping" with "pong".
         </p>
         {kernelLog.length === 0 ? (
           <div className="text-xs text-muted-foreground italic">

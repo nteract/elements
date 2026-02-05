@@ -7,10 +7,10 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Progress } from "@/registry/primitives/progress";
 import { Label } from "@/registry/primitives/label";
-import { useWidgetModelValue } from "../widget-store-context";
+import { Progress } from "@/registry/primitives/progress";
 import type { WidgetComponentProps } from "../widget-registry";
+import { useWidgetModelValue } from "../widget-store-context";
 
 export function FloatProgress({ modelId, className }: WidgetComponentProps) {
   // Subscribe to individual state keys
@@ -21,7 +21,7 @@ export function FloatProgress({ modelId, className }: WidgetComponentProps) {
   const barStyle =
     useWidgetModelValue<"success" | "info" | "warning" | "danger" | "">(
       modelId,
-      "bar_style"
+      "bar_style",
     ) ?? "";
   const orientation =
     useWidgetModelValue<"horizontal" | "vertical">(modelId, "orientation") ??
@@ -51,19 +51,17 @@ export function FloatProgress({ modelId, className }: WidgetComponentProps) {
       className={cn(
         "flex gap-3",
         isVertical ? "flex-col items-center" : "items-center",
-        className
+        className,
       )}
       data-widget-id={modelId}
       data-widget-type="FloatProgress"
     >
-      {description && (
-        <Label className="shrink-0 text-sm">{description}</Label>
-      )}
+      {description && <Label className="shrink-0 text-sm">{description}</Label>}
       <Progress
         value={percentage}
         className={cn(
           isVertical ? "h-32 w-2" : "flex-1 min-w-24",
-          barStyle && barStyleClasses[barStyle]
+          barStyle && barStyleClasses[barStyle],
         )}
       />
       <span className="w-16 text-right tabular-nums text-sm text-muted-foreground">

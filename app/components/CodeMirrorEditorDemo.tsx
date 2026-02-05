@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { CodeMirrorEditor } from "@/registry/editor";
 import type { SupportedLanguage } from "@/registry/editor";
+import { CodeMirrorEditor } from "@/registry/editor";
 
 interface CodeMirrorEditorDemoProps {
   initialLanguage?: SupportedLanguage;
@@ -96,7 +96,9 @@ export function CodeMirrorEditorDemo({
   readOnly = false,
 }: CodeMirrorEditorDemoProps) {
   const [language, setLanguage] = useState<SupportedLanguage>(initialLanguage);
-  const [value, setValue] = useState(initialValue ?? defaultCode[initialLanguage]);
+  const [value, setValue] = useState(
+    initialValue ?? defaultCode[initialLanguage],
+  );
 
   const handleLanguageChange = (newLang: SupportedLanguage) => {
     setLanguage(newLang);
@@ -106,13 +108,18 @@ export function CodeMirrorEditorDemo({
   return (
     <div className="rounded-lg border border-border overflow-hidden">
       <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 border-b border-border">
-        <label htmlFor="language-select" className="text-sm text-muted-foreground">
+        <label
+          htmlFor="language-select"
+          className="text-sm text-muted-foreground"
+        >
           Language:
         </label>
         <select
           id="language-select"
           value={language}
-          onChange={(e) => handleLanguageChange(e.target.value as SupportedLanguage)}
+          onChange={(e) =>
+            handleLanguageChange(e.target.value as SupportedLanguage)
+          }
           className="text-sm bg-background border border-border rounded px-2 py-1"
         >
           <option value="python">Python</option>

@@ -1,7 +1,7 @@
 "use client";
 
-import { CellControls } from "@/registry/cell/CellControls";
 import { useState } from "react";
+import { CellControls } from "@/registry/cell/CellControls";
 
 interface CellControlsDemoProps {
   showMoveControls?: boolean;

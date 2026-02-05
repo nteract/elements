@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface CellContainerProps {
@@ -28,7 +28,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
       focusBgColor = "bg-primary/5",
       focusBorderColor = "border-primary/60",
     },
-    ref
+    ref,
   ) => {
     return (
       <div
@@ -40,7 +40,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
           isFocused
             ? [focusBgColor, focusBorderColor]
             : "border-transparent hover:bg-muted/10",
-          className
+          className,
         )}
         onMouseDown={onFocus}
         draggable={!!onDragStart}
@@ -51,7 +51,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 CellContainer.displayName = "CellContainer";

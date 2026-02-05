@@ -1,7 +1,7 @@
 "use client";
 
-import { RuntimeHealthIndicator } from "@/registry/cell/RuntimeHealthIndicator";
 import type { ComponentProps } from "react";
+import { RuntimeHealthIndicator } from "@/registry/cell/RuntimeHealthIndicator";
 
 type RuntimeHealthIndicatorDemoProps = Omit<
   ComponentProps<typeof RuntimeHealthIndicator>,

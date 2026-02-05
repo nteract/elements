@@ -47,7 +47,9 @@ export function CollaboratorAvatarsDemo({
   return (
     <div className="flex items-center gap-8 p-4 border rounded-md bg-muted/20">
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-muted-foreground">Default (3 visible)</span>
+        <span className="text-xs text-muted-foreground">
+          Default (3 visible)
+        </span>
         <CollaboratorAvatars
           users={sampleUsers}
           currentUserId={currentUserId}

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import type * as React from "react";
 import { cn } from "@/lib/utils";
 import {
   Avatar,
@@ -75,7 +75,7 @@ export function PresenceBookmarks({
               type="button"
               className={cn(
                 "relative rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring",
-                index > 0 && "-ml-2"
+                index > 0 && "-ml-2",
               )}
               style={
                 user.color
@@ -85,7 +85,10 @@ export function PresenceBookmarks({
                   : undefined
               }
             >
-              <Avatar size="sm" className={!user.color ? "ring-2 ring-border" : undefined}>
+              <Avatar
+                size="sm"
+                className={!user.color ? "ring-2 ring-border" : undefined}
+              >
                 <AvatarImage src={user.picture} alt={user.name} />
                 <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
               </Avatar>
@@ -103,7 +106,7 @@ export function PresenceBookmarks({
       {overflowCount > 0 && (
         <div
           className={cn(
-            "-ml-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium text-muted-foreground ring-2 ring-background"
+            "-ml-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium text-muted-foreground ring-2 ring-background",
           )}
         >
           +{overflowCount}

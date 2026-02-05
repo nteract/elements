@@ -1,7 +1,7 @@
 "use client";
 
-import { CellContainer } from "@/registry/cell/CellContainer";
 import type { ComponentProps } from "react";
+import { CellContainer } from "@/registry/cell/CellContainer";
 
 type CellContainerDemoProps = Omit<
   ComponentProps<typeof CellContainer>,
