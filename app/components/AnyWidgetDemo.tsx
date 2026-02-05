@@ -146,6 +146,87 @@ const CONFETTI_CSS = `
 }
 `;
 
+// Factory widget - demonstrates the factory pattern (like quak uses)
+// Per AFM spec: "The default export can also be an async function returning this interface"
+const FACTORY_ESM = `
+export default function() {
+  // Factory can hold shared state across initialize/render
+  let initialized = false;
+
+  return {
+    initialize({ model }) {
+      initialized = true;
+      console.log("[Factory Widget] Initialized with count:", model.get("count"));
+    },
+    render({ model, el }) {
+      const container = document.createElement("div");
+      container.className = "factory-widget-container";
+
+      const status = document.createElement("div");
+      status.className = "factory-widget-status";
+      status.textContent = initialized ? "✓ Factory pattern working" : "✗ Initialize not called";
+
+      const countDisplay = document.createElement("div");
+      countDisplay.className = "factory-widget-count";
+      countDisplay.textContent = "Count: " + (model.get("count") ?? 0);
+
+      const btn = document.createElement("button");
+      btn.className = "factory-widget-btn";
+      btn.textContent = "Increment";
+      btn.onclick = () => {
+        const newCount = (model.get("count") ?? 0) + 1;
+        model.set("count", newCount);
+        model.save_changes();
+        countDisplay.textContent = "Count: " + newCount;
+      };
+
+      model.on("change:count", () => {
+        countDisplay.textContent = "Count: " + model.get("count");
+      });
+
+      container.appendChild(status);
+      container.appendChild(countDisplay);
+      container.appendChild(btn);
+      el.appendChild(container);
+    }
+  };
+}
+`;
+
+const FACTORY_CSS = `
+.factory-widget-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.factory-widget-status {
+  font-size: 12px;
+  padding: 4px 8px;
+  background: hsl(var(--muted));
+  border-radius: 4px;
+  width: fit-content;
+}
+.factory-widget-count {
+  font-size: 14px;
+  font-weight: 500;
+}
+.factory-widget-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: background 0.15s;
+  width: fit-content;
+}
+.factory-widget-btn:hover {
+  background: hsl(var(--muted));
+}
+`;
+
 // === Test Messages ===
 
 const createAnyWidgetMessage = (
@@ -228,10 +309,36 @@ const createConfettiWidgetMessage = (commId: string): JupyterCommMessage => ({
   },
 });
 
+const createFactoryWidgetMessage = (
+  commId: string,
+  count: number = 0
+): JupyterCommMessage => ({
+  header: {
+    msg_id: crypto.randomUUID(),
+    msg_type: "comm_open",
+  },
+  content: {
+    comm_id: commId,
+    target_name: "jupyter.widget",
+    data: {
+      state: {
+        _model_name: "AnyModel",
+        _model_module: "anywidget",
+        _view_name: "AnyView",
+        _view_module: "anywidget",
+        _esm: FACTORY_ESM,
+        _css: FACTORY_CSS,
+        count,
+      },
+    },
+  },
+});
+
 // === Demo Components ===
 
 const COUNTER_WIDGET_ID = "demo-anywidget-counter";
 const CONFETTI_WIDGET_ID = "demo-anywidget-confetti";
+const FACTORY_WIDGET_ID = "demo-anywidget-factory";
 
 function CounterDemo() {
   const { handleMessage } = useWidgetStoreRequired();
@@ -344,6 +451,35 @@ function ConfettiDemo() {
   );
 }
 
+function FactoryDemo() {
+  const { handleMessage } = useWidgetStoreRequired();
+  const models = useWidgetModels();
+
+  const hasWidget = models.has(FACTORY_WIDGET_ID);
+
+  const createWidget = () => {
+    handleMessage(createFactoryWidgetMessage(FACTORY_WIDGET_ID, 0));
+  };
+
+  return (
+    <div className="space-y-4 border rounded-lg p-4">
+      <div>
+        <h4 className="font-medium mb-1">Factory Pattern Widget</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          Demonstrates the factory pattern (like quak) where default export is a function returning {"{"} initialize, render {"}"}.
+        </p>
+      </div>
+      {!hasWidget ? (
+        <Button onClick={createWidget} variant="default" size="sm">
+          Create Factory Widget
+        </Button>
+      ) : (
+        <AnyWidgetView modelId={FACTORY_WIDGET_ID} />
+      )}
+    </div>
+  );
+}
+
 // Kernel log entry type
 interface KernelLogEntry {
   direction: "in" | "out";
@@ -432,6 +568,7 @@ function AnyWidgetDemoInner({
       <div className="grid gap-4 md:grid-cols-2">
         <CounterDemo />
         <ConfettiDemo />
+        <FactoryDemo />
       </div>
 
       {/* Kernel Log */}
