@@ -5,6 +5,7 @@ icon: LayoutList
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { OutputAreaDemo } from '@/app/components/OutputAreaDemo';
 
 <div className="my-8">
@@ -19,10 +20,12 @@ OutputArea handles rendering multiple Jupyter outputs with:
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/output-area.json
+    npx shadcn@latest add @nteract/output-area
     ```
   </Tab>
   <Tab value="Manual">

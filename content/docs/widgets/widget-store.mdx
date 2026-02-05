@@ -5,6 +5,7 @@ icon: Layers
 ---
 
 import { WidgetStoreDemo } from '@/app/components/WidgetStoreDemo';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 <div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
   <WidgetStoreDemo />
@@ -23,10 +24,12 @@ A pure React state store for managing Jupyter widget models. This replaces the B
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-store.json
+    npx shadcn@latest add @nteract/widget-store
     ```
   </Tab>
   <Tab value="Manual">

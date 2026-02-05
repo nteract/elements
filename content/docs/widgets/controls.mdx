@@ -6,6 +6,7 @@ icon: LayoutGrid
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { WidgetControlsGallery } from '@/app/components/WidgetControlsGallery';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 <div className="my-8">
   <WidgetControlsGallery />
@@ -15,10 +16,12 @@ import { WidgetControlsGallery } from '@/app/components/WidgetControlsGallery';
 
 Install the widget controls along with the widget view infrastructure:
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-controls.json
+    npx shadcn@latest add @nteract/widget-controls
     ```
   </Tab>
   <Tab value="Manual">

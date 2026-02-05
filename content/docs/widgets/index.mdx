@@ -5,6 +5,7 @@ icon: Puzzle
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 ## Why nteract-elements widgets?
 
@@ -89,10 +90,12 @@ ESM widget loader implementing the [AFM interface](https://anywidget.dev/en/afm/
 
 ## Quick Start
 
+<RegistrySetup />
+
 ```bash
 # Install everything
-npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-view.json
-npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-controls.json
+npx shadcn@latest add @nteract/widget-view
+npx shadcn@latest add @nteract/widget-controls
 ```
 
 ```tsx

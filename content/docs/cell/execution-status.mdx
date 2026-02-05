@@ -5,6 +5,7 @@ icon: Play
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
 
 <div className="my-8 flex flex-wrap gap-4">
@@ -18,10 +19,12 @@ A cell primitive that displays the current execution state of a notebook cell. R
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/execution-status.json
+    npx shadcn@latest add @nteract/execution-status
     ```
   </Tab>
   <Tab value="Manual">

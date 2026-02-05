@@ -5,6 +5,7 @@ icon: Box
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { CellDemo, NotebookDemo } from '@/app/components/CellDemo';
 import { CellContainerDemo } from '@/app/components/CellContainerDemo';
 import { CellTypeButtonDemo } from '@/app/components/CellTypeButtonDemo';
@@ -97,15 +98,17 @@ Click different cells to see focus behavior:
 
 Install all cell components:
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-container.json
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-header.json
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-controls.json
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-type-button.json
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/play-button.json
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/execution-status.json
+    npx shadcn@latest add @nteract/cell-container
+    npx shadcn@latest add @nteract/cell-header
+    npx shadcn@latest add @nteract/cell-controls
+    npx shadcn@latest add @nteract/cell-type-button
+    npx shadcn@latest add @nteract/play-button
+    npx shadcn@latest add @nteract/execution-status
     ```
   </Tab>
   <Tab value="Manual">

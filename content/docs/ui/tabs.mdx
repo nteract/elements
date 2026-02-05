@@ -5,6 +5,7 @@ icon: LayoutPanelLeft
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Tabs as TabsComponent, TabsList, TabsTrigger, TabsContent } from '@/registry/primitives/tabs';
 import { Button } from '@/registry/primitives/button';
 import { Card, CardContent } from '@/registry/primitives/card';
@@ -44,10 +45,12 @@ A tabbed interface component for organizing content into switchable panels. Buil
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/tabs.json
+    npx shadcn@latest add @nteract/tabs
     ```
   </Tab>
   <Tab value="Manual">

@@ -13,6 +13,23 @@ Before installing nteract Elements, make sure your environment meets the followi
 
 nteract Elements is built targeting React 19 (no `forwardRef` usage) and Tailwind CSS 4.
 
+## Installation
+
+Add nteract to your shadcn registry:
+
+```bash
+pnpm dlx shadcn@latest registry add @nteract
+```
+
+Then install components as needed:
+
+```bash
+npx shadcn@latest add @nteract/media-router
+npx shadcn@latest add @nteract/cell-container
+```
+
+See the [documentation](https://nteract-elements.vercel.app) for all available components.
+
 ## Quick start
 
 ```bash

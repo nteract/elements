@@ -5,6 +5,7 @@ icon: Command
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import {
   Command,
   CommandDialog,
@@ -53,10 +54,12 @@ A command palette component built on [cmdk](https://cmdk.paco.me/) for fast, key
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/command.json
+    npx shadcn@latest add @nteract/command
     ```
   </Tab>
   <Tab value="Manual">

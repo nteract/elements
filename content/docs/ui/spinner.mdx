@@ -5,6 +5,7 @@ icon: Loader
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Spinner } from '@/registry/primitives/spinner';
 
 <div className="my-8 flex items-center gap-8">
@@ -17,10 +18,12 @@ A loading spinner component for indicating async operations. Used in notebooks t
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/spinner.json
+    npx shadcn@latest add @nteract/spinner
     ```
   </Tab>
   <Tab value="Manual">

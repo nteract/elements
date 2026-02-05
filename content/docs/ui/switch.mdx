@@ -5,6 +5,7 @@ icon: ToggleLeft
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Switch } from '@/registry/primitives/switch';
 import { Label } from '@/registry/primitives/label';
 
@@ -18,10 +19,12 @@ A toggle switch component for boolean settings. Built on Radix UI Switch for acc
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/switch.json
+    npx shadcn@latest add @nteract/switch
     ```
   </Tab>
   <Tab value="Manual">

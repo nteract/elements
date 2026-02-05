@@ -5,6 +5,7 @@ icon: MousePointer
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/registry/primitives/hover-card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/registry/primitives/avatar';
 import { Button } from '@/registry/primitives/button';
@@ -36,10 +37,12 @@ A hover card component built on [Radix UI](https://www.radix-ui.com/) for displa
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/hover-card.json
+    npx shadcn@latest add @nteract/hover-card
     ```
   </Tab>
   <Tab value="Manual">

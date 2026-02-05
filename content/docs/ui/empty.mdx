@@ -5,6 +5,7 @@ icon: BoxSelect
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Empty, EmptyIcon, EmptyTitle, EmptyDescription, EmptyActions } from '@/registry/primitives/empty';
 import { Button } from '@/registry/primitives/button';
 import { FileX, Inbox, Search } from 'lucide-react';
@@ -28,10 +29,12 @@ A flexible empty state component for displaying placeholder content when there's
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/empty.json
+    npx shadcn@latest add @nteract/empty
     ```
   </Tab>
   <Tab value="Manual">

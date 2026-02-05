@@ -5,6 +5,7 @@ icon: MessageSquare
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription } from '@/registry/primitives/popover';
 import { Button } from '@/registry/primitives/button';
 
@@ -26,10 +27,12 @@ A floating overlay panel that displays rich content when triggered. Built on Rad
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/popover.json
+    npx shadcn@latest add @nteract/popover
     ```
   </Tab>
   <Tab value="Manual">

@@ -5,6 +5,7 @@ icon: SquareStack
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { CellTypeButton, CodeCellButton, MarkdownCellButton, SqlCellButton, AiCellButton } from '@/registry/cell/CellTypeButton';
 
 <div className="my-8 flex flex-wrap gap-4">
@@ -18,10 +19,12 @@ Styled buttons for different notebook cell types. Each cell type has a distinct 
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-type-button.json
+    npx shadcn@latest add @nteract/cell-type-button
     ```
   </Tab>
   <Tab value="Manual">

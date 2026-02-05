@@ -5,6 +5,7 @@ icon: MessageSquareMore
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import {
   Dialog,
   DialogTrigger,
@@ -44,10 +45,12 @@ A modal dialog component for displaying focused content that requires user inter
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/dialog.json
+    npx shadcn@latest add @nteract/dialog
     ```
   </Tab>
   <Tab value="Manual">

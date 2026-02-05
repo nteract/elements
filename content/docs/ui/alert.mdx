@@ -5,6 +5,7 @@ icon: AlertCircle
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Alert, AlertTitle, AlertDescription } from '@/registry/primitives/alert';
 import { AlertCircle, Terminal, Info } from 'lucide-react';
 
@@ -29,10 +30,12 @@ A callout component for displaying important messages to users. Supports default
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/alert.json
+    npx shadcn@latest add @nteract/alert
     ```
   </Tab>
   <Tab value="Manual">

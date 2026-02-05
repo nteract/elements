@@ -5,15 +5,18 @@ icon: Image
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 Component for rendering SVG graphics in notebook outputs. Handles matplotlib figures rendered as SVG, diagrams, and other vector graphics.
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/svg-output.json
+    npx shadcn@latest add @nteract/svg-output
     ```
   </Tab>
   <Tab value="Manual">

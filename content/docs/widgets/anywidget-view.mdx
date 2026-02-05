@@ -7,6 +7,7 @@ icon: Sparkles
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { AnyWidgetDemo } from '@/app/components/AnyWidgetDemo';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 <div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
   <AnyWidgetDemo />
@@ -24,10 +25,12 @@ React component for rendering [anywidget](https://anywidget.dev) ESM modules. Im
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/anywidget-view.json
+    npx shadcn@latest add @nteract/anywidget-view
     ```
   </Tab>
   <Tab value="Manual">

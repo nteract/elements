@@ -5,6 +5,7 @@ icon: PanelRight
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import {
   Sheet,
   SheetTrigger,
@@ -51,10 +52,12 @@ A slide-out panel component that slides in from an edge of the screen. Built on 
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/sheet.json
+    npx shadcn@latest add @nteract/sheet
     ```
   </Tab>
   <Tab value="Manual">

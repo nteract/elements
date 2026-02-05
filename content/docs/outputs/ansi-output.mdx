@@ -5,6 +5,7 @@ icon: Terminal
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { AnsiOutput, AnsiStreamOutput, AnsiErrorOutput } from '@/registry/outputs/ansi-output';
 import nteractBanner from '@/lib/nteract-banner.json';
 
@@ -16,10 +17,12 @@ Components for rendering ANSI escape sequences as colored text. Preserves the te
 
 ## Installation
 
+<RegistrySetup />
+
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/ansi-output.json
+    npx shadcn@latest add @nteract/ansi-output
     ```
   </Tab>
   <Tab value="Manual">
