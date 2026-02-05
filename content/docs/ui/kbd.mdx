@@ -5,6 +5,7 @@ icon: Keyboard
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Kbd, KbdGroup } from '@/registry/primitives/kbd';
 
 <div className="my-8 flex flex-wrap items-center gap-4">
@@ -23,8 +24,9 @@ A keyboard key component for displaying keyboard shortcuts and hotkeys. Essentia
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/kbd.json
+    npx shadcn@latest add @nteract/kbd
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy the component from this repository's `components/ui/kbd.tsx`.

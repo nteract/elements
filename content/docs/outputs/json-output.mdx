@@ -5,6 +5,7 @@ icon: Braces
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { JsonOutput } from '@/registry/outputs/json-output';
 import { JsonStringViewer } from '@/components/json-string-viewer';
 
@@ -29,8 +30,9 @@ Component for rendering JSON data in an interactive, expandable tree view. Usefu
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/json-output.json
+    npx shadcn@latest add @nteract/json-output
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/json-output.tsx).

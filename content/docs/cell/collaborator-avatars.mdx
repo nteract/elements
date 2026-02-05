@@ -5,6 +5,7 @@ icon: Users
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { CollaboratorAvatarsDemo } from '@/app/components/CollaboratorAvatarsDemo';
 
 <div className="my-8">
@@ -27,8 +28,9 @@ The CollaboratorAvatars component displays a row of user avatars showing who is 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/collaborator-avatars.json
+    npx shadcn@latest add @nteract/collaborator-avatars
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from [nteract/elements](https://github.com/nteract/elements/tree/main/registry/cell/CollaboratorAvatars.tsx).

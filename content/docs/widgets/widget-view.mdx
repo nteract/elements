@@ -7,6 +7,7 @@ icon: LayoutGrid
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { BuiltinWidgetsDemo } from '@/app/components/BuiltinWidgetsDemo';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 <div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
   <BuiltinWidgetsDemo />
@@ -27,8 +28,9 @@ Universal widget view component that routes widget models to the appropriate ren
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-view.json
+    npx shadcn@latest add @nteract/widget-view
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy the files to your project:

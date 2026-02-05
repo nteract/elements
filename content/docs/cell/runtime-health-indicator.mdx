@@ -5,6 +5,7 @@ icon: Circle
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { RuntimeHealthIndicatorDemo } from '@/app/components/RuntimeHealthIndicatorDemo';
 
 <div className="my-8 flex gap-4 items-center">
@@ -21,8 +22,9 @@ A component that displays kernel connection status with color-coded indicators. 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/runtime-health-indicator.json
+    npx shadcn@latest add @nteract/runtime-health-indicator
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/RuntimeHealthIndicator.tsx).

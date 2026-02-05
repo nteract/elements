@@ -5,6 +5,7 @@ icon: Layers
 ---
 
 import { WidgetStoreDemo } from '@/app/components/WidgetStoreDemo';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 <div className="my-8 overflow-x-auto rounded-xl border bg-fd-card p-6">
   <WidgetStoreDemo />
@@ -26,8 +27,9 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-store.json
+    npx shadcn@latest add @nteract/widget-store
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy the files to your project from [the registry source](https://github.com/nteract/elements/tree/main/registry/widgets):

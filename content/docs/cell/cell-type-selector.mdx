@@ -5,6 +5,7 @@ icon: ListFilter
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { CellTypeSelectorDemo, CellTypeSelectorLimitedDemo } from '@/app/components/CellTypeSelectorDemo';
 
 <div className="my-8">
@@ -18,8 +19,9 @@ A dropdown selector for changing cell types. Displays the current type with colo
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-type-selector.json
+    npx shadcn@latest add @nteract/cell-type-selector
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/cell/CellTypeSelector.tsx).

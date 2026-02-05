@@ -5,6 +5,7 @@ icon: AlignLeft
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Textarea } from '@/registry/primitives/textarea';
 import { Label } from '@/registry/primitives/label';
 
@@ -19,8 +20,9 @@ A multiline text input with consistent styling and focus states. Ideal for code 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/textarea.json
+    npx shadcn@latest add @nteract/textarea
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).

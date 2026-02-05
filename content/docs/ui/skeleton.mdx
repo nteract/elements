@@ -5,6 +5,7 @@ icon: Square
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Skeleton } from '@/registry/primitives/skeleton';
 
 <div className="my-8 flex flex-col gap-4">
@@ -24,8 +25,9 @@ A placeholder loading component that shows a pulsing animation while content is 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/skeleton.json
+    npx shadcn@latest add @nteract/skeleton
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy the component from this repository's `registry/primitives/skeleton.tsx`.

@@ -5,6 +5,7 @@ icon: Tag
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Badge } from '@/registry/primitives/badge';
 
 <div className="my-8 flex flex-wrap gap-4">
@@ -21,8 +22,9 @@ A badge component for displaying status indicators, labels, counts, or categorie
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/badge.json
+    npx shadcn@latest add @nteract/badge
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).

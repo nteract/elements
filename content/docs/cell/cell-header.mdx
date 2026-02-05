@@ -5,6 +5,7 @@ icon: LayoutPanelTop
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { CellHeaderDemo } from '@/app/components/CellHeaderDemo';
 import { Button } from '@/registry/primitives/button';
 import { Badge } from '@/registry/primitives/badge';
@@ -23,8 +24,9 @@ A flexible header component for notebook cells that provides left and right cont
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/cell-header.json
+    npx shadcn@latest add @nteract/cell-header
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/CellHeader.tsx).

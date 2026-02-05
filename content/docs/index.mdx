@@ -14,29 +14,27 @@ A collection of React components for building notebook interfaces. Designed for 
 
 ## Installation
 
-Install components directly from the registry using the shadcn CLI:
+### Quick Setup (Recommended)
+
+Add nteract to your shadcn registry:
 
 ```bash
-npx shadcn@latest add https://nteract-elements.vercel.app/r/ansi-output.json
+pnpm dlx shadcn@latest registry add @nteract
 ```
 
-### Using the `@nteract` namespace
-
-To use shorter install commands like `npx shadcn@latest add @nteract/badge`, add the registry to your `components.json`:
-
-```json
-{
-  "registries": {
-    "@nteract": "https://nteract-elements.vercel.app/r/{name}.json"
-  }
-}
-```
-
-Then install components with the `@nteract/` prefix:
+This configures your `components.json` with the @nteract registry. Then install any component:
 
 ```bash
 npx shadcn@latest add @nteract/ansi-output
 npx shadcn@latest add @nteract/media-router
+```
+
+### Alternative: Direct URL
+
+Install directly without registry configuration:
+
+```bash
+npx shadcn@latest add https://nteract-elements.vercel.app/r/ansi-output.json
 ```
 
 Or browse the component documentation to copy and adapt components for your project.

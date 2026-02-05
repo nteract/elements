@@ -5,6 +5,7 @@ icon: FileText
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { MarkdownOutput } from '@/registry/outputs/markdown-output';
 
@@ -33,8 +34,9 @@ Component for rendering Markdown content in notebook outputs. Based on the [inth
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/markdown-output.json
+    npx shadcn@latest add @nteract/markdown-output
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Install dependencies:

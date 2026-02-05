@@ -5,6 +5,7 @@ icon: Route
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 Automatically selects the best renderer for Jupyter outputs based on MIME type priority. Supports custom renderers and priority ordering for platform-specific MIME types.
@@ -14,8 +15,9 @@ Automatically selects the best renderer for Jupyter outputs based on MIME type p
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/media-router.json
+    npx shadcn@latest add @nteract/media-router
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Install all output component dependencies, then copy from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/media-router.tsx).

@@ -111,6 +111,7 @@ icon: LucideIconName
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { ComponentName } from '@/registry/primitives/component-name';
 
 <div className="my-8">
@@ -124,8 +125,9 @@ Brief description paragraph.
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/component-name.json
+    npx shadcn@latest add @nteract/component-name
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).

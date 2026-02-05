@@ -5,6 +5,7 @@ icon: RectangleHorizontal
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Button } from '@/registry/primitives/button';
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from '@/registry/primitives/button-group';
 import { ChevronDown, Bold, Italic, Underline } from 'lucide-react';
@@ -24,8 +25,9 @@ Group buttons together with merged borders. Includes `ButtonGroupSeparator` for 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/button-group.json
+    npx shadcn@latest add @nteract/button-group
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).

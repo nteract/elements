@@ -5,6 +5,7 @@ icon: TextCursorInput
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Input } from '@/registry/primitives/input';
 
 <div className="my-8 max-w-sm">
@@ -18,8 +19,9 @@ A form input component with consistent styling, focus states, and support for va
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/input.json
+    npx shadcn@latest add @nteract/input
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Copy from the [nteract/elements registry](https://github.com/nteract/elements/tree/main/registry/primitives).

@@ -6,6 +6,7 @@ icon: Code
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { CodeMirrorEditorDemo, SimpleEditorDemo, ThemeComparisonDemo } from '@/app/components/CodeMirrorEditorDemo';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 
 <div className="my-8">
   <CodeMirrorEditorDemo />
@@ -20,8 +21,9 @@ Try the editor above — switch languages, edit the code, and toggle between lig
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/codemirror-editor.json
+    npx shadcn@latest add @nteract/codemirror-editor
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Install dependencies:

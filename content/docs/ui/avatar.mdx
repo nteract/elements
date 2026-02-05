@@ -5,6 +5,7 @@ icon: User
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, AvatarGroupCount } from '@/registry/primitives/avatar';
 
 <div className="my-8 flex flex-wrap items-center gap-4">
@@ -30,8 +31,9 @@ A versatile avatar component built on [Radix UI](https://www.radix-ui.com/) prim
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
-    npx shadcn@latest add https://nteract-elements.vercel.app/r/avatar.json
+    npx shadcn@latest add @nteract/avatar
     ```
+    <RegistrySetup />
   </Tab>
   <Tab value="Manual">
     Install the dependencies:
