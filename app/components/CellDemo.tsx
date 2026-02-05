@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { CellContainer } from "@/registry/cell/CellContainer";
-import { CellHeader } from "@/registry/cell/CellHeader";
 import { CellControls } from "@/registry/cell/CellControls";
-import { CellTypeButton, type CellType } from "@/registry/cell/CellTypeButton";
-import { PlayButton } from "@/registry/cell/PlayButton";
+import { CellHeader } from "@/registry/cell/CellHeader";
+import { type CellType, CellTypeButton } from "@/registry/cell/CellTypeButton";
 import { ExecutionStatus } from "@/registry/cell/ExecutionStatus";
+import { PlayButton } from "@/registry/cell/PlayButton";
 
 interface CellDemoProps {
   cellType?: CellType;
@@ -75,7 +75,9 @@ export function CellDemo({
       />
       {showSource && sourceVisible && (
         <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm">
-          <span className="text-muted-foreground"># Click the play button to run</span>
+          <span className="text-muted-foreground">
+            # Click the play button to run
+          </span>
           <br />
           print("Hello from nteract-elements!")
         </div>
@@ -94,9 +96,21 @@ export function NotebookDemo() {
   const [focusedId, setFocusedId] = useState<string | null>("cell-1");
 
   const cells = [
-    { id: "cell-1", type: "code" as CellType, content: 'x = 42\nprint(f"The answer is {x}")' },
-    { id: "cell-2", type: "markdown" as CellType, content: "## Results\nThis cell shows markdown content." },
-    { id: "cell-3", type: "code" as CellType, content: "import pandas as pd\ndf = pd.DataFrame({'a': [1,2,3]})" },
+    {
+      id: "cell-1",
+      type: "code" as CellType,
+      content: 'x = 42\nprint(f"The answer is {x}")',
+    },
+    {
+      id: "cell-2",
+      type: "markdown" as CellType,
+      content: "## Results\nThis cell shows markdown content.",
+    },
+    {
+      id: "cell-3",
+      type: "code" as CellType,
+      content: "import pandas as pd\ndf = pd.DataFrame({'a': [1,2,3]})",
+    },
   ];
 
   return (

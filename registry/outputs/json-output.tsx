@@ -1,18 +1,18 @@
 "use client";
 
+import { ChevronRightIcon } from "lucide-react";
+import {
+  createContext,
+  type HTMLAttributes,
+  useContext,
+  useState,
+} from "react";
+import { cn } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/registry/primitives/collapsible";
-import { cn } from "@/lib/utils";
-import { ChevronRightIcon } from "lucide-react";
-import {
-  createContext,
-  useContext,
-  useState,
-  type HTMLAttributes,
-} from "react";
 
 interface JsonViewerContextType {
   expandedPaths: Set<string>;
@@ -75,9 +75,8 @@ export function JsonOutput({
     return collectPathsToDepth(data, "$", collapsed);
   };
 
-  const [expandedPaths, setExpandedPaths] = useState<Set<string>>(
-    getInitialExpanded
-  );
+  const [expandedPaths, setExpandedPaths] =
+    useState<Set<string>>(getInitialExpanded);
 
   const togglePath = (path: string) => {
     const newExpanded = new Set(expandedPaths);
@@ -95,7 +94,7 @@ export function JsonOutput({
         data-slot="json-output"
         className={cn(
           "not-prose py-2 font-mono text-sm text-muted-foreground",
-          className
+          className,
         )}
       >
         <JsonPrimitive value={data} displayDataTypes={displayDataTypes} />
@@ -139,7 +138,7 @@ function collectPathsToDepth(
   value: unknown,
   path: string,
   maxDepth: number,
-  currentDepth = 0
+  currentDepth = 0,
 ): Set<string> {
   const paths = new Set<string>();
   if (value && typeof value === "object" && currentDepth < maxDepth) {
@@ -150,7 +149,7 @@ function collectPathsToDepth(
           item,
           `${path}[${index}]`,
           maxDepth,
-          currentDepth + 1
+          currentDepth + 1,
         );
         childPaths.forEach((p) => paths.add(p));
       });
@@ -160,7 +159,7 @@ function collectPathsToDepth(
           val,
           `${path}.${key}`,
           maxDepth,
-          currentDepth + 1
+          currentDepth + 1,
         );
         childPaths.forEach((p) => paths.add(p));
       });
@@ -189,12 +188,7 @@ function JsonValue({ value, path, keyName, isLast }: JsonValueProps) {
 
   if (Array.isArray(value)) {
     return (
-      <JsonArray
-        value={value}
-        path={path}
-        keyName={keyName}
-        isLast={isLast}
-      />
+      <JsonArray value={value} path={path} keyName={keyName} isLast={isLast} />
     );
   }
 
@@ -276,7 +270,7 @@ function JsonObject({ value, path, keyName, isLast }: JsonObjectProps) {
             <ChevronRightIcon
               className={cn(
                 "size-3 shrink-0 text-muted-foreground transition-transform mt-1 self-start",
-                isExpanded && "rotate-90"
+                isExpanded && "rotate-90",
               )}
             />
             {keyName !== null && (
@@ -355,7 +349,7 @@ function JsonArray({ value, path, keyName, isLast }: JsonArrayProps) {
             <ChevronRightIcon
               className={cn(
                 "size-3 shrink-0 text-muted-foreground transition-transform mt-1 self-start",
-                isExpanded && "rotate-90"
+                isExpanded && "rotate-90",
               )}
             />
             {keyName !== null && (
@@ -457,15 +451,9 @@ function JsonPrimitive({ value, displayDataTypes }: JsonPrimitiveProps) {
   }
 
   // Fallback for other types
-  return (
-    <span className="text-muted-foreground">{String(value)}</span>
-  );
+  return <span className="text-muted-foreground">{String(value)}</span>;
 }
 
 function JsonTypeLabel({ type }: { type: string }) {
-  return (
-    <span className="text-xs text-muted-foreground/60 ml-1">
-      {type}
-    </span>
-  );
+  return <span className="text-xs text-muted-foreground/60 ml-1">{type}</span>;
 }

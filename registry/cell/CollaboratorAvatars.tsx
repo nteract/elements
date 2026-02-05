@@ -1,18 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/lib/utils";
 import {
   Avatar,
-  AvatarImage,
   AvatarFallback,
   AvatarGroup,
   AvatarGroupCount,
+  AvatarImage,
 } from "@/registry/primitives/avatar";
 import {
   HoverCard,
-  HoverCardTrigger,
   HoverCardContent,
+  HoverCardTrigger,
 } from "@/registry/primitives/hover-card";
 
 export interface CollaboratorUser {

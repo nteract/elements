@@ -8,14 +8,14 @@
  */
 
 import { useCallback, useState } from "react";
+import { Button } from "@/registry/primitives/button";
 import {
-  WidgetStoreProvider,
-  useWidgetStoreRequired,
-  useWidgetModels,
   type JupyterCommMessage,
+  useWidgetModels,
+  useWidgetStoreRequired,
+  WidgetStoreProvider,
 } from "@/registry/widgets/widget-store-context";
 import { WidgetView } from "@/registry/widgets/widget-view";
-import { Button } from "@/registry/primitives/button";
 
 // Import to register built-in widgets
 import "@/registry/widgets/controls";
@@ -25,7 +25,7 @@ import "@/registry/widgets/controls";
 function createWidgetMessage(
   commId: string,
   modelName: string,
-  state: Record<string, unknown>
+  state: Record<string, unknown>,
 ): JupyterCommMessage {
   return {
     header: {
@@ -216,7 +216,11 @@ const LAYOUT_WIDGETS = [
   {
     id: "tab-content-1",
     name: "TextModel",
-    state: { value: "", description: "Tab 1 input:", placeholder: "Type here..." },
+    state: {
+      value: "",
+      description: "Tab 1 input:",
+      placeholder: "Type here...",
+    },
   },
   {
     id: "tab-content-2",
@@ -236,7 +240,12 @@ const LAYOUT_WIDGETS = [
   {
     id: "accordion-content-1",
     name: "TextareaModel",
-    state: { value: "", description: "", placeholder: "Panel 1 content...", rows: 2 },
+    state: {
+      value: "",
+      description: "",
+      placeholder: "Panel 1 content...",
+      rows: 2,
+    },
   },
   {
     id: "accordion-content-2",
@@ -247,7 +256,10 @@ const LAYOUT_WIDGETS = [
     id: "demo-accordion",
     name: "AccordionModel",
     state: {
-      children: ["IPY_MODEL_accordion-content-1", "IPY_MODEL_accordion-content-2"],
+      children: [
+        "IPY_MODEL_accordion-content-1",
+        "IPY_MODEL_accordion-content-2",
+      ],
       _titles: ["Panel One", "Panel Two"],
       selected_index: 0,
     },
@@ -273,7 +285,9 @@ function DemoControls() {
   const createAllWidgets = () => {
     for (const widget of ALL_WIDGETS) {
       if (!models.has(widget.id)) {
-        handleMessage(createWidgetMessage(widget.id, widget.name, widget.state));
+        handleMessage(
+          createWidgetMessage(widget.id, widget.name, widget.state),
+        );
         addLog(`Created ${widget.name}`);
       }
     }
@@ -363,7 +377,7 @@ function WidgetDisplay() {
                   </div>
                   <WidgetView modelId={widget.id} />
                 </div>
-              )
+              ),
           )}
         </div>
       </div>

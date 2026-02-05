@@ -1,5 +1,5 @@
-import { Extension } from "@codemirror/state";
-import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
+import type { Extension } from "@codemirror/state";
+import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 
 /**
  * Theme mode options

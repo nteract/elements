@@ -9,11 +9,11 @@
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/registry/primitives/checkbox";
 import { Label } from "@/registry/primitives/label";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function CheckboxWidget({ modelId, className }: WidgetComponentProps) {
   const { sendUpdate } = useWidgetStoreRequired();
@@ -32,11 +32,7 @@ export function CheckboxWidget({ modelId, className }: WidgetComponentProps) {
 
   return (
     <div
-      className={cn(
-        "flex items-center gap-2",
-        indent && "pl-4",
-        className
-      )}
+      className={cn("flex items-center gap-2", indent && "pl-4", className)}
       data-widget-id={modelId}
       data-widget-type="Checkbox"
     >
@@ -49,10 +45,7 @@ export function CheckboxWidget({ modelId, className }: WidgetComponentProps) {
       {description && (
         <Label
           htmlFor={`checkbox-${modelId}`}
-          className={cn(
-            "text-sm",
-            disabled && "opacity-50 cursor-not-allowed"
-          )}
+          className={cn("text-sm", disabled && "opacity-50 cursor-not-allowed")}
         >
           {description}
         </Label>

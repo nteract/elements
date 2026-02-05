@@ -1,9 +1,9 @@
-import { python } from "@codemirror/lang-python";
-import { markdown } from "@codemirror/lang-markdown";
-import { sql } from "@codemirror/lang-sql";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
+import { markdown } from "@codemirror/lang-markdown";
+import { python } from "@codemirror/lang-python";
+import { sql } from "@codemirror/lang-sql";
 import type { Extension } from "@codemirror/state";
 
 /**
@@ -38,7 +38,6 @@ export function getLanguageExtension(language: SupportedLanguage): Extension {
       return javascript({ typescript: true });
     case "json":
       return json();
-    case "plain":
     default:
       return [];
   }

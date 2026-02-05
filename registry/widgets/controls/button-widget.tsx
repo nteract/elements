@@ -8,14 +8,17 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/primitives/button";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 // Map ipywidgets button_style to shadcn variants
-const STYLE_MAP: Record<string, "default" | "destructive" | "secondary" | "outline"> = {
+const STYLE_MAP: Record<
+  string,
+  "default" | "destructive" | "secondary" | "outline"
+> = {
   primary: "default",
   success: "default", // Could use a custom green variant
   info: "secondary",

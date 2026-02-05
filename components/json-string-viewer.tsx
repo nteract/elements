@@ -5,7 +5,7 @@ import { JsonOutput } from "@/registry/outputs/json-output";
 
 export function JsonStringViewer() {
   const [input, setInput] = useState(
-    '{"name": "nteract", "features": ["ANSI", "Markdown", "JSON"], "nested": {"deep": true}}'
+    '{"name": "nteract", "features": ["ANSI", "Markdown", "JSON"], "nested": {"deep": true}}',
   );
   const [parsed, setParsed] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);

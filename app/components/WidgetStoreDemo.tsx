@@ -11,18 +11,16 @@
  */
 
 import { useCallback, useState } from "react";
-import {
-  WidgetStoreProvider,
-  useWidgetStoreRequired,
-  useWidgetModels,
-  useWidgetModel,
-  useWidgetModelValue,
-  useResolvedModelValue,
-  type JupyterCommMessage,
-  type WidgetModel,
-} from "@/registry/widgets/widget-store-context";
 import { Button } from "@/registry/primitives/button";
-import { cn } from "@/lib/utils";
+import {
+  type JupyterCommMessage,
+  useResolvedModelValue,
+  useWidgetModels,
+  useWidgetModelValue,
+  useWidgetStoreRequired,
+  type WidgetModel,
+  WidgetStoreProvider,
+} from "@/registry/widgets/widget-store-context";
 
 // === Test Data from Issue #66 ===
 

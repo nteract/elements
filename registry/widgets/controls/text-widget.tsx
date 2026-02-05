@@ -6,15 +6,15 @@
  * Maps to ipywidgets TextModel.
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/registry/primitives/input";
 import { Label } from "@/registry/primitives/label";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function TextWidget({ modelId, className }: WidgetComponentProps) {
   const { sendUpdate, sendCustom } = useWidgetStoreRequired();
@@ -44,7 +44,7 @@ export function TextWidget({ modelId, className }: WidgetComponentProps) {
         sendUpdate(modelId, { value: newValue });
       }
     },
-    [modelId, continuousUpdate, sendUpdate]
+    [modelId, continuousUpdate, sendUpdate],
   );
 
   const handleBlur = useCallback(() => {
@@ -64,7 +64,7 @@ export function TextWidget({ modelId, className }: WidgetComponentProps) {
         }
       }
     },
-    [modelId, continuousUpdate, localValue, value, sendUpdate, sendCustom]
+    [modelId, continuousUpdate, localValue, value, sendUpdate, sendCustom],
   );
 
   return (
@@ -73,9 +73,7 @@ export function TextWidget({ modelId, className }: WidgetComponentProps) {
       data-widget-id={modelId}
       data-widget-type="Text"
     >
-      {description && (
-        <Label className="shrink-0 text-sm">{description}</Label>
-      )}
+      {description && <Label className="shrink-0 text-sm">{description}</Label>}
       <Input
         type="text"
         value={localValue}

@@ -1,26 +1,26 @@
 "use client";
 
 import {
-  KeyBinding,
+  EditorView,
+  type KeyBinding,
   keymap,
   placeholder as placeholderExt,
-  EditorView,
 } from "@codemirror/view";
+import { type Extension, useCodeMirror } from "@uiw/react-codemirror";
 import {
+  forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
-  forwardRef,
-  useImperativeHandle,
 } from "react";
-import { Extension, useCodeMirror } from "@uiw/react-codemirror";
 
 import { cn } from "@/lib/utils";
 import { defaultExtensions } from "./extensions";
 import { getLanguageExtension, type SupportedLanguage } from "./languages";
-import { lightTheme, darkTheme, isDarkMode, type ThemeMode } from "./themes";
+import { darkTheme, isDarkMode, lightTheme, type ThemeMode } from "./themes";
 
 export interface CodeMirrorEditorRef {
   /** Focus the editor */

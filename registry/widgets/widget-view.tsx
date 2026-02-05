@@ -10,10 +10,10 @@
  */
 
 import { cn } from "@/lib/utils";
-import { useWidgetModel, useWidgetStoreRequired } from "./widget-store-context";
 import { AnyWidgetView, isAnyWidget } from "./anywidget-view";
 import { getWidgetComponent } from "./widget-registry";
 import type { WidgetModel } from "./widget-store";
+import { useWidgetModel } from "./widget-store-context";
 
 // === Props ===
 
@@ -47,7 +47,7 @@ function UnsupportedWidget({ model, className }: UnsupportedWidgetProps) {
     <div
       className={cn(
         "rounded border border-dashed border-muted-foreground/50 p-3 text-sm",
-        className
+        className,
       )}
       data-widget-id={model.id}
       data-widget-unsupported="true"
@@ -94,7 +94,9 @@ export function WidgetView({ modelId, className }: WidgetViewProps) {
   }
 
   // No handler found
-  return <UnsupportedWidget modelId={modelId} model={model} className={className} />;
+  return (
+    <UnsupportedWidget modelId={modelId} model={model} className={className} />
+  );
 }
 
 export default WidgetView;

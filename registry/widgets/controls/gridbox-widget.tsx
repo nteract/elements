@@ -8,18 +8,22 @@
  */
 
 import { cn } from "@/lib/utils";
-import { useWidgetModelValue, parseModelRef } from "../widget-store-context";
-import { WidgetView } from "../widget-view";
 import type { WidgetComponentProps } from "../widget-registry";
+import { parseModelRef, useWidgetModelValue } from "../widget-store-context";
+import { WidgetView } from "../widget-view";
 
 // Map ipywidgets box_style to Tailwind classes
 const BOX_STYLE_MAP: Record<string, string> = {
   "": "",
-  primary: "border border-blue-500 bg-blue-50/50 dark:bg-blue-950/50 rounded-md p-2",
-  success: "border border-green-500 bg-green-50/50 dark:bg-green-950/50 rounded-md p-2",
+  primary:
+    "border border-blue-500 bg-blue-50/50 dark:bg-blue-950/50 rounded-md p-2",
+  success:
+    "border border-green-500 bg-green-50/50 dark:bg-green-950/50 rounded-md p-2",
   info: "border border-sky-500 bg-sky-50/50 dark:bg-sky-950/50 rounded-md p-2",
-  warning: "border border-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/50 rounded-md p-2",
-  danger: "border border-red-500 bg-red-50/50 dark:bg-red-950/50 rounded-md p-2",
+  warning:
+    "border border-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/50 rounded-md p-2",
+  danger:
+    "border border-red-500 bg-red-50/50 dark:bg-red-950/50 rounded-md p-2",
 };
 
 export function GridBoxWidget({ modelId, className }: WidgetComponentProps) {
@@ -34,7 +38,7 @@ export function GridBoxWidget({ modelId, className }: WidgetComponentProps) {
       className={cn(
         "grid grid-cols-1 sm:grid-cols-2 gap-2",
         styleClass,
-        className
+        className,
       )}
       data-widget-id={modelId}
       data-widget-type="GridBox"

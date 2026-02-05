@@ -1,5 +1,6 @@
+import type React from "react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import React, { ReactNode } from "react";
 
 interface CellHeaderProps {
   className?: string;
@@ -23,7 +24,7 @@ export const CellHeader: React.FC<CellHeaderProps> = ({
       data-slot="cell-header"
       className={cn(
         "cell-header flex items-center justify-between px-1 py-2 sm:pr-4",
-        className
+        className,
       )}
       onKeyDown={onKeyDown}
       draggable={draggable}

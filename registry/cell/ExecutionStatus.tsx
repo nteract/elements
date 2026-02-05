@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Badge } from "@/registry/primitives/badge";
 
 interface ExecutionStatusProps {
@@ -13,7 +13,11 @@ export const ExecutionStatus: React.FC<ExecutionStatusProps> = ({
       return null;
     case "queued":
       return (
-        <Badge data-slot="execution-status" variant="secondary" className="h-5 text-xs">
+        <Badge
+          data-slot="execution-status"
+          variant="secondary"
+          className="h-5 text-xs"
+        >
           Queued
         </Badge>
       );

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.13/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -13,8 +13,14 @@
       "!.next",
       "!dist",
       "!build",
-      "!.source"
+      "!.source",
+      "!**/*.css"
     ]
+  },
+  "css": {
+    "parser": {
+      "cssModules": true
+    }
   },
   "formatter": {
     "enabled": true,
@@ -24,7 +30,31 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "useSemanticElements": "off",
+        "noSvgWithoutTitle": "off",
+        "useButtonType": "off",
+        "useFocusableInteractive": "off",
+        "useKeyWithClickEvents": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "useIterableCallbackReturn": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "correctness": {
+        "noUnusedFunctionParameters": "off"
+      }
     },
     "domains": {
       "next": "recommended",

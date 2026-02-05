@@ -1,7 +1,7 @@
 "use client";
 
-import { PlayButton } from "@/registry/cell/PlayButton";
 import type { ComponentProps } from "react";
+import { PlayButton } from "@/registry/cell/PlayButton";
 
 type PlayButtonDemoProps = Omit<
   ComponentProps<typeof PlayButton>,

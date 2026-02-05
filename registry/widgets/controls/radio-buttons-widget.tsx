@@ -7,13 +7,13 @@
  */
 
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/registry/primitives/radio-group";
 import { Label } from "@/registry/primitives/label";
+import { RadioGroup, RadioGroupItem } from "@/registry/primitives/radio-group";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function RadioButtonsWidget({
   modelId,
@@ -36,7 +36,7 @@ export function RadioButtonsWidget({
 
   const handleValueChange = (newValue: string) => {
     const newIndex = parseInt(newValue, 10);
-    if (!isNaN(newIndex)) {
+    if (!Number.isNaN(newIndex)) {
       sendUpdate(modelId, { index: newIndex });
     }
   };
@@ -66,7 +66,7 @@ export function RadioButtonsWidget({
               htmlFor={`${modelId}-radio-${idx}`}
               className={cn(
                 "text-sm font-normal cursor-pointer",
-                disabled && "opacity-50 cursor-not-allowed"
+                disabled && "opacity-50 cursor-not-allowed",
               )}
             >
               {option}

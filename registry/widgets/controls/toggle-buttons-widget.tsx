@@ -7,13 +7,16 @@
  */
 
 import { cn } from "@/lib/utils";
-import { ToggleGroup, ToggleGroupItem } from "@/registry/primitives/toggle-group";
 import { Label } from "@/registry/primitives/label";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/registry/primitives/toggle-group";
+import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
 } from "../widget-store-context";
-import type { WidgetComponentProps } from "../widget-registry";
 
 export function ToggleButtonsWidget({
   modelId,
@@ -42,7 +45,7 @@ export function ToggleButtonsWidget({
       return;
     }
     const newIndex = parseInt(newValue, 10);
-    if (!isNaN(newIndex)) {
+    if (!Number.isNaN(newIndex)) {
       sendUpdate(modelId, { index: newIndex });
     }
   };
@@ -53,9 +56,7 @@ export function ToggleButtonsWidget({
       data-widget-id={modelId}
       data-widget-type="ToggleButtons"
     >
-      {description && (
-        <Label className="shrink-0 text-sm">{description}</Label>
-      )}
+      {description && <Label className="shrink-0 text-sm">{description}</Label>}
       <ToggleGroup
         type="single"
         value={value}

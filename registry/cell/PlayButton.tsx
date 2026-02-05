@@ -1,6 +1,6 @@
+import { Loader2, Play, Square } from "lucide-react";
+import type React from "react";
 import { cn } from "@/lib/utils";
-import { Play, Square, Loader2 } from "lucide-react";
-import React from "react";
 
 interface PlayButtonProps {
   executionState: "idle" | "queued" | "running" | "completed" | "error";
@@ -43,7 +43,7 @@ export const PlayButton: React.FC<PlayButtonProps> = ({
             ? focusedClass
             : "text-muted-foreground/40 hover:text-foreground group-hover:text-foreground",
         isAutoLaunching && "cursor-wait opacity-75",
-        className
+        className,
       )}
       title={title}
     >

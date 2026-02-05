@@ -1,7 +1,8 @@
 "use client";
 
-import { Bot, Code, Database, FileText, ChevronDown } from "lucide-react";
+import { Bot, ChevronDown, Code, Database, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { type CellType, cellTypeStyles } from "@/registry/cell/CellTypeButton";
 import { Button } from "@/registry/primitives/button";
 import {
   DropdownMenu,
@@ -9,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/registry/primitives/dropdown-menu";
-import { type CellType, cellTypeStyles } from "@/registry/cell/CellTypeButton";
 
 const allCellTypes: CellType[] = ["code", "markdown", "sql", "ai"];
 
@@ -48,7 +48,7 @@ export function CellTypeSelector({
 }: CellTypeSelectorProps) {
   const Icon = cellTypeIcons[currentType];
   const availableTypes = allCellTypes.filter((type) =>
-    enabledTypes.includes(type)
+    enabledTypes.includes(type),
   );
 
   return (
@@ -60,7 +60,7 @@ export function CellTypeSelector({
           size="sm"
           className={cn(
             cellTypeStyles[currentType],
-            "flex items-center gap-1.5"
+            "flex items-center gap-1.5",
           )}
         >
           <Icon className="h-3 w-3" />
@@ -78,7 +78,7 @@ export function CellTypeSelector({
               className={cn(
                 "flex items-center gap-2",
                 cellTypeMenuItemStyles[type],
-                type === currentType && "bg-accent"
+                type === currentType && "bg-accent",
               )}
             >
               <TypeIcon className="h-4 w-4" />
