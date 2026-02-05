@@ -1,0 +1,99 @@
+---
+title: Output Widget
+description: Renders captured Jupyter outputs inside the widget tree
+icon: Monitor
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { OutputWidgetDemo } from '@/app/components/OutputWidgetDemo';
+
+<div className="my-8">
+  <OutputWidgetDemo />
+</div>
+
+Implements the ipywidgets `OutputModel` (`@jupyter-widgets/output`). Captures and displays Jupyter cell outputs inside the widget tree, enabling patterns like output capture in interactive widgets.
+
+## Installation
+
+The OutputWidget is included with widget controls:
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/widget-controls
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy [output-widget.tsx](https://github.com/nteract/elements/blob/main/registry/widgets/controls/output-widget.tsx) to your project.
+
+    **Requires:** [Widget View](/docs/widgets/widget-view), [OutputArea](/docs/cell/output-area)
+  </Tab>
+</Tabs>
+
+## Usage
+
+The OutputWidget is registered automatically when you import the controls module:
+
+```tsx
+import "@/components/widgets/controls"
+```
+
+It renders whenever the kernel sends an `OutputModel` widget. No manual usage is typically needed — `WidgetView` routes to it automatically based on the model name.
+
+### Python Example
+
+```python
+import ipywidgets as widgets
+
+out = widgets.Output()
+
+with out:
+    print("Hello from the Output widget!")
+    display({"text/html": "<b>Rich content</b>"}, raw=True)
+
+# Display in a layout
+widgets.VBox([widgets.Label("Captured output:"), out])
+```
+
+### With MediaProvider
+
+When an `OutputModel` renders outputs that include custom MIME types (like Plotly charts or other widgets), wrap your app with `MediaProvider` to supply the renderers:
+
+```tsx
+import { MediaProvider } from "@/components/outputs/media-provider"
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { WidgetView } from "@/components/widgets/widget-view"
+import "@/components/widgets/controls"
+
+<WidgetStoreProvider sendMessage={sendToKernel}>
+  <MediaProvider
+    renderers={{
+      "application/vnd.jupyter.widget-view+json": ({ data }) => {
+        const { model_id } = data as { model_id: string };
+        return <WidgetView modelId={model_id} />;
+      },
+    }}
+  >
+    <WidgetView modelId={outputWidgetId} />
+  </MediaProvider>
+</WidgetStoreProvider>
+```
+
+## Widget State
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `outputs` | `JupyterOutput[]` | Array of captured Jupyter outputs |
+| `msg_id` | `string` | Parent message ID for output capturing (kernel-side) |
+
+The `outputs` array uses the standard Jupyter output format — the same `JupyterOutput` type used by `OutputArea`.
+
+## Model Info
+
+| Property | Value |
+| --- | --- |
+| Model Name | `OutputModel` |
+| Model Module | `@jupyter-widgets/output` |

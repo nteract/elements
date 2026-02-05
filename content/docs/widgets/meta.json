@@ -5,6 +5,7 @@
     "widget-store",
     "widget-view",
     "anywidget-view",
-    "controls"
+    "controls",
+    "output-widget"
   ]
 }
