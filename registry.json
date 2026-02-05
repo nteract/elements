@@ -94,11 +94,25 @@
       ]
     },
     {
+      "name": "media-provider",
+      "type": "registry:component",
+      "title": "Media Provider",
+      "description": "React context provider for shared media rendering configuration. Provides renderers, priority, and unsafe settings to all nested MediaRouter instances.",
+      "files": [
+        {
+          "path": "registry/outputs/media-provider.tsx",
+          "type": "registry:component",
+          "target": "components/outputs/media-provider.tsx"
+        }
+      ]
+    },
+    {
       "name": "media-router",
       "type": "registry:component",
       "title": "Media Router",
       "description": "MIME type-based output dispatcher that automatically selects the best renderer for Jupyter outputs. Supports custom renderers and priority ordering for platform-specific MIME types.",
       "registryDependencies": [
+        "@nteract/media-provider",
         "@nteract/ansi-output",
         "@nteract/markdown-output",
         "@nteract/html-output",
@@ -388,6 +402,7 @@
       "description": "Built-in shadcn-backed widget components for standard ipywidgets including controls (IntSlider, FloatSlider, IntRangeSlider, FloatRangeSlider, IntProgress, Button, Checkbox, Text, Textarea, HTML, ColorPicker, Dropdown, RadioButtons, ToggleButton, ToggleButtons, SelectMultiple) and layout containers (VBox, HBox, Box, GridBox, Accordion, Tab).",
       "registryDependencies": [
         "@nteract/widget-view",
+        "@nteract/output-area",
         "slider",
         "progress",
         "button",
@@ -640,6 +655,11 @@
           "path": "registry/widgets/controls/controller-axis-widget.tsx",
           "type": "registry:component",
           "target": "components/widgets/controls/controller-axis-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/output-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/output-widget.tsx"
         }
       ]
     },
@@ -668,6 +688,7 @@
       "title": "All nteract Components",
       "description": "Install all Jupyter frontend components: outputs, cell primitives, widgets, and editor.",
       "registryDependencies": [
+        "@nteract/media-provider",
         "@nteract/media-router",
         "@nteract/output-area",
         "@nteract/cell-container",

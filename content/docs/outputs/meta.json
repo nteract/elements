@@ -8,6 +8,7 @@
     "svg-output",
     "markdown-output",
     "json-output",
+    "media-provider",
     "media-router"
   ]
 }

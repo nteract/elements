@@ -1,0 +1,122 @@
+---
+title: Media Provider
+description: Shared configuration context for MIME type rendering
+icon: Settings
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Provides shared rendering configuration (custom renderers, priority, unsafe mode) to all nested MediaRouter instances via React context. Configure MIME type rendering once at the top of the tree instead of passing props to every MediaRouter.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/media-provider
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/media-provider.tsx).
+  </Tab>
+</Tabs>
+
+<Callout type="info">
+  MediaProvider is included automatically when you install MediaRouter.
+</Callout>
+
+## Usage
+
+### Basic
+
+Set `unsafe` mode for all nested outputs:
+
+```tsx
+import { MediaProvider } from "@/components/outputs/media-provider"
+import { OutputArea } from "@/components/cell/OutputArea"
+
+<MediaProvider unsafe={true}>
+  <OutputArea outputs={cell.outputs} />
+</MediaProvider>
+```
+
+### Custom Renderers
+
+Register renderers for MIME types not handled by built-in components. All nested MediaRouter instances inherit them:
+
+```tsx
+import { MediaProvider } from "@/components/outputs/media-provider"
+import { PlotlyChart } from "./plotly-chart"
+
+<MediaProvider
+  renderers={{
+    "application/vnd.plotly.v1+json": ({ data }) => (
+      <PlotlyChart data={data} />
+    ),
+  }}
+>
+  {/* All outputs can now render Plotly */}
+  {cells.map(cell => (
+    <OutputArea key={cell.id} outputs={cell.outputs} />
+  ))}
+</MediaProvider>
+```
+
+### With Widgets
+
+Bridge the widget system into the media pipeline so widget-type outputs render automatically:
+
+```tsx
+import { MediaProvider } from "@/components/outputs/media-provider"
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { WidgetView } from "@/components/widgets/widget-view"
+import "@/components/widgets/controls"
+
+<WidgetStoreProvider sendMessage={sendToKernel}>
+  <MediaProvider
+    renderers={{
+      "application/vnd.jupyter.widget-view+json": ({ data }) => {
+        const { model_id } = data as { model_id: string };
+        return <WidgetView modelId={model_id} />;
+      },
+    }}
+  >
+    <OutputArea outputs={cell.outputs} />
+  </MediaProvider>
+</WidgetStoreProvider>
+```
+
+### Nesting
+
+Inner providers merge renderers with outer providers (inner wins for the same MIME type) and override priority/unsafe entirely:
+
+```tsx
+<MediaProvider renderers={{ "text/html": CustomHtml }}>
+  {/* Inner adds Plotly without losing the outer HTML renderer */}
+  <MediaProvider renderers={{ "application/vnd.plotly.v1+json": Plotly }}>
+    <OutputArea outputs={outputs} />
+  </MediaProvider>
+</MediaProvider>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `renderers` | `Record<string, CustomRenderer>` | `{}` | Custom MIME type renderers, merged with parent provider |
+| `priority` | `readonly string[]` | `DEFAULT_PRIORITY` | MIME type priority order, overrides parent |
+| `unsafe` | `boolean` | `false` | Allow unsafe HTML rendering, overrides parent |
+| `children` | `ReactNode` | — | Child components |
+
+## How It Works
+
+MediaRouter resolves configuration with this fallback chain:
+
+1. **Direct props** (highest priority) — props passed directly to `<MediaRouter>`
+2. **MediaProvider context** — inherited from the nearest provider
+3. **Built-in defaults** — `DEFAULT_PRIORITY`, empty renderers, `unsafe=false`
+
+Without a MediaProvider in the tree, MediaRouter behaves exactly as before. No breaking changes.

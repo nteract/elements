@@ -38,6 +38,7 @@ import { IntRangeSlider } from "./int-range-slider";
 import { IntSlider } from "./int-slider";
 import { IntTextWidget } from "./int-text-widget";
 import { LabelWidget } from "./label-widget";
+import { OutputWidget } from "./output-widget";
 import { PasswordWidget } from "./password-widget";
 import { PlayWidget } from "./play-widget";
 import { RadioButtonsWidget } from "./radio-buttons-widget";
@@ -111,6 +112,9 @@ registerWidget("ControllerModel", ControllerWidget);
 registerWidget("ControllerButtonModel", ControllerButtonWidget);
 registerWidget("ControllerAxisModel", ControllerAxisWidget);
 
+// Output widget (@jupyter-widgets/output)
+registerWidget("OutputModel", OutputWidget);
+
 export { AccordionWidget } from "./accordion-widget";
 export { BoundedFloatTextWidget } from "./bounded-float-text-widget";
 export { BoundedIntTextWidget } from "./bounded-int-text-widget";
@@ -143,6 +147,7 @@ export { IntRangeSlider } from "./int-range-slider";
 export { IntSlider } from "./int-slider";
 export { IntTextWidget } from "./int-text-widget";
 export { LabelWidget } from "./label-widget";
+export { OutputWidget } from "./output-widget";
 export { PasswordWidget } from "./password-widget";
 export { PlayWidget } from "./play-widget";
 export { RadioButtonsWidget } from "./radio-buttons-widget";
