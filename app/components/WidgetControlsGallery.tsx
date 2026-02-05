@@ -517,6 +517,11 @@ const WIDGET_CATEGORIES = {
     description: "Arrange child widgets",
     widgets: [], // Handled separately due to complexity
   },
+  gamepad: {
+    title: "Gamepad Controller",
+    description: "Web Gamepad API integration",
+    widgets: [], // Handled separately due to child widgets
+  },
 };
 
 // Container widgets need child widgets first
@@ -608,6 +613,38 @@ const CONTAINER_SETUP = {
       name: "HTMLModel",
       state: { value: " 1.2G/2.8G [00:19&lt;00:26, 62.1MB/s]" },
     },
+    // Controller button children (simulated gamepad buttons)
+    {
+      id: "gamepad-btn-0",
+      name: "ControllerButtonModel",
+      state: { pressed: false, value: 0 },
+    },
+    {
+      id: "gamepad-btn-1",
+      name: "ControllerButtonModel",
+      state: { pressed: true, value: 1 },
+    },
+    {
+      id: "gamepad-btn-2",
+      name: "ControllerButtonModel",
+      state: { pressed: false, value: 0 },
+    },
+    {
+      id: "gamepad-btn-3",
+      name: "ControllerButtonModel",
+      state: { pressed: false, value: 0.5 },
+    },
+    // Controller axis children
+    {
+      id: "gamepad-axis-0",
+      name: "ControllerAxisModel",
+      state: { value: 0.3 },
+    },
+    {
+      id: "gamepad-axis-1",
+      name: "ControllerAxisModel",
+      state: { value: -0.7 },
+    },
   ],
   containers: [
     {
@@ -680,6 +717,25 @@ const CONTAINER_SETUP = {
       },
     },
   ],
+  gamepad: {
+    id: "gallery-controller",
+    name: "ControllerModel",
+    label: "Controller (Gamepad)",
+    state: {
+      index: 0,
+      connected: true, // Simulated as connected for demo
+      name: "Demo Gamepad",
+      mapping: "standard",
+      buttons: [
+        "IPY_MODEL_gamepad-btn-0",
+        "IPY_MODEL_gamepad-btn-1",
+        "IPY_MODEL_gamepad-btn-2",
+        "IPY_MODEL_gamepad-btn-3",
+      ],
+      axes: ["IPY_MODEL_gamepad-axis-0", "IPY_MODEL_gamepad-axis-1"],
+      timestamp: Date.now(),
+    },
+  },
 };
 
 function GalleryContent() {
@@ -712,6 +768,15 @@ function GalleryContent() {
       );
     }
 
+    // Create gamepad controller widget
+    handleMessage(
+      createWidgetMessage(
+        CONTAINER_SETUP.gamepad.id,
+        CONTAINER_SETUP.gamepad.name,
+        CONTAINER_SETUP.gamepad.state,
+      ),
+    );
+
     setInitialized(true);
   }, [handleMessage, initialized]);
 
@@ -725,7 +790,7 @@ function GalleryContent() {
     <div className="space-y-10">
       {/* Regular widget categories */}
       {Object.entries(WIDGET_CATEGORIES).map(([key, category]) => {
-        if (key === "containers") return null;
+        if (key === "containers" || key === "gamepad") return null;
         return (
           <section key={key}>
             <h3 className="text-lg font-semibold mb-1">{category.title}</h3>
@@ -770,6 +835,22 @@ function GalleryContent() {
               <WidgetView modelId={container.id} />
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Gamepad Controller widget */}
+      <section>
+        <h3 className="text-lg font-semibold mb-1">Gamepad Controller</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Web Gamepad API integration - connect a gamepad to see live input
+        </p>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="border rounded-lg p-4 bg-background md:col-span-2">
+            <div className="text-xs font-mono text-muted-foreground mb-3">
+              {CONTAINER_SETUP.gamepad.label}
+            </div>
+            <WidgetView modelId={CONTAINER_SETUP.gamepad.id} />
+          </div>
         </div>
       </section>
     </div>
