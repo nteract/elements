@@ -138,9 +138,7 @@
       "title": "ButtonGroup",
       "description": "Group buttons together with merged borders. Includes ButtonGroupSeparator and ButtonGroupText.",
       "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
-      "registryDependencies": [
-        "@nteract/separator"
-      ],
+      "registryDependencies": ["@nteract/separator"],
       "files": [
         {
           "path": "registry/primitives/button-group.tsx",
@@ -256,9 +254,7 @@
       "title": "Dialog",
       "description": "A modal dialog component for confirmations, forms, and focused interactions. Includes overlay, header, footer, and close button.",
       "dependencies": ["radix-ui", "lucide-react"],
-      "registryDependencies": [
-        "@nteract/button"
-      ],
+      "registryDependencies": ["@nteract/button"],
       "files": [
         {
           "path": "registry/primitives/dialog.tsx",
@@ -297,9 +293,7 @@
       "title": "CellTypeButton",
       "description": "Styled buttons for different notebook cell types with color coding. Includes CodeCellButton, MarkdownCellButton, SqlCellButton, and AiCellButton convenience components.",
       "dependencies": ["lucide-react"],
-      "registryDependencies": [
-        "@nteract/button"
-      ],
+      "registryDependencies": ["@nteract/button"],
       "files": [
         {
           "path": "registry/cell/CellTypeButton.tsx",
@@ -312,9 +306,7 @@
       "type": "registry:component",
       "title": "ExecutionStatus",
       "description": "A badge component that displays the execution state of a notebook cell. Shows queued, running, or error states.",
-      "registryDependencies": [
-        "@nteract/badge"
-      ],
+      "registryDependencies": ["@nteract/badge"],
       "files": [
         {
           "path": "registry/cell/ExecutionStatus.tsx",
@@ -354,10 +346,7 @@
       "title": "CellControls",
       "description": "Cell action menu with source visibility toggle, move controls, and dropdown menu for delete and clear operations.",
       "dependencies": ["lucide-react"],
-      "registryDependencies": [
-        "@nteract/button",
-        "@nteract/dropdown-menu"
-      ],
+      "registryDependencies": ["@nteract/button", "@nteract/dropdown-menu"],
       "files": [
         {
           "path": "registry/cell/CellControls.tsx",
@@ -421,10 +410,7 @@
       "title": "OutputArea",
       "description": "Wrapper component for rendering multiple Jupyter outputs with collapsible state and scroll behavior.",
       "dependencies": ["lucide-react"],
-      "registryDependencies": [
-        "@nteract/media-router",
-        "@nteract/ansi-output"
-      ],
+      "registryDependencies": ["@nteract/media-router", "@nteract/ansi-output"],
       "files": [
         {
           "path": "registry/cell/OutputArea.tsx",
@@ -476,9 +462,7 @@
       "title": "Command",
       "description": "A command palette component for keyboard-driven navigation and actions. Built on cmdk with dialog support.",
       "dependencies": ["cmdk", "lucide-react"],
-      "registryDependencies": [
-        "@nteract/dialog"
-      ],
+      "registryDependencies": ["@nteract/dialog"],
       "files": [
         {
           "path": "registry/primitives/command.tsx",
@@ -522,10 +506,7 @@
       "type": "registry:component",
       "title": "CollaboratorAvatars",
       "description": "Display avatars of users collaborating on a notebook with overflow handling.",
-      "registryDependencies": [
-        "@nteract/avatar",
-        "@nteract/hover-card"
-      ],
+      "registryDependencies": ["@nteract/avatar", "@nteract/hover-card"],
       "files": [
         {
           "path": "registry/cell/CollaboratorAvatars.tsx",
@@ -538,10 +519,7 @@
       "type": "registry:component",
       "title": "PresenceBookmarks",
       "description": "Shows stacked user avatars indicating who is present on a cell. Displays a HoverCard with user details and a +N overflow indicator when users exceed the limit.",
-      "registryDependencies": [
-        "@nteract/avatar",
-        "@nteract/hover-card"
-      ],
+      "registryDependencies": ["@nteract/avatar", "@nteract/hover-card"],
       "files": [
         {
           "path": "registry/cell/PresenceBookmarks.tsx",
@@ -606,9 +584,7 @@
       "title": "Alert Dialog",
       "description": "A modal dialog for critical confirmations that require user acknowledgment. Built on Radix UI with accessible focus management.",
       "dependencies": ["radix-ui"],
-      "registryDependencies": [
-        "@nteract/button"
-      ],
+      "registryDependencies": ["@nteract/button"],
       "files": [
         {
           "path": "registry/primitives/alert-dialog.tsx",
@@ -724,9 +700,7 @@
       "type": "registry:lib",
       "title": "AnyWidget View",
       "description": "React component for rendering anywidget ESM modules with the AFM (AnyWidget Frontend Module) interface. Handles dynamic ESM loading, CSS injection, and two-way state synchronization.",
-      "registryDependencies": [
-        "@nteract/widget-store"
-      ],
+      "registryDependencies": ["@nteract/widget-store"],
       "files": [
         {
           "path": "registry/widgets/anywidget-view.tsx",
@@ -970,9 +944,7 @@
       "title": "Toggle Group",
       "description": "Toggle button group component built on Radix UI ToggleGroup primitive.",
       "dependencies": ["radix-ui", "class-variance-authority"],
-      "registryDependencies": [
-        "@nteract/toggle"
-      ],
+      "registryDependencies": ["@nteract/toggle"],
       "files": [
         {
           "path": "registry/primitives/toggle-group.tsx",
