@@ -122,6 +122,29 @@ export function injectCSS(modelId: string, css: string): () => void {
   };
 }
 
+// === Message Headers ===
+
+/**
+ * Session ID for all outgoing messages.
+ * Must be stable across messages for the kernel to track the session.
+ */
+const SESSION_ID = crypto.randomUUID();
+
+/**
+ * Create a complete Jupyter message header with all fields.
+ * All fields are required for compatibility with strongly-typed backends (Rust, Go).
+ */
+function createHeader(msgType: string, username: string = "frontend") {
+  return {
+    msg_id: crypto.randomUUID(),
+    msg_type: msgType,
+    username,
+    session: SESSION_ID,
+    date: new Date().toISOString(),
+    version: "5.3",
+  };
+}
+
 // === AFM Model Proxy ===
 
 type EventCallback = (...args: unknown[]) => void;
@@ -168,18 +191,21 @@ export function createAFMModelProxy(
       if (Object.keys(pendingChanges).length === 0) return;
 
       // Send comm_msg with update method to kernel
+      // Full Jupyter protocol message format for strongly-typed backends
       sendMessage({
-        header: {
-          msg_id: crypto.randomUUID(),
-          msg_type: "comm_msg",
-        },
+        header: createHeader("comm_msg"),
+        parent_header: null,
+        metadata: {},
         content: {
           comm_id: model.id,
           data: {
             method: "update",
             state: { ...pendingChanges },
+            buffer_paths: [],
           },
         },
+        buffers: [],
+        channel: "shell",
       });
 
       // Clear pending changes after sending
@@ -276,20 +302,21 @@ export function createAFMModelProxy(
       buffers?: ArrayBuffer[]
     ): void {
       // Send custom message to kernel
-      // The content is spread into data alongside the method
+      // Full Jupyter protocol message format for strongly-typed backends
       sendMessage({
-        header: {
-          msg_id: crypto.randomUUID(),
-          msg_type: "comm_msg",
-        },
+        header: createHeader("comm_msg"),
+        parent_header: null,
+        metadata: {},
         content: {
           comm_id: model.id,
           data: {
             method: "custom",
             ...content,
+            buffer_paths: [],
           } as Record<string, unknown>,
         },
-        buffers,
+        buffers: buffers ?? [],
+        channel: "shell",
       });
     },
 
@@ -335,6 +362,11 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
   // Use reactive model hook - triggers re-render when model changes
   const model = useWidgetModel(modelId);
 
+  // Track the _esm value separately to trigger re-mount when it arrives
+  // (anywidgets may send _esm in a comm_msg after the initial comm_open)
+  const esm = model?.state._esm as string | undefined;
+  const css = model?.state._css as string | undefined;
+
   // Track cleanup functions and mount state
   const cleanupRef = useRef<{
     css?: () => void;
@@ -349,19 +381,22 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
   );
 
   useEffect(() => {
-    // Wait for container and model to be ready
-    if (!containerRef.current || !model) return;
+    // Wait for container, model, and _esm to be ready
+    // Note: _esm may arrive in a comm_msg after the initial comm_open
+    if (!containerRef.current || !model || !esm) {
+      // Don't set error - just wait for _esm to arrive via comm_msg
+      return;
+    }
 
     // Prevent double-mount
     if (hasMountedRef.current) return;
 
-    const esm = model.state._esm as string | undefined;
-    if (!esm) {
-      setError(new Error("No _esm field in widget state"));
-      return;
-    }
+    // Clear any previous error when we have _esm
+    setError(null);
 
-    const css = model.state._css as string | undefined;
+    // Capture esm value for use in async function (TypeScript narrowing)
+    const esmCode = esm;
+
     let isCancelled = false;
     hasMountedRef.current = true;
 
@@ -378,7 +413,7 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
         }
 
         // Load the ESM module
-        const module = await loadESM(esm!);
+        const module = await loadESM(esmCode);
 
         // Check if cancelled after async load
         if (isCancelled) return;
@@ -448,9 +483,8 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
       }
       hasMountedRef.current = false;
     };
-    // Note: model.id is used instead of the full model object to prevent
-    // re-running when model state changes (we only want to mount once)
-  }, [modelId, model?.id, store, sendMessage, getCurrentState]);
+    // Dependencies include esm so we re-run when _esm arrives via comm_msg update
+  }, [modelId, model?.id, esm, css, store, sendMessage, getCurrentState]);
 
   // Model not ready yet
   const modelExists = model !== undefined;
