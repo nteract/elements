@@ -17,6 +17,14 @@ import { CheckboxWidget } from "./checkbox-widget";
 import { TextWidget } from "./text-widget";
 import { TextareaWidget } from "./textarea-widget";
 
+// Import layout widget components
+import { VBoxWidget } from "./vbox-widget";
+import { HBoxWidget } from "./hbox-widget";
+import { BoxWidget } from "./box-widget";
+import { GridBoxWidget } from "./gridbox-widget";
+import { AccordionWidget } from "./accordion-widget";
+import { TabWidget } from "./tab-widget";
+
 // Register all widgets with their model names
 registerWidget("IntSliderModel", IntSlider);
 registerWidget("FloatSliderModel", FloatSlider);
@@ -27,6 +35,14 @@ registerWidget("CheckboxModel", CheckboxWidget);
 registerWidget("TextModel", TextWidget);
 registerWidget("TextareaModel", TextareaWidget);
 
+// Register layout widgets
+registerWidget("VBoxModel", VBoxWidget);
+registerWidget("HBoxModel", HBoxWidget);
+registerWidget("BoxModel", BoxWidget);
+registerWidget("GridBoxModel", GridBoxWidget);
+registerWidget("AccordionModel", AccordionWidget);
+registerWidget("TabModel", TabWidget);
+
 // Re-export components for direct use
 export { IntSlider } from "./int-slider";
 export { FloatSlider } from "./float-slider";
@@ -36,3 +52,11 @@ export { ButtonWidget } from "./button-widget";
 export { CheckboxWidget } from "./checkbox-widget";
 export { TextWidget } from "./text-widget";
 export { TextareaWidget } from "./textarea-widget";
+
+// Re-export layout widgets
+export { VBoxWidget } from "./vbox-widget";
+export { HBoxWidget } from "./hbox-widget";
+export { BoxWidget } from "./box-widget";
+export { GridBoxWidget } from "./gridbox-widget";
+export { AccordionWidget } from "./accordion-widget";
+export { TabWidget } from "./tab-widget";
