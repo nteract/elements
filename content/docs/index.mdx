@@ -20,6 +20,25 @@ Install components directly from the registry using the shadcn CLI:
 npx shadcn@latest add https://nteract-elements.vercel.app/r/ansi-output.json
 ```
 
+### Using the `@nteract` namespace
+
+To use shorter install commands like `npx shadcn@latest add @nteract/badge`, add the registry to your `components.json`:
+
+```json
+{
+  "registries": {
+    "@nteract": "https://nteract-elements.vercel.app/r/{name}.json"
+  }
+}
+```
+
+Then install components with the `@nteract/` prefix:
+
+```bash
+npx shadcn@latest add @nteract/ansi-output
+npx shadcn@latest add @nteract/media-router
+```
+
 Or browse the component documentation to copy and adapt components for your project.
 
 ## Outputs
