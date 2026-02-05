@@ -613,8 +613,8 @@ const CONTAINER_SETUP = {
       name: "HTMLModel",
       state: { value: " 1.2G/2.8G [00:19&lt;00:26, 62.1MB/s]" },
     },
-    // Controller button children - standard gamepad has up to 16 buttons
-    ...Array.from({ length: 16 }, (_, i) => ({
+    // Controller button children - Xbox has 17, some have more
+    ...Array.from({ length: 20 }, (_, i) => ({
       id: `gamepad-btn-${i}`,
       name: "ControllerButtonModel",
       state: { pressed: false, value: 0 },
@@ -706,9 +706,9 @@ const CONTAINER_SETUP = {
       connected: false, // Starts disconnected - connect a real gamepad!
       name: "",
       mapping: "",
-      // Standard gamepad: 16 buttons, 4 axes
+      // Standard gamepad: up to 20 buttons, 4 axes
       buttons: Array.from(
-        { length: 16 },
+        { length: 20 },
         (_, i) => `IPY_MODEL_gamepad-btn-${i}`,
       ),
       axes: Array.from({ length: 4 }, (_, i) => `IPY_MODEL_gamepad-axis-${i}`),
