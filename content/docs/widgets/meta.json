@@ -3,7 +3,6 @@
   "pages": [
     "index",
     "widget-store",
-    "widget-view",
     "anywidget-view",
     "controls",
     "output-widget"
