@@ -7,8 +7,8 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Label } from "@/registry/primitives/label";
-import { Slider } from "@/registry/primitives/slider";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

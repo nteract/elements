@@ -7,7 +7,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Toggle } from "@/registry/primitives/toggle";
+import { Toggle } from "@/components/ui/toggle";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

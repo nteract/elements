@@ -12,7 +12,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/primitives/tabs";
+} from "@/components/ui/tabs";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   parseModelRef,

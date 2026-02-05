@@ -7,12 +7,12 @@ import {
   AvatarGroup,
   AvatarGroupCount,
   AvatarImage,
-} from "@/registry/primitives/avatar";
+} from "@/components/ui/avatar";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/registry/primitives/hover-card";
+} from "@/components/ui/hover-card";
 
 export interface CollaboratorUser {
   id: string;

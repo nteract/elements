@@ -7,14 +7,14 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Label } from "@/registry/primitives/label";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/primitives/select";
+} from "@/components/ui/select";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

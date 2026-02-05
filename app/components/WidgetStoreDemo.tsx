@@ -11,7 +11,7 @@
  */
 
 import { useCallback, useState } from "react";
-import { Button } from "@/registry/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   type JupyterCommMessage,
   useResolvedModelValue,

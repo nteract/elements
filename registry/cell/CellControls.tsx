@@ -13,14 +13,14 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/registry/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/primitives/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 interface CellControlsProps {
   sourceVisible: boolean;

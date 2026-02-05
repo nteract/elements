@@ -9,8 +9,8 @@
 import { PlusIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/registry/primitives/button";
-import { Label } from "@/registry/primitives/label";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

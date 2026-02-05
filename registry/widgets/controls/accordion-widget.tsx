@@ -12,7 +12,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/registry/primitives/accordion";
+} from "@/components/ui/accordion";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   parseModelRef,

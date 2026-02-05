@@ -7,7 +7,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Progress } from "@/registry/primitives/progress";
+import { Progress } from "@/components/ui/progress";
 import type { WidgetComponentProps } from "../widget-registry";
 import { useWidgetModelValue } from "../widget-store-context";
 

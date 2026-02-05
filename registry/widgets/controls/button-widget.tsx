@@ -7,7 +7,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/registry/primitives/button";
+import { Button } from "@/components/ui/button";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

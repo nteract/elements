@@ -9,7 +9,7 @@
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/registry/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -17,13 +17,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/registry/primitives/command";
-import { Label } from "@/registry/primitives/label";
+} from "@/components/ui/command";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/primitives/popover";
+} from "@/components/ui/popover";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

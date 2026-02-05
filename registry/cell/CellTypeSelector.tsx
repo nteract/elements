@@ -3,13 +3,13 @@
 import { Bot, ChevronDown, Code, Database, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type CellType, cellTypeStyles } from "@/registry/cell/CellTypeButton";
-import { Button } from "@/registry/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/primitives/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 const allCellTypes: CellType[] = ["code", "markdown", "sql", "ai"];
 

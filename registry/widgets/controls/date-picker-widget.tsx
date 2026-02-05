@@ -8,8 +8,8 @@
 
 import { useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { Input } from "@/registry/primitives/input";
-import { Label } from "@/registry/primitives/label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
