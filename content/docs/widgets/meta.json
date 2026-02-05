@@ -1,4 +1,13 @@
 {
   "title": "Widgets",
-  "pages": ["widget-store", "anywidget-view", "widget-view"]
+  "pages": [
+    "---Overview---",
+    "index",
+    "---Components---",
+    "widget-store",
+    "widget-view",
+    "anywidget-view",
+    "---Reference---",
+    "controls"
+  ]
 }

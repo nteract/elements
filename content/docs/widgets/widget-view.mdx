@@ -93,18 +93,19 @@ Model exists?
 
 ## Built-in Widgets
 
-The following ipywidgets are supported out of the box when you import `@/registry/widgets/controls`:
+24 ipywidgets are supported out of the box when you import `@/registry/widgets/controls`:
 
-| Model Name | Description | shadcn Primitive |
-| --- | --- | --- |
-| `IntSliderModel` | Integer slider | Slider |
-| `FloatSliderModel` | Floating point slider | Slider |
-| `IntProgressModel` | Integer progress bar | Progress |
-| `FloatProgressModel` | Floating point progress bar | Progress |
-| `ButtonModel` | Clickable button | Button |
-| `CheckboxModel` | Boolean checkbox | Checkbox |
-| `TextModel` | Single-line text input | Input |
-| `TextareaModel` | Multi-line text input | Textarea |
+- **Sliders:** IntSlider, FloatSlider, IntRangeSlider, FloatRangeSlider
+- **Progress:** IntProgress, FloatProgress
+- **Text:** Text, Textarea, HTML
+- **Selection:** Dropdown, RadioButtons, ToggleButtons, SelectMultiple
+- **Boolean:** Checkbox, ToggleButton
+- **Other:** Button, ColorPicker
+- **Containers:** VBox, HBox, Box, GridBox, Tab, Accordion
+
+<Callout type="info">
+  See the [Built-in Controls](/docs/widgets/controls) page for a full interactive gallery with all properties.
+</Callout>
 
 ## Registering Custom Widgets
 

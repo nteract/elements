@@ -1,0 +1,137 @@
+---
+title: Jupyter Widgets
+description: Build notebook UIs with fully customizable widget components
+icon: Puzzle
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+## Why nteract-elements widgets?
+
+Traditional Jupyter widget frontends (`@jupyter-widgets/html-manager`) are designed for JupyterLab. They use Backbone.js for state management, have JupyterLab-specific styling, and are difficult to customize for standalone applications.
+
+**nteract-elements takes a different approach:**
+
+| Traditional | nteract-elements |
+|-------------|------------------|
+| Backbone.js models | Pure React with `useSyncExternalStore` |
+| JupyterLab styling | shadcn/ui primitives (fully customizable) |
+| Monolithic manager | Modular: pick only what you need |
+| Extension-focused | App-focused |
+
+The result: **widgets that look like your app, not JupyterLab.**
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      Your React App                         │
+├─────────────────────────────────────────────────────────────┤
+│                   WidgetStoreProvider                       │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │                    Widget Store                      │   │
+│  │  • Manages all widget model state                    │   │
+│  │  • Handles comm_open / comm_msg / comm_close         │   │
+│  │  • Fine-grained subscriptions per model/key          │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                           │                                 │
+│         ┌─────────────────┼─────────────────┐              │
+│         ▼                 ▼                 ▼              │
+│   ┌──────────┐     ┌──────────┐     ┌──────────┐          │
+│   │WidgetView│     │WidgetView│     │WidgetView│          │
+│   └────┬─────┘     └────┬─────┘     └────┬─────┘          │
+│        │                │                │                 │
+│   ┌────▼─────┐    ┌─────▼────┐    ┌─────▼─────┐          │
+│   │ IntSlider│    │AnyWidget │    │  VBox     │          │
+│   │(built-in)│    │  (ESM)   │    │(container)│          │
+│   └──────────┘    └──────────┘    └───────────┘          │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼ sendMessage()
+                    ┌──────────────┐
+                    │ Jupyter Kernel│
+                    └──────────────┘
+```
+
+## Components
+
+### [Widget Store](/docs/widgets/widget-store)
+
+The foundation. A pure React store that manages widget model state with:
+- Concurrent-safe state via `useSyncExternalStore`
+- Fine-grained subscriptions (subscribe to a single key, not the whole model)
+- IPY_MODEL_ reference resolution
+
+### [Widget View](/docs/widgets/widget-view)
+
+The router. Automatically renders the right component for each widget:
+- Routes anywidgets (with `_esm`) to the ESM loader
+- Routes standard ipywidgets to built-in shadcn components
+- Shows helpful fallback for unsupported models
+
+### [AnyWidget View](/docs/widgets/anywidget-view)
+
+ESM widget loader implementing the [AFM interface](https://anywidget.dev/en/afm/):
+- Dynamic ESM loading (inline code or remote URLs)
+- CSS injection with automatic cleanup
+- Full two-way binding support
+
+### [Built-in Controls](/docs/widgets/controls)
+
+24 shadcn-backed widget components for standard ipywidgets:
+- **Sliders:** IntSlider, FloatSlider, IntRangeSlider, FloatRangeSlider
+- **Progress:** IntProgress, FloatProgress
+- **Text:** Text, Textarea, HTML
+- **Selection:** Dropdown, RadioButtons, ToggleButtons, SelectMultiple
+- **Boolean:** Checkbox, ToggleButton
+- **Other:** Button, ColorPicker
+- **Containers:** VBox, HBox, Box, GridBox, Accordion, Tab
+
+## Quick Start
+
+```bash
+# Install everything
+npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-view.json
+npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-controls.json
+```
+
+```tsx
+import { WidgetStoreProvider } from "@/lib/widget-store-context"
+import { WidgetView } from "@/lib/widget-view"
+import "@/lib/controls" // Register built-in widgets
+
+function NotebookApp({ kernel }) {
+  // Route kernel messages to the widget store
+  const { handleMessage } = useWidgetStore()
+
+  useEffect(() => {
+    kernel.onMessage(handleMessage)
+  }, [kernel])
+
+  return (
+    <WidgetStoreProvider sendMessage={(msg) => kernel.send(msg)}>
+      {/* Render widgets by their comm_id */}
+      <WidgetView modelId="widget-123" />
+    </WidgetStoreProvider>
+  )
+}
+```
+
+<Callout type="info">
+  For a complete integration example, see the [runtimed sidecar](https://github.com/runtimed/runtimed) which uses nteract-elements for full Jupyter widget support.
+</Callout>
+
+## Customization
+
+Every built-in widget uses shadcn/ui primitives. Customize them by:
+
+1. **Theming** - Modify CSS variables in your `tailwind.config.js`
+2. **Override components** - Register your own component for any model name
+3. **Fork and modify** - Copy a widget file and adjust as needed
+
+```tsx
+import { registerWidget } from "@/lib/widget-registry"
+
+// Replace the default IntSlider with your custom version
+registerWidget("IntSliderModel", MyCustomSlider)
+```

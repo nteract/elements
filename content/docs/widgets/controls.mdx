@@ -1,0 +1,167 @@
+---
+title: Built-in Controls
+description: Gallery of shadcn-backed widget components
+icon: LayoutGrid
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { WidgetControlsGallery } from '@/app/components/WidgetControlsGallery';
+
+<div className="my-8">
+  <WidgetControlsGallery />
+</div>
+
+## Installation
+
+Install the widget controls along with the widget view infrastructure:
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add https://nteract-elements.vercel.app/r/widget-controls.json
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Copy the [controls/](https://github.com/nteract/elements/tree/main/registry/widgets/controls) directory to your project.
+
+    **Requires:** [Widget View](/docs/widgets/widget-view)
+  </Tab>
+</Tabs>
+
+## Usage
+
+Import the controls module to register all built-in widgets:
+
+```tsx
+// Import to register all built-in widgets
+import "@/lib/controls"
+
+// Or import specific widgets
+import { IntSlider, Button, VBox } from "@/lib/controls"
+```
+
+## Widget Reference
+
+### Sliders
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| IntSlider | `IntSliderModel` | Integer value with draggable handle |
+| FloatSlider | `FloatSliderModel` | Floating point value with handle |
+| IntRangeSlider | `IntRangeSliderModel` | Integer range with two handles |
+| FloatRangeSlider | `FloatRangeSliderModel` | Float range with two handles |
+
+**Common props:** `value`, `min`, `max`, `step`, `description`, `disabled`, `orientation`, `readout`, `readout_format`
+
+### Progress Bars
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| IntProgress | `IntProgressModel` | Integer progress bar |
+| FloatProgress | `FloatProgressModel` | Float progress bar (0-1) |
+
+**Common props:** `value`, `min`, `max`, `description`, `bar_style` (`"success"`, `"info"`, `"warning"`, `"danger"`)
+
+### Text Input
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| Text | `TextModel` | Single-line text input |
+| Textarea | `TextareaModel` | Multi-line text input |
+| HTML | `HTMLModel` | Rendered HTML content |
+
+**Common props:** `value`, `description`, `placeholder`, `disabled`
+
+### Boolean
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| Checkbox | `CheckboxModel` | Checkbox with label |
+| ToggleButton | `ToggleButtonModel` | Toggle button |
+
+**Common props:** `value`, `description`, `disabled`
+
+### Selection
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| Dropdown | `DropdownModel` | Single-select dropdown |
+| RadioButtons | `RadioButtonsModel` | Radio button group |
+| ToggleButtons | `ToggleButtonsModel` | Button group for selection |
+| SelectMultiple | `SelectMultipleModel` | Multi-select listbox |
+
+**Common props:** `value`, `_options_labels`, `description`, `disabled`
+
+### Other
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| Button | `ButtonModel` | Clickable button |
+| ColorPicker | `ColorPickerModel` | Color selection input |
+
+**Button props:** `description` (button text), `button_style`, `tooltip`, `disabled`
+**ColorPicker props:** `value` (hex color), `description`, `concise`, `disabled`
+
+### Layout Containers
+
+| Widget | Model Name | Description |
+|--------|------------|-------------|
+| VBox | `VBoxModel` | Vertical stack |
+| HBox | `HBoxModel` | Horizontal row |
+| Box | `BoxModel` | Generic container |
+| GridBox | `GridBoxModel` | CSS Grid layout |
+| Tab | `TabModel` | Tabbed interface |
+| Accordion | `AccordionModel` | Collapsible panels |
+
+**Common props:** `children` (array of `IPY_MODEL_<id>` references), `box_style`
+**Tab/Accordion props:** `_titles`, `selected_index`
+
+## Customizing Widgets
+
+### Override a widget globally
+
+Register your own component to replace any built-in widget:
+
+```tsx
+import { registerWidget } from "@/lib/widget-registry"
+import { useWidgetModelValue, useWidgetStoreRequired } from "@/lib/widget-store-context"
+
+function MyFancySlider({ modelId, className }) {
+  const { sendUpdate } = useWidgetStoreRequired()
+  const value = useWidgetModelValue(modelId, "value") ?? 0
+
+  return (
+    <div className={className}>
+      <input
+        type="range"
+        value={value}
+        onChange={(e) => sendUpdate(modelId, { value: Number(e.target.value) })}
+      />
+    </div>
+  )
+}
+
+// Replace the default IntSlider everywhere
+registerWidget("IntSliderModel", MyFancySlider)
+```
+
+### Style via CSS variables
+
+All widgets use shadcn's CSS variable theming. Customize colors in your `tailwind.config.js`:
+
+```js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "hsl(var(--primary))",
+        // ... your custom theme
+      }
+    }
+  }
+}
+```
+
+### Fork and modify
+
+Copy any widget file from the [controls/](https://github.com/nteract/elements/tree/main/registry/widgets/controls) directory and modify it directly. The widgets are intentionally simple and self-contained.
