@@ -8,9 +8,9 @@
 
 import { UploadIcon } from "lucide-react";
 import { useCallback, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Button } from "@/registry/primitives/button";
-import { Label } from "@/registry/primitives/label";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

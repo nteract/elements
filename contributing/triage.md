@@ -16,25 +16,11 @@ Process for evaluating and importing components into nteract-elements.
 | `svg-output` | Vector graphics |
 | `media-router` | MIME-type dispatcher that routes to the above |
 
-### UI primitives (`registry/primitives/`)
+### UI primitives (upstream shadcn, installed in `components/ui/`)
 
-| Component | Description |
-|-----------|-------------|
-| `badge` | Status labels and counts |
-| `button` | Button with variants and sizes |
-| `card` | Content grouping container |
-| `dialog` | Modal dialog windows |
-| `dropdown-menu` | Action list menu |
-| `input` | Text input with focus and validation states |
-| `kbd` | Keyboard shortcut display |
-| `label` | Form labels |
-| `popover` | Floating content panel |
-| `separator` | Visual dividers |
-| `sheet` | Slide-out panels |
-| `spinner` | Loading indicator |
-| `tabs` | Tabbed content panels |
-| `textarea` | Multi-line text input |
-| `tooltip` | Hover information |
+Primitives are **not published** in the nteract registry. They come from upstream shadcn/ui and are installed locally for the docs site via `pnpm dlx shadcn@latest add <name>`.
+
+Currently installed: accordion, alert, alert-dialog, avatar, badge, button, button-group, card, checkbox, collapsible, command, dialog, dropdown-menu, empty, hover-card, input, kbd, label, popover, progress, radio-group, select, separator, sheet, skeleton, slider, spinner, switch, tabs, textarea, toggle, toggle-group, tooltip.
 
 ### Cell primitives (`registry/cell/`)
 
@@ -94,9 +80,10 @@ pnpm dlx shadcn@latest add avatar command collapsible skeleton switch hover-card
 
 | Path | Purpose |
 |------|---------|
-| `registry/primitives/` | shadcn/ui primitives (published via nteract registry) |
+| `components/ui/` | shadcn/ui primitives (installed via CLI, not published) |
 | `registry/cell/` | Notebook cell components (published via nteract registry) |
 | `registry/outputs/` | Output renderers (published via nteract registry) |
+| `registry/widgets/` | Jupyter widget implementations (published via nteract registry) |
 | `components/` | Fumadocs site internals only (not published) |
 | `content/docs/ui/` | MDX docs for UI primitives |
 | `content/docs/cell/` | MDX docs for cell components |
@@ -106,25 +93,13 @@ pnpm dlx shadcn@latest add avatar command collapsible skeleton switch hover-card
 
 ### For shadcn/ui primitives (Button, Input, Card, etc.)
 
-**Use the shadcn CLI.** Do not manually copy component code.
+Primitives are **not published** in the nteract registry — consumers get them from upstream shadcn. To add a new primitive for the docs site:
 
 ```bash
-# Add a single component
-pnpm dlx shadcn@latest add badge
-
-# Add multiple components
-pnpm dlx shadcn@latest add card popover tooltip
+pnpm dlx shadcn@latest add <component-name>
 ```
 
-The CLI places components in `registry/primitives/` (configured via `components.json`).
-
-After adding via CLI:
-
-1. Verify the build works: `pnpm run types:check`
-2. Add entry to `registry.json` with correct path
-3. Add MDX documentation under `content/docs/ui/<component>.mdx`
-4. Update `content/docs/ui/meta.json` to include the new component
-5. Open PR with commit message referencing the issue (e.g., `Closes #46`)
+The CLI installs into `components/ui/` (configured via `components.json`). No `registry.json` entry needed for primitives.
 
 ### For notebook-specific components
 
@@ -133,7 +108,7 @@ These aren't available via shadcn CLI. Copy from `runtimed/intheloop`:
 1. Copy source file(s) from intheloop
 2. Update imports:
    - Use `@/lib/utils` for `cn()`
-   - Use `@/registry/primitives/<component>` for UI primitives
+   - Use `@/components/ui/<component>` for UI primitives
 3. Strip app-specific patterns (see table below)
 4. Place in `registry/cell/` for cell components
 5. Verify the build works: `pnpm run types:check`
@@ -148,7 +123,7 @@ Before merging a component PR:
 - [ ] Component placed in correct `registry/` subfolder
 - [ ] TypeScript props exported (no `any`)
 - [ ] Uses `cn()` from `@/lib/utils` for class merging
-- [ ] Imports use `@/registry/primitives/` for UI dependencies
+- [ ] Imports use `@/components/ui/` for UI dependencies
 - [ ] Entry added to `registry.json` with correct path
 - [ ] Build passes: `pnpm run types:check`
 - [ ] MDX documentation with interactive examples

@@ -6,9 +6,9 @@
  * Maps to ipywidgets FloatProgressModel.
  */
 
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { Label } from "@/registry/primitives/label";
-import { Progress } from "@/registry/primitives/progress";
 import type { WidgetComponentProps } from "../widget-registry";
 import { useWidgetModelValue } from "../widget-store-context";
 

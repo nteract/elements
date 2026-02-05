@@ -108,175 +108,6 @@
       ]
     },
     {
-      "name": "badge",
-      "type": "registry:ui",
-      "title": "Badge",
-      "description": "A badge component for displaying status, labels, and counts.",
-      "dependencies": ["class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/badge.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "button",
-      "type": "registry:ui",
-      "title": "Button",
-      "description": "A button component with multiple variants and sizes.",
-      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/button.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "button-group",
-      "type": "registry:ui",
-      "title": "ButtonGroup",
-      "description": "Group buttons together with merged borders. Includes ButtonGroupSeparator and ButtonGroupText.",
-      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
-      "registryDependencies": ["separator"],
-      "files": [
-        {
-          "path": "registry/primitives/button-group.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "card",
-      "type": "registry:ui",
-      "title": "Card",
-      "description": "A card component for grouping related content.",
-      "files": [
-        {
-          "path": "registry/primitives/card.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "dropdown-menu",
-      "type": "registry:ui",
-      "title": "Dropdown Menu",
-      "description": "A dropdown menu component for displaying a list of actions.",
-      "dependencies": ["@radix-ui/react-dropdown-menu"],
-      "files": [
-        {
-          "path": "registry/primitives/dropdown-menu.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "input",
-      "type": "registry:ui",
-      "title": "Input",
-      "description": "A text input component with focus and validation states.",
-      "files": [
-        {
-          "path": "registry/primitives/input.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "kbd",
-      "type": "registry:ui",
-      "title": "Kbd",
-      "description": "A keyboard key component for displaying keyboard shortcuts and hotkeys. Essential for notebook interfaces.",
-      "dependencies": ["class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/kbd.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "popover",
-      "type": "registry:ui",
-      "title": "Popover",
-      "description": "A popover component for displaying floating content.",
-      "dependencies": ["@radix-ui/react-popover"],
-      "files": [
-        {
-          "path": "registry/primitives/popover.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "spinner",
-      "type": "registry:ui",
-      "title": "Spinner",
-      "description": "A loading spinner component for indicating async operations like kernel execution and cell running status.",
-      "dependencies": ["lucide-react"],
-      "files": [
-        {
-          "path": "registry/primitives/spinner.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "tooltip",
-      "type": "registry:ui",
-      "title": "Tooltip",
-      "description": "A tooltip component for displaying additional information on hover.",
-      "dependencies": ["@radix-ui/react-tooltip"],
-      "files": [
-        {
-          "path": "registry/primitives/tooltip.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "tabs",
-      "type": "registry:ui",
-      "title": "Tabs",
-      "description": "A tabbed interface component for switching between different views or content panels. Supports horizontal and vertical orientations with default and line variants.",
-      "dependencies": ["radix-ui", "class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/tabs.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "dialog",
-      "type": "registry:ui",
-      "title": "Dialog",
-      "description": "A modal dialog component for confirmations, forms, and focused interactions. Includes overlay, header, footer, and close button.",
-      "dependencies": ["radix-ui", "lucide-react"],
-      "registryDependencies": ["button"],
-      "files": [
-        {
-          "path": "registry/primitives/dialog.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "sheet",
-      "type": "registry:ui",
-      "title": "Sheet",
-      "description": "A slide-out panel component for sidebars, details panels, and mobile navigation. Supports sliding from any edge of the screen.",
-      "dependencies": ["radix-ui", "lucide-react"],
-      "files": [
-        {
-          "path": "registry/primitives/sheet.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "cell-header",
       "type": "registry:component",
       "title": "CellHeader",
@@ -368,44 +199,6 @@
       ]
     },
     {
-      "name": "separator",
-      "type": "registry:ui",
-      "title": "Separator",
-      "description": "A visual divider for separating content sections. Supports horizontal and vertical orientations.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/separator.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "label",
-      "type": "registry:ui",
-      "title": "Label",
-      "description": "An accessible label component for form controls. Pairs with inputs, textareas, and other form elements.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/label.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "textarea",
-      "type": "registry:ui",
-      "title": "Textarea",
-      "description": "A multiline text input for longer content. Ideal for code cells, markdown input, and form fields.",
-      "files": [
-        {
-          "path": "registry/primitives/textarea.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "output-area",
       "type": "registry:component",
       "title": "OutputArea",
@@ -427,77 +220,6 @@
       "files": [
         {
           "path": "registry/cell/ExecutionCount.tsx",
-          "type": "registry:component"
-        }
-      ]
-    },
-    {
-      "name": "avatar",
-      "type": "registry:ui",
-      "title": "Avatar",
-      "description": "A profile picture component with fallback support. Includes Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, and AvatarGroupCount components.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/avatar.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "hover-card",
-      "type": "registry:ui",
-      "title": "Hover Card",
-      "description": "A card that appears on hover, useful for displaying additional information about an element without requiring a click.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/hover-card.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "command",
-      "type": "registry:ui",
-      "title": "Command",
-      "description": "A command palette component for keyboard-driven navigation and actions. Built on cmdk with dialog support.",
-      "dependencies": ["cmdk", "lucide-react"],
-      "registryDependencies": ["dialog"],
-      "files": [
-        {
-          "path": "registry/primitives/command.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "empty",
-      "type": "registry:ui",
-      "title": "Empty",
-      "description": "Empty state container with slots for icon, title, description, and actions.",
-      "dependencies": ["class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/empty.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "cell-type-selector",
-      "type": "registry:component",
-      "title": "CellTypeSelector",
-      "description": "A dropdown selector for changing cell types in notebook interfaces. Supports filtering available types and displays the current type with color-coded styling.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": [
-        "button",
-        "dropdown-menu",
-        "@nteract/cell-type-button"
-      ],
-      "files": [
-        {
-          "path": "registry/cell/CellTypeSelector.tsx",
           "type": "registry:component"
         }
       ]
@@ -525,97 +247,6 @@
         {
           "path": "registry/cell/PresenceBookmarks.tsx",
           "type": "registry:component"
-        }
-      ]
-    },
-    {
-      "name": "skeleton",
-      "type": "registry:ui",
-      "title": "Skeleton",
-      "description": "A placeholder loading component that shows a pulsing animation while content is loading.",
-      "files": [
-        {
-          "path": "registry/primitives/skeleton.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "switch",
-      "type": "registry:ui",
-      "title": "Switch",
-      "description": "A toggle switch component for boolean settings. Supports default and small sizes.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/switch.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "slider",
-      "type": "registry:ui",
-      "title": "Slider",
-      "description": "A draggable slider component for selecting numeric values within a range. Supports single and range selection.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/slider.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "alert",
-      "type": "registry:ui",
-      "title": "Alert",
-      "description": "A callout component for displaying important messages. Supports default and destructive variants.",
-      "dependencies": ["class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/alert.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "alert-dialog",
-      "type": "registry:ui",
-      "title": "Alert Dialog",
-      "description": "A modal dialog for critical confirmations that require user acknowledgment. Built on Radix UI with accessible focus management.",
-      "dependencies": ["radix-ui"],
-      "registryDependencies": ["button"],
-      "files": [
-        {
-          "path": "registry/primitives/alert-dialog.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "accordion",
-      "type": "registry:ui",
-      "title": "Accordion",
-      "description": "A vertically stacked set of interactive headings that reveal or hide associated content. Built on Radix UI.",
-      "dependencies": ["radix-ui", "lucide-react"],
-      "files": [
-        {
-          "path": "registry/primitives/accordion.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "collapsible",
-      "type": "registry:ui",
-      "title": "Collapsible",
-      "description": "A component that can expand or collapse content. Built on Radix UI Collapsible primitive.",
-      "dependencies": ["radix-ui"],
-      "files": [
-        {
-          "path": "registry/primitives/collapsible.tsx",
-          "type": "registry:ui"
         }
       ]
     },
@@ -995,79 +626,20 @@
       ]
     },
     {
-      "name": "progress",
-      "type": "registry:ui",
-      "title": "Progress",
-      "description": "Progress bar component built on Radix UI Progress primitive.",
+      "name": "cell-type-selector",
+      "type": "registry:component",
+      "title": "CellTypeSelector",
+      "description": "A dropdown selector for changing cell types in notebook interfaces. Supports filtering available types and displays the current type with color-coded styling.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "dropdown-menu",
+        "@nteract/cell-type-button"
+      ],
       "files": [
         {
-          "path": "registry/primitives/progress.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "checkbox",
-      "type": "registry:ui",
-      "title": "Checkbox",
-      "description": "Checkbox component built on Radix UI Checkbox primitive.",
-      "files": [
-        {
-          "path": "registry/primitives/checkbox.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "select",
-      "type": "registry:ui",
-      "title": "Select",
-      "description": "Select dropdown component built on Radix UI Select primitive.",
-      "dependencies": ["radix-ui", "lucide-react"],
-      "files": [
-        {
-          "path": "registry/primitives/select.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "radio-group",
-      "type": "registry:ui",
-      "title": "Radio Group",
-      "description": "Radio group component built on Radix UI RadioGroup primitive.",
-      "dependencies": ["radix-ui", "lucide-react"],
-      "files": [
-        {
-          "path": "registry/primitives/radio-group.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "toggle",
-      "type": "registry:ui",
-      "title": "Toggle",
-      "description": "Toggle button component built on Radix UI Toggle primitive.",
-      "dependencies": ["radix-ui", "class-variance-authority"],
-      "files": [
-        {
-          "path": "registry/primitives/toggle.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "toggle-group",
-      "type": "registry:ui",
-      "title": "Toggle Group",
-      "description": "Toggle button group component built on Radix UI ToggleGroup primitive.",
-      "dependencies": ["radix-ui", "class-variance-authority"],
-      "registryDependencies": ["toggle"],
-      "files": [
-        {
-          "path": "registry/primitives/toggle-group.tsx",
-          "type": "registry:ui"
+          "path": "registry/cell/CellTypeSelector.tsx",
+          "type": "registry:component"
         }
       ]
     },

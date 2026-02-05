@@ -6,9 +6,9 @@
  * Maps to ipywidgets CheckboxModel.
  */
 
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Checkbox } from "@/registry/primitives/checkbox";
-import { Label } from "@/registry/primitives/label";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

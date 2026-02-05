@@ -10,8 +10,8 @@
 import "katex/dist/katex.min.css";
 
 import katex from "katex";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Label } from "@/registry/primitives/label";
 import type { WidgetComponentProps } from "../widget-registry";
 import { useWidgetModelValue } from "../widget-store-context";
 

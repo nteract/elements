@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import { Button } from "@/registry/primitives/button";
+import { Button } from "@/components/ui/button";
 import { AnyWidgetView } from "@/registry/widgets/anywidget-view";
 import {
   type JupyterCommMessage,

@@ -6,12 +6,9 @@
  * Maps to ipywidgets ToggleButtonsModel.
  */
 
+import { Label } from "@/components/ui/label";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-import { Label } from "@/registry/primitives/label";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/registry/primitives/toggle-group";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,
