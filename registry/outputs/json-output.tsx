@@ -12,7 +12,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/registry/primitives/collapsible";
+} from "@/components/ui/collapsible";
 
 interface JsonViewerContextType {
   expandedPaths: Set<string>;

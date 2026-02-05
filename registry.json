@@ -79,6 +79,7 @@
       "title": "JSON Output",
       "description": "Component for rendering JSON data in an interactive, expandable tree view. Useful for inspecting complex data structures and API responses.",
       "dependencies": ["@uiw/react-json-view"],
+      "registryDependencies": ["collapsible"],
       "files": [
         {
           "path": "registry/outputs/json-output.tsx",
