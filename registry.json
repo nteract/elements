@@ -361,6 +361,11 @@
           "path": "registry/widgets/link-subscriptions.ts",
           "type": "registry:lib",
           "target": "components/widgets/link-subscriptions.ts"
+        },
+        {
+          "path": "registry/widgets/canvas-manager-subscriptions.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/canvas-manager-subscriptions.ts"
         }
       ]
     },
