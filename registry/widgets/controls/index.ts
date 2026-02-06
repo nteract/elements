@@ -20,6 +20,7 @@ import { ControllerAxisWidget } from "./controller-axis-widget";
 import { ControllerButtonWidget } from "./controller-button-widget";
 import { ControllerWidget } from "./controller-widget";
 import { DatePickerWidget } from "./date-picker-widget";
+import { DatetimeWidget } from "./datetime-widget";
 // Selection widgets
 import { DropdownWidget } from "./dropdown-widget";
 import { FileUploadWidget } from "./file-upload-widget";
@@ -27,6 +28,7 @@ import { FloatLogSlider } from "./float-log-slider";
 import { FloatProgress } from "./float-progress";
 import { FloatRangeSlider } from "./float-range-slider";
 import { FloatSlider } from "./float-slider";
+import { FloatsInputWidget } from "./floats-input-widget";
 import { FloatTextWidget } from "./float-text-widget";
 import { GridBoxWidget } from "./gridbox-widget";
 import { HBoxWidget } from "./hbox-widget";
@@ -38,6 +40,7 @@ import { IntRangeSlider } from "./int-range-slider";
 // Import widget components
 import { IntSlider } from "./int-slider";
 import { IntTextWidget } from "./int-text-widget";
+import { IntsInputWidget } from "./ints-input-widget";
 import { LabelWidget } from "./label-widget";
 import { OutputWidget } from "./output-widget";
 import { PasswordWidget } from "./password-widget";
@@ -47,6 +50,7 @@ import { SelectMultipleWidget } from "./select-multiple-widget";
 import { SelectWidget } from "./select-widget";
 import { SelectionRangeSliderWidget } from "./selection-range-slider-widget";
 import { SelectionSliderWidget } from "./selection-slider-widget";
+import { StackWidget } from "./stack-widget";
 import { TabWidget } from "./tab-widget";
 import { TagsInputWidget } from "./tags-input-widget";
 import { TextWidget } from "./text-widget";
@@ -82,7 +86,10 @@ registerWidget("AudioModel", AudioWidget);
 registerWidget("VideoModel", VideoWidget);
 registerWidget("ColorPickerModel", ColorPicker);
 registerWidget("DatePickerModel", DatePickerWidget);
+registerWidget("DatetimeModel", DatetimeWidget);
+registerWidget("NaiveDatetimeModel", DatetimeWidget);
 registerWidget("TimePickerModel", TimePickerWidget);
+registerWidget("TimeModel", TimePickerWidget);
 // Numeric text inputs
 registerWidget("IntTextModel", IntTextWidget);
 registerWidget("FloatTextModel", FloatTextWidget);
@@ -101,6 +108,8 @@ registerWidget("ToggleButtonsModel", ToggleButtonsWidget);
 // Multi-value inputs
 registerWidget("TagsInputModel", TagsInputWidget);
 registerWidget("ColorsInputModel", ColorsInputWidget);
+registerWidget("IntsInputModel", IntsInputWidget);
+registerWidget("FloatsInputModel", FloatsInputWidget);
 registerWidget("FileUploadModel", FileUploadWidget);
 
 // Register layout widgets
@@ -110,6 +119,7 @@ registerWidget("BoxModel", BoxWidget);
 registerWidget("GridBoxModel", GridBoxWidget);
 registerWidget("AccordionModel", AccordionWidget);
 registerWidget("TabModel", TabWidget);
+registerWidget("StackModel", StackWidget);
 
 // Controller widgets (Gamepad API)
 registerWidget("ControllerModel", ControllerWidget);
@@ -133,6 +143,7 @@ export { ControllerAxisWidget } from "./controller-axis-widget";
 export { ControllerButtonWidget } from "./controller-button-widget";
 export { ControllerWidget } from "./controller-widget";
 export { DatePickerWidget } from "./date-picker-widget";
+export { DatetimeWidget } from "./datetime-widget";
 // Selection widgets
 export { DropdownWidget } from "./dropdown-widget";
 export { FileUploadWidget } from "./file-upload-widget";
@@ -140,6 +151,7 @@ export { FloatLogSlider } from "./float-log-slider";
 export { FloatProgress } from "./float-progress";
 export { FloatRangeSlider } from "./float-range-slider";
 export { FloatSlider } from "./float-slider";
+export { FloatsInputWidget } from "./floats-input-widget";
 export { FloatTextWidget } from "./float-text-widget";
 export { GridBoxWidget } from "./gridbox-widget";
 export { HBoxWidget } from "./hbox-widget";
@@ -151,6 +163,7 @@ export { IntRangeSlider } from "./int-range-slider";
 // Re-export components for direct use
 export { IntSlider } from "./int-slider";
 export { IntTextWidget } from "./int-text-widget";
+export { IntsInputWidget } from "./ints-input-widget";
 export { LabelWidget } from "./label-widget";
 export { OutputWidget } from "./output-widget";
 export { PasswordWidget } from "./password-widget";
@@ -160,6 +173,7 @@ export { SelectMultipleWidget } from "./select-multiple-widget";
 export { SelectWidget } from "./select-widget";
 export { SelectionRangeSliderWidget } from "./selection-range-slider-widget";
 export { SelectionSliderWidget } from "./selection-slider-widget";
+export { StackWidget } from "./stack-widget";
 export { TabWidget } from "./tab-widget";
 export { TagsInputWidget } from "./tags-input-widget";
 export { TextWidget } from "./text-widget";

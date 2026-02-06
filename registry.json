@@ -675,6 +675,26 @@
           "path": "registry/widgets/controls/video-widget.tsx",
           "type": "registry:component",
           "target": "components/widgets/controls/video-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/ints-input-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/ints-input-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/floats-input-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/floats-input-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/datetime-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/datetime-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/stack-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/stack-widget.tsx"
         }
       ]
     },
