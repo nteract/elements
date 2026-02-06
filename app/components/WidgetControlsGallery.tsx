@@ -546,6 +546,35 @@ const WIDGET_CATEGORIES = {
           description: "Colors:",
         },
       },
+      {
+        id: "gallery-ints-input",
+        name: "IntsInputModel",
+        label: "IntsInput",
+        state: {
+          value: [1, 2, 3],
+          description: "Integers:",
+          placeholder: "Add integer...",
+        },
+      },
+      {
+        id: "gallery-floats-input",
+        name: "FloatsInputModel",
+        label: "FloatsInput",
+        state: {
+          value: [1.5, 2.7, 3.14],
+          description: "Floats:",
+          placeholder: "Add number...",
+        },
+      },
+      {
+        id: "gallery-datetime",
+        name: "DatetimeModel",
+        label: "Datetime",
+        state: {
+          value: null,
+          description: "Datetime:",
+        },
+      },
     ],
   },
   containers: {
@@ -716,6 +745,19 @@ const CONTAINER_SETUP = {
       state: {
         children: ["IPY_MODEL_container-acc-1", "IPY_MODEL_container-acc-2"],
         _titles: ["Expandable Panel 1", "Expandable Panel 2"],
+        selected_index: 0,
+      },
+    },
+    {
+      id: "gallery-stack",
+      name: "StackModel",
+      label: "Stack",
+      state: {
+        children: [
+          "IPY_MODEL_container-btn-1",
+          "IPY_MODEL_container-btn-2",
+          "IPY_MODEL_container-btn-3",
+        ],
         selected_index: 0,
       },
     },

@@ -98,10 +98,13 @@ import { IntSlider, Button, VBox } from "@/components/widgets/controls"
 | HTML | `HTMLModel` | Rendered HTML content |
 | HTMLMath | `HTMLMathModel` | HTML with LaTeX math rendering |
 | Image | `ImageModel` | Image display from kernel |
+| Audio | `AudioModel` | Audio player with controls |
+| Video | `VideoModel` | Video player with controls |
 
 **Label/HTML props:** `value`, `description`, `placeholder`
 **HTMLMath props:** `value` (supports $...$ and $$...$$ math), `description`
 **Image props:** `value` (base64), `format`, `width`, `height`, `description`
+**Audio/Video props:** `value` (base64), `format`, `autoplay`, `loop`, `controls`
 
 ### Boolean
 
@@ -135,14 +138,16 @@ import { IntSlider, Button, VBox } from "@/components/widgets/controls"
 | Valid | `ValidModel` | Validation indicator (checkmark/X) |
 | Play | `PlayModel` | Animation control with play/pause |
 | DatePicker | `DatePickerModel` | Date input field |
-| TimePicker | `TimePickerModel` | Time input field |
+| Datetime | `DatetimeModel` | Datetime input with timezone |
+| NaiveDatetime | `NaiveDatetimeModel` | Datetime input without timezone |
+| TimePicker | `TimeModel` | Time input field |
 | FileUpload | `FileUploadModel` | File upload button |
 
 **Button props:** `description` (button text), `button_style`, `tooltip`, `disabled`
 **ColorPicker props:** `value` (hex color), `description`, `concise`, `disabled`
 **Valid props:** `value` (boolean), `readout` (status message), `description`
 **Play props:** `value`, `min`, `max`, `step`, `interval` (ms), `_playing`, `repeat`
-**DatePicker/TimePicker props:** `value`, `min`, `max`, `description`, `disabled`
+**DatePicker/TimePicker/Datetime props:** `value`, `min`, `max`, `description`, `disabled`
 **FileUpload props:** `value` (file array), `accept`, `multiple`, `button_style`
 
 ### Multi-value Inputs
@@ -151,8 +156,12 @@ import { IntSlider, Button, VBox } from "@/components/widgets/controls"
 |--------|------------|-------------|
 | TagsInput | `TagsInputModel` | Multi-value tag input |
 | ColorsInput | `ColorsInputModel` | Multi-value color picker |
+| IntsInput | `IntsInputModel` | Multi-value integer input |
+| FloatsInput | `FloatsInputModel` | Multi-value float input |
 
-**Common props:** `value` (array), `description`, `allow_duplicates`, `allowed_tags`, `placeholder`
+**Common props:** `value` (array), `description`, `allow_duplicates`, `placeholder`
+**TagsInput/ColorsInput:** `allowed_tags`
+**IntsInput/FloatsInput:** `min`, `max`
 
 ### Layout Containers
 
@@ -164,9 +173,10 @@ import { IntSlider, Button, VBox } from "@/components/widgets/controls"
 | GridBox | `GridBoxModel` | CSS Grid layout |
 | Tab | `TabModel` | Tabbed interface |
 | Accordion | `AccordionModel` | Collapsible panels |
+| Stack | `StackModel` | Shows one child at a time |
 
 **Common props:** `children` (array of `IPY_MODEL_<id>` references), `box_style`
-**Tab/Accordion props:** `_titles`, `selected_index`
+**Tab/Accordion/Stack props:** `_titles`, `selected_index`
 
 ### Gamepad Controller
 
