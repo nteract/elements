@@ -6,6 +6,7 @@
     "anywidget-view",
     "controls",
     "output-widget",
+    "---Third-Party Libraries---",
     "ipycanvas"
   ]
 }
