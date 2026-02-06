@@ -42,6 +42,7 @@ import { IntSlider } from "./int-slider";
 import { IntTextWidget } from "./int-text-widget";
 import { IntsInputWidget } from "./ints-input-widget";
 import { LabelWidget } from "./label-widget";
+import { DirectionalLinkWidget, LinkWidget } from "./link-widget";
 import { OutputWidget } from "./output-widget";
 import { PasswordWidget } from "./password-widget";
 import { PlayWidget } from "./play-widget";
@@ -112,6 +113,10 @@ registerWidget("IntsInputModel", IntsInputWidget);
 registerWidget("FloatsInputModel", FloatsInputWidget);
 registerWidget("FileUploadModel", FileUploadWidget);
 
+// Link widgets (frontend-only property synchronization)
+registerWidget("LinkModel", LinkWidget);
+registerWidget("DirectionalLinkModel", DirectionalLinkWidget);
+
 // Register layout widgets
 registerWidget("VBoxModel", VBoxWidget);
 registerWidget("HBoxModel", HBoxWidget);
@@ -165,6 +170,7 @@ export { IntSlider } from "./int-slider";
 export { IntTextWidget } from "./int-text-widget";
 export { IntsInputWidget } from "./ints-input-widget";
 export { LabelWidget } from "./label-widget";
+export { DirectionalLinkWidget, LinkWidget } from "./link-widget";
 export { OutputWidget } from "./output-widget";
 export { PasswordWidget } from "./password-widget";
 export { PlayWidget } from "./play-widget";

@@ -356,6 +356,11 @@
           "path": "registry/widgets/buffer-utils.ts",
           "type": "registry:lib",
           "target": "components/widgets/buffer-utils.ts"
+        },
+        {
+          "path": "registry/widgets/link-subscriptions.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/link-subscriptions.ts"
         }
       ]
     },
@@ -545,6 +550,11 @@
           "path": "registry/widgets/controls/label-widget.tsx",
           "type": "registry:component",
           "target": "components/widgets/controls/label-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/link-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/link-widget.tsx"
         },
         {
           "path": "registry/widgets/controls/image-widget.tsx",
