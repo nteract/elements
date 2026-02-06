@@ -660,6 +660,21 @@
           "path": "registry/widgets/controls/output-widget.tsx",
           "type": "registry:component",
           "target": "components/widgets/controls/output-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/button-style-utils.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/controls/button-style-utils.ts"
+        },
+        {
+          "path": "registry/widgets/controls/audio-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/audio-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/controls/video-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/video-widget.tsx"
         }
       ]
     },
