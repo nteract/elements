@@ -547,6 +547,11 @@
           "target": "components/widgets/controls/label-widget.tsx"
         },
         {
+          "path": "registry/widgets/controls/link-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/controls/link-widget.tsx"
+        },
+        {
           "path": "registry/widgets/controls/image-widget.tsx",
           "type": "registry:component",
           "target": "components/widgets/controls/image-widget.tsx"
