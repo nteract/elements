@@ -62,20 +62,16 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
     img.src = url;
   }, [imageData]);
 
-  // Send client_ready event
-  useEffect(() => {
-    if (sendClientReady) {
-      sendCustom(modelId, { event: "client_ready" });
-    }
-  }, [sendClientReady, modelId, sendCustom]);
-
-  // Subscribe to custom messages on the CanvasManagerModel
+  // Subscribe to custom messages on the CanvasManagerModel, then send client_ready.
+  // These must be in the same effect so the subscription is active before
+  // Python replays drawing commands in response to client_ready.
   useEffect(() => {
     if (!canvasManagerRef) return;
 
     const managerModelId = parseModelRef(canvasManagerRef);
     if (!managerModelId) return;
 
+    // Subscribe FIRST
     const unsubscribe = store.subscribeToCustomMessage(
       managerModelId,
       (content, buffers) => {
@@ -110,8 +106,14 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
       },
     );
 
+    // THEN send client_ready — subscription is now active so
+    // replayed commands from Python will be received
+    if (sendClientReady) {
+      sendCustom(modelId, { event: "client_ready" });
+    }
+
     return unsubscribe;
-  }, [canvasManagerRef, store, modelId]);
+  }, [canvasManagerRef, store, modelId, sendClientReady, sendCustom]);
 
   // Mouse event helpers
   const getCoordinates = useCallback(
