@@ -29,6 +29,11 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   // Track an async command processing chain so commands execute in order
   const processingRef = useRef<Promise<void>>(Promise.resolve());
+  // Track which canvas the manager last targeted via switchCanvas.
+  // In non-caching mode (the default, without hold_canvas()), each drawing
+  // command is a separate custom message. We need to persist the switchCanvas
+  // target across messages so each canvas only processes its own commands.
+  const activeCanvasRef = useRef<string | null>(null);
 
   const width = useWidgetModelValue<number>(modelId, "width") ?? 200;
   const height = useWidgetModelValue<number>(modelId, "height") ?? 200;
@@ -91,14 +96,24 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
             // Remaining buffers are binary data for batch operations
             const dataBuffers = buffers.slice(1);
 
-            await processCommands(
+            // Determine if this canvas is the active target based on the
+            // last switchCanvas we saw. Start inactive — a canvas should not
+            // draw until switchCanvas explicitly targets it.
+            const isActive = activeCanvasRef.current === modelId;
+
+            const result = await processCommands(
               ctx,
               commands,
               dataBuffers,
               canvas,
               modelId,
-              true,
+              isActive,
             );
+
+            // Persist switchCanvas target across messages
+            if (result.switchedTo !== null) {
+              activeCanvasRef.current = result.switchedTo;
+            }
           } catch (err) {
             console.warn("[ipycanvas] Error processing commands:", err);
           }

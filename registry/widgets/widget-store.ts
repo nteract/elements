@@ -288,20 +288,23 @@ export function createWidgetStore(): WidgetStore {
         b instanceof DataView ? b : new DataView(b),
       );
 
+      // Always buffer so future subscribers get the history (e.g. a second
+      // CanvasWidget subscribing to the same CanvasManagerModel after the
+      // first canvas is already mounted and receiving messages).
+      if (!customMessageBuffer.has(commId)) {
+        customMessageBuffer.set(commId, []);
+      }
+      const buffer = customMessageBuffer.get(commId)!;
+      buffer.push({ content, buffers: dataViewBuffers });
+      // Evict oldest messages if over limit
+      if (buffer.length > MAX_BUFFERED_MESSAGES) {
+        buffer.splice(0, buffer.length - MAX_BUFFERED_MESSAGES);
+      }
+
+      // Also deliver to existing subscribers
       const callbacks = customListeners.get(commId);
       if (callbacks && callbacks.size > 0) {
         callbacks.forEach((cb) => cb(content, dataViewBuffers));
-      } else {
-        // Buffer the message for when a listener subscribes
-        if (!customMessageBuffer.has(commId)) {
-          customMessageBuffer.set(commId, []);
-        }
-        const buffer = customMessageBuffer.get(commId)!;
-        buffer.push({ content, buffers: dataViewBuffers });
-        // Evict oldest messages if over limit
-        if (buffer.length > MAX_BUFFERED_MESSAGES) {
-          buffer.splice(0, buffer.length - MAX_BUFFERED_MESSAGES);
-        }
       }
     },
 
@@ -315,13 +318,15 @@ export function createWidgetStore(): WidgetStore {
       }
       customListeners.get(commId)?.add(callback);
 
-      // Flush any buffered messages to this new subscriber
+      // Flush any buffered messages to this new subscriber.
+      // Keep the buffer (don't delete) so other subscribers to the same
+      // comm_id also receive these messages — e.g. multiple CanvasWidgets
+      // subscribing to one CanvasManagerModel.
       const buffered = customMessageBuffer.get(commId);
       if (buffered && buffered.length > 0) {
         for (const msg of buffered) {
           callback(msg.content, msg.buffers);
         }
-        customMessageBuffer.delete(commId);
       }
 
       // Return unsubscribe function
