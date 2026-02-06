@@ -76,13 +76,9 @@ function setupDirectionalLink(
     }
 
     // Subscribe to source changes, propagate to target
-    keyUnsub = store.subscribeToKey(
-      sourceModelId,
-      sourceAttr,
-      (newValue) => {
-        store.updateModel(targetModelId, { [targetAttr]: newValue });
-      },
-    );
+    keyUnsub = store.subscribeToKey(sourceModelId, sourceAttr, (newValue) => {
+      store.updateModel(targetModelId, { [targetAttr]: newValue });
+    });
 
     // Clean up global listener once setup is complete
     if (globalUnsub) {

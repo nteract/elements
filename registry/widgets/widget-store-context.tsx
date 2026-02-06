@@ -21,12 +21,12 @@ import {
   useRef,
   useSyncExternalStore,
 } from "react";
+import { createLinkManager } from "./link-subscriptions";
 import {
   type JupyterCommMessage,
   type SendMessage,
   useCommRouter,
 } from "./use-comm-router";
-import { createLinkManager } from "./link-subscriptions";
 import {
   createWidgetStore,
   resolveModelRef,
@@ -235,6 +235,8 @@ export function useWasWidgetClosed(modelId: string): boolean {
   return store.wasModelClosed(modelId);
 }
 
+// Re-export link manager for non-React integrations (e.g. iframe isolation)
+export { createLinkManager } from "./link-subscriptions";
 export type {
   JupyterCommMessage,
   JupyterMessageHeader,
@@ -242,8 +244,6 @@ export type {
 } from "./use-comm-router";
 // Re-export types from use-comm-router
 export { useCommRouter } from "./use-comm-router";
-// Re-export link manager for non-React integrations (e.g. iframe isolation)
-export { createLinkManager } from "./link-subscriptions";
 export type { WidgetModel, WidgetStore } from "./widget-store";
 // Re-export types and utilities from widget-store
 export { isModelRef, parseModelRef, resolveModelRef } from "./widget-store";
