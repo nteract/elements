@@ -709,6 +709,32 @@
       ]
     },
     {
+      "name": "ipycanvas",
+      "type": "registry:component",
+      "title": "ipycanvas Widget",
+      "description": "Canvas widget for ipycanvas. Renders an HTML canvas and processes drawing commands sent from Python via the ipycanvas binary protocol. Supports shapes, paths, text, transforms, batch operations, and mouse/keyboard events.",
+      "registryDependencies": [
+        "@nteract/widget-view"
+      ],
+      "files": [
+        {
+          "path": "registry/widgets/ipycanvas/index.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/ipycanvas/index.ts"
+        },
+        {
+          "path": "registry/widgets/ipycanvas/canvas-widget.tsx",
+          "type": "registry:component",
+          "target": "components/widgets/ipycanvas/canvas-widget.tsx"
+        },
+        {
+          "path": "registry/widgets/ipycanvas/ipycanvas-commands.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/ipycanvas/ipycanvas-commands.ts"
+        }
+      ]
+    },
+    {
       "name": "cell-type-selector",
       "type": "registry:component",
       "title": "CellTypeSelector",
