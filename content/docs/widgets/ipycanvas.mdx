@@ -1,0 +1,184 @@
+---
+title: ipycanvas
+description: Canvas widget for the ipycanvas library
+icon: PaintBucket
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+
+Renders [ipycanvas](https://ipycanvas.readthedocs.io/) `Canvas` widgets. Processes drawing commands sent from Python via the ipycanvas binary protocol and renders them on an HTML `<canvas>` element.
+
+## Features
+
+- **Full drawing protocol** - Shapes, paths, text, transforms, batch operations
+- **Binary buffer support** - Efficient NumPy array transfer for batch drawing
+- **Mouse and keyboard events** - Forwarded back to the Python kernel
+- **Canvas state management** - `save`/`restore`, style attributes, transforms
+- **Styled batch operations** - Per-element colors and alpha for bulk drawing
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/ipycanvas
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy the files to your project from [the registry source](https://github.com/nteract/elements/tree/main/registry/widgets/ipycanvas).
+
+    **Requires:** [Widget Store](/docs/widgets/widget-store)
+  </Tab>
+</Tabs>
+
+## Setup
+
+Import the ipycanvas registration module to enable canvas widget rendering. This is separate from the built-in controls and must be opted into:
+
+```tsx
+// Import once to register CanvasModel and CanvasManagerModel
+import "@/components/widgets/ipycanvas"
+```
+
+This registers both `CanvasModel` (visual canvas) and `CanvasManagerModel` (headless command router) with the widget registry.
+
+## Usage
+
+Once registered, ipycanvas widgets render automatically through `WidgetView`:
+
+```tsx
+import { WidgetStoreProvider } from "@/components/widgets/widget-store-context"
+import { WidgetView } from "@/components/widgets/widget-view"
+
+// Register ipycanvas widgets
+import "@/components/widgets/ipycanvas"
+
+function App() {
+  return (
+    <WidgetStoreProvider sendMessage={(msg) => kernel.send(msg)}>
+      <WidgetView modelId="canvas-comm-id" />
+    </WidgetStoreProvider>
+  )
+}
+```
+
+## Python Example
+
+```python
+from ipycanvas import Canvas
+
+canvas = Canvas(width=400, height=300)
+
+# Set styles
+canvas.fill_style = "red"
+canvas.fill_rect(10, 10, 100, 50)
+
+# Draw shapes
+canvas.fill_style = "blue"
+canvas.fill_circle(200, 150, 40)
+
+# Draw text
+canvas.font = "24px sans-serif"
+canvas.fill_style = "black"
+canvas.fill_text("Hello!", 150, 50)
+
+canvas
+```
+
+## Supported Commands
+
+### Drawing
+
+| Command | Description |
+| --- | --- |
+| `fill_rect`, `stroke_rect`, `clear_rect` | Rectangle operations |
+| `fill_circle`, `stroke_circle` | Circle operations |
+| `fill_arc`, `stroke_arc` | Arc/pie operations |
+| `stroke_line` | Single line segment |
+| `fill_polygon`, `stroke_polygon` | Polygon from points |
+| `fill_text`, `stroke_text` | Text rendering |
+
+### Batch Operations
+
+Efficiently draw many shapes from NumPy arrays:
+
+| Command | Description |
+| --- | --- |
+| `fill_rects`, `stroke_rects` | Many rectangles |
+| `fill_circles`, `stroke_circles` | Many circles |
+| `fill_arcs`, `stroke_arcs` | Many arcs |
+| `stroke_lines` | Connected line segments |
+| `fill_polygons`, `stroke_polygons` | Many polygons |
+| `stroke_line_segments` | Disconnected line segments |
+
+All batch commands also have styled variants (e.g., `fill_styled_rects`) that accept per-element colors and alpha values.
+
+### Path Operations
+
+| Command | Description |
+| --- | --- |
+| `begin_path`, `close_path` | Path lifecycle |
+| `move_to`, `line_to` | Path points |
+| `arc`, `ellipse`, `arc_to` | Curved segments |
+| `quadratic_curve_to`, `bezier_curve_to` | Bezier curves |
+| `stroke`, `fill`, `clip` | Path rendering |
+
+### Transforms and State
+
+| Command | Description |
+| --- | --- |
+| `translate`, `rotate`, `scale` | Affine transforms |
+| `transform`, `set_transform`, `reset_transform` | Matrix operations |
+| `save`, `restore` | Context state stack |
+
+### Style Attributes
+
+Set via Python properties like `canvas.fill_style = "red"`:
+
+`fill_style`, `stroke_style`, `global_alpha`, `font`, `text_align`, `text_baseline`, `direction`, `global_composite_operation`, `line_width`, `line_cap`, `line_join`, `miter_limit`, `line_dash_offset`, `shadow_offset_x`, `shadow_offset_y`, `shadow_blur`, `shadow_color`, `filter`, `image_smoothing_enabled`
+
+## Events
+
+Mouse and keyboard events are forwarded to the kernel:
+
+| Event | Data |
+| --- | --- |
+| `mouse_move`, `mouse_down`, `mouse_up`, `mouse_out` | `{ x, y }` in canvas coordinates |
+| `mouse_wheel` | `{ x: deltaX, y: deltaY }` |
+| `key_down` | `{ key, shift_key, ctrl_key, meta_key }` |
+
+```python
+canvas = Canvas(width=400, height=300)
+
+def on_mouse_down(x, y):
+    canvas.fill_circle(x, y, 5)
+
+canvas.on_mouse_down(on_mouse_down)
+```
+
+## Architecture
+
+ipycanvas uses two widget models:
+
+- **`CanvasManagerModel`** - Headless widget that receives drawing commands as binary custom messages. Routes commands to the active canvas via `switchCanvas`.
+- **`CanvasModel`** - Visual widget that renders the HTML `<canvas>` element. Subscribes to its manager's custom messages and executes drawing commands on the 2D context.
+
+Commands are serialized as binary buffers for performance. The first buffer contains JSON-encoded command metadata, and subsequent buffers carry binary data (e.g., NumPy arrays for batch operations).
+
+<Callout type="info">
+  The `hold_canvas()` context manager in Python batches many drawing commands into a single message for better performance.
+</Callout>
+
+## Not Yet Supported
+
+These features require cross-widget model resolution and are planned for a future release:
+
+- `draw_image` / `put_image_data` (drawing from other widget images)
+- `stroke_path` / `fill_path` (Path2D widget references)
+- `sync_image_data` (sending canvas pixels back to the kernel)
+- `MultiCanvas` (layered canvas composition)
+- `RoughCanvas` (hand-drawn style rendering)
+- Touch events
