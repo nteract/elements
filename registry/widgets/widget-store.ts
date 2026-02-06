@@ -133,6 +133,14 @@ export function createWidgetStore(): WidgetStore {
   // Structure: modelId -> Set<callback>
   const customListeners = new Map<string, Set<CustomMessageCallback>>();
 
+  // Buffered custom messages for comm_ids with no listeners yet
+  // Structure: commId -> Array<{ content, buffers }>
+  const customMessageBuffer = new Map<
+    string,
+    Array<{ content: Record<string, unknown>; buffers?: DataView[] }>
+  >();
+  const MAX_BUFFERED_MESSAGES = 1000;
+
   // Notify all global listeners that something changed
   function emitChange() {
     listeners.forEach((listener) => listener());
@@ -230,9 +238,10 @@ export function createWidgetStore(): WidgetStore {
       models = new Map(models);
       models.delete(commId);
 
-      // Clean up listeners for this model
+      // Clean up listeners and buffered messages for this model
       keyListeners.delete(commId);
       customListeners.delete(commId);
+      customMessageBuffer.delete(commId);
 
       emitChange();
     },
@@ -273,14 +282,26 @@ export function createWidgetStore(): WidgetStore {
       content: Record<string, unknown>,
       buffers?: ArrayBuffer[],
     ): void {
+      // Convert ArrayBuffer[] to DataView[] for anywidget compatibility
+      // Anywidgets access the underlying buffer via .buffer property
+      const dataViewBuffers = buffers?.map((b) =>
+        b instanceof DataView ? b : new DataView(b),
+      );
+
       const callbacks = customListeners.get(commId);
-      if (callbacks) {
-        // Convert ArrayBuffer[] to DataView[] for anywidget compatibility
-        // Anywidgets access the underlying buffer via .buffer property
-        const dataViewBuffers = buffers?.map((b) =>
-          b instanceof DataView ? b : new DataView(b),
-        );
+      if (callbacks && callbacks.size > 0) {
         callbacks.forEach((cb) => cb(content, dataViewBuffers));
+      } else {
+        // Buffer the message for when a listener subscribes
+        if (!customMessageBuffer.has(commId)) {
+          customMessageBuffer.set(commId, []);
+        }
+        const buffer = customMessageBuffer.get(commId)!;
+        buffer.push({ content, buffers: dataViewBuffers });
+        // Evict oldest messages if over limit
+        if (buffer.length > MAX_BUFFERED_MESSAGES) {
+          buffer.splice(0, buffer.length - MAX_BUFFERED_MESSAGES);
+        }
       }
     },
 
@@ -293,6 +314,15 @@ export function createWidgetStore(): WidgetStore {
         customListeners.set(commId, new Set());
       }
       customListeners.get(commId)?.add(callback);
+
+      // Flush any buffered messages to this new subscriber
+      const buffered = customMessageBuffer.get(commId);
+      if (buffered && buffered.length > 0) {
+        for (const msg of buffered) {
+          callback(msg.content, msg.buffers);
+        }
+        customMessageBuffer.delete(commId);
+      }
 
       // Return unsubscribe function
       return () => {
