@@ -163,14 +163,42 @@ canvas.on_mouse_down(on_mouse_down)
 
 ipycanvas uses two widget models:
 
-- **`CanvasManagerModel`** - Headless widget that receives drawing commands as binary custom messages. Routes commands to the active canvas via `switchCanvas`.
-- **`CanvasModel`** - Visual widget that renders the HTML `<canvas>` element. Subscribes to its manager's custom messages and executes drawing commands on the 2D context.
+- **`CanvasManagerModel`** — Headless singleton (`_view_name: null`) that receives ALL drawing commands from Python as binary custom messages. Uses `switchCanvas` to indicate which canvas each command targets.
+- **`CanvasModel`** — Visual widget that renders an HTML `<canvas>` element. Subscribes to its own comm_id and executes drawing commands on the 2D context.
 
 Commands are serialized as binary buffers for performance. The first buffer contains JSON-encoded command metadata, and subsequent buffers carry binary data (e.g., NumPy arrays for batch operations).
 
 <Callout type="info">
-  The `hold_canvas()` context manager in Python batches many drawing commands into a single message for better performance.
+  The `hold_canvas()` context manager in Python batches many drawing commands into a single message for better performance. Without it, each drawing call is a separate message.
 </Callout>
+
+## Implementation Notes
+
+Our implementation differs from ipycanvas's original frontend in how command routing works. The binary protocol and command set are identical.
+
+### Store-level routing
+
+In ipycanvas's original Backbone.js frontend, each `CanvasView` subscribes to the `CanvasManagerModel`'s comm channel and tracks `switchCanvas` state locally. This means every canvas sees every command for every other canvas — they just filter locally.
+
+We route at the store level instead. `createCanvasManagerRouter` (in `canvas-manager-subscriptions.ts`) watches for `CanvasManagerModel` instances, subscribes to their messages, parses `switchCanvas` targets, and re-emits each message to only the targeted canvas's comm_id. Each `CanvasWidget` subscribes to its own comm_id and processes everything it receives — no filtering, no shared state.
+
+```
+Original ipycanvas:
+  Manager → broadcast to all canvases → each canvas filters locally
+
+nteract-elements:
+  Manager → store router parses switchCanvas → emits to target canvas only
+```
+
+This matters for correctness: with the broadcast approach, rapid animations on one canvas can interfere with other canvases' `switchCanvas` tracking. Store-level routing eliminates this by isolating each canvas completely.
+
+### Headless manager routing
+
+`CanvasManagerModel` has `_view_name: null` — it's never in the widget render tree and has no visual representation. The original frontend handles this inside `CanvasView` by reaching into the manager's model. We handle it at the store level via `createCanvasManagerRouter`, which follows the same pattern as `createLinkManager` for `jslink`/`jsdlink`. This runs in `WidgetStoreProvider` and requires no component to be mounted.
+
+### No Backbone.js
+
+ipycanvas's original frontend uses Backbone.js models and views. We use a pure React widget store with `useSyncExternalStore` for state and store-level subscriptions for custom messages.
 
 ## Not Yet Supported
 

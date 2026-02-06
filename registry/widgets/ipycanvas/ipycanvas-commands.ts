@@ -213,7 +213,6 @@ function getArg(metadata: unknown, buffers: DataView[]): Arg {
 // === Drawing Helpers ===
 
 function drawRects(
-  ctx: CanvasRenderingContext2D,
   args: unknown[],
   buffers: DataView[],
   callback: (x: number, y: number, w: number, h: number) => void,
@@ -230,7 +229,6 @@ function drawRects(
 }
 
 function drawCircles(
-  ctx: CanvasRenderingContext2D,
   args: unknown[],
   buffers: DataView[],
   callback: (x: number, y: number, r: number) => void,
@@ -246,7 +244,6 @@ function drawCircles(
 }
 
 function drawArcs(
-  ctx: CanvasRenderingContext2D,
   args: unknown[],
   buffers: DataView[],
   callback: (
@@ -701,24 +698,24 @@ export async function processCommands(
 
     // --- Batch drawing ---
     case "fillRects":
-      drawRects(ctx, args, buffers, (x, y, w, h) => ctx.fillRect(x, y, w, h));
+      drawRects(args, buffers, (x, y, w, h) => ctx.fillRect(x, y, w, h));
       break;
     case "strokeRects":
-      drawRects(ctx, args, buffers, (x, y, w, h) => ctx.strokeRect(x, y, w, h));
+      drawRects(args, buffers, (x, y, w, h) => ctx.strokeRect(x, y, w, h));
       break;
     case "fillCircles":
-      drawCircles(ctx, args, buffers, (x, y, r) => fillCircle(ctx, x, y, r));
+      drawCircles(args, buffers, (x, y, r) => fillCircle(ctx, x, y, r));
       break;
     case "strokeCircles":
-      drawCircles(ctx, args, buffers, (x, y, r) => strokeCircle(ctx, x, y, r));
+      drawCircles(args, buffers, (x, y, r) => strokeCircle(ctx, x, y, r));
       break;
     case "fillArcs":
-      drawArcs(ctx, args, buffers, (x, y, r, sa, ea, ac) =>
+      drawArcs(args, buffers, (x, y, r, sa, ea, ac) =>
         fillArc(ctx, x, y, r, sa, ea, ac),
       );
       break;
     case "strokeArcs":
-      drawArcs(ctx, args, buffers, (x, y, r, sa, ea, ac) =>
+      drawArcs(args, buffers, (x, y, r, sa, ea, ac) =>
         strokeArc(ctx, x, y, r, sa, ea, ac),
       );
       break;

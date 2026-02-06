@@ -4,8 +4,8 @@
  * ipycanvas Canvas widget.
  *
  * Renders an HTML <canvas> element and processes drawing commands sent from
- * Python via the ipycanvas binary protocol. Commands arrive as custom messages
- * on the CanvasManagerModel and are executed on the canvas 2D context.
+ * Python via the ipycanvas binary protocol. Drawing commands arrive at each
+ * canvas's comm_id, routed by createCanvasManagerRouter at the store level.
  *
  * @see https://ipycanvas.readthedocs.io/
  */
@@ -13,7 +13,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import type { WidgetComponentProps } from "../widget-registry";
-import { parseModelRef } from "../widget-store";
 import {
   useWidgetModelValue,
   useWidgetStoreRequired,
@@ -29,16 +28,9 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   // Track an async command processing chain so commands execute in order
   const processingRef = useRef<Promise<void>>(Promise.resolve());
-  // Track which canvas the manager last targeted via switchCanvas.
-  // In non-caching mode (the default, without hold_canvas()), each drawing
-  // command is a separate custom message. We need to persist the switchCanvas
-  // target across messages so each canvas only processes its own commands.
-  const activeCanvasRef = useRef<string | null>(null);
 
   const width = useWidgetModelValue<number>(modelId, "width") ?? 200;
   const height = useWidgetModelValue<number>(modelId, "height") ?? 200;
-  const canvasManagerRef =
-    useWidgetModelValue<string>(modelId, "_canvas_manager") ?? null;
   const sendClientReady =
     useWidgetModelValue<boolean>(modelId, "_send_client_ready_event") ?? true;
   const imageData = useWidgetModelValue<Uint8ClampedArray | null>(
@@ -67,18 +59,12 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
     img.src = url;
   }, [imageData]);
 
-  // Subscribe to custom messages on the CanvasManagerModel, then send client_ready.
-  // These must be in the same effect so the subscription is active before
-  // Python replays drawing commands in response to client_ready.
+  // Subscribe to messages routed to this canvas's comm_id, then send
+  // client_ready. Routing is handled by createCanvasManagerRouter at the
+  // store level — this widget just processes what it receives.
   useEffect(() => {
-    if (!canvasManagerRef) return;
-
-    const managerModelId = parseModelRef(canvasManagerRef);
-    if (!managerModelId) return;
-
-    // Subscribe FIRST
     const unsubscribe = store.subscribeToCustomMessage(
-      managerModelId,
+      modelId,
       (content, buffers) => {
         const canvas = canvasRef.current;
         const ctx = ctxRef.current;
@@ -96,24 +82,14 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
             // Remaining buffers are binary data for batch operations
             const dataBuffers = buffers.slice(1);
 
-            // Determine if this canvas is the active target based on the
-            // last switchCanvas we saw. Start inactive — a canvas should not
-            // draw until switchCanvas explicitly targets it.
-            const isActive = activeCanvasRef.current === modelId;
-
-            const result = await processCommands(
+            await processCommands(
               ctx,
               commands,
               dataBuffers,
               canvas,
               modelId,
-              isActive,
+              true,
             );
-
-            // Persist switchCanvas target across messages
-            if (result.switchedTo !== null) {
-              activeCanvasRef.current = result.switchedTo;
-            }
           } catch (err) {
             console.warn("[ipycanvas] Error processing commands:", err);
           }
@@ -121,14 +97,12 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
       },
     );
 
-    // THEN send client_ready — subscription is now active so
-    // replayed commands from Python will be received
     if (sendClientReady) {
       sendCustom(modelId, { event: "client_ready" });
     }
 
     return unsubscribe;
-  }, [canvasManagerRef, store, modelId, sendClientReady, sendCustom]);
+  }, [store, modelId, sendClientReady, sendCustom]);
 
   // Mouse event helpers
   const getCoordinates = useCallback(
@@ -223,9 +197,9 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
 // === CanvasManagerWidget ===
 
 /**
- * Headless widget for CanvasManagerModel.
- * The manager coordinates drawing commands but has no visual representation.
- * Command processing is handled via custom message subscriptions from CanvasWidget.
+ * Stub for CanvasManagerModel. Routing is handled at the store level
+ * by createCanvasManagerRouter. CanvasManagerModel has _view_name: null
+ * and is never rendered.
  */
 export function CanvasManagerWidget(_props: WidgetComponentProps) {
   return null;
