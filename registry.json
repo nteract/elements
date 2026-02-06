@@ -356,6 +356,11 @@
           "path": "registry/widgets/buffer-utils.ts",
           "type": "registry:lib",
           "target": "components/widgets/buffer-utils.ts"
+        },
+        {
+          "path": "registry/widgets/link-subscriptions.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/link-subscriptions.ts"
         }
       ]
     },
