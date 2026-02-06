@@ -10,8 +10,8 @@
  * @see https://ipycanvas.readthedocs.io/
  */
 
-import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 import type { WidgetComponentProps } from "../widget-registry";
 import { parseModelRef } from "../widget-store";
 import {
@@ -48,7 +48,7 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
     ctxRef.current = canvas.getContext("2d");
   }, []);
 
-  // Draw initial image_data if present (for restoring canvas state)
+  // Draw image_data when it changes (for restoring canvas state)
   useEffect(() => {
     if (!imageData || !ctxRef.current || !canvasRef.current) return;
 
@@ -60,9 +60,7 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
       URL.revokeObjectURL(url);
     };
     img.src = url;
-    // Only run on initial mount when image_data is present
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [imageData]);
 
   // Send client_ready event
   useEffect(() => {
@@ -198,6 +196,7 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseOut={onMouseOut}
+      onBlur={() => sendCustom(modelId, { event: "mouse_out", x: 0, y: 0 })}
       onWheel={onWheel}
       onKeyDown={onKeyDown}
     />

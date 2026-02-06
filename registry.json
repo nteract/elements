@@ -713,9 +713,7 @@
       "type": "registry:component",
       "title": "ipycanvas Widget",
       "description": "Canvas widget for ipycanvas. Renders an HTML canvas and processes drawing commands sent from Python via the ipycanvas binary protocol. Supports shapes, paths, text, transforms, batch operations, and mouse/keyboard events.",
-      "registryDependencies": [
-        "@nteract/widget-view"
-      ],
+      "registryDependencies": ["@nteract/widget-view"],
       "files": [
         {
           "path": "registry/widgets/ipycanvas/index.ts",

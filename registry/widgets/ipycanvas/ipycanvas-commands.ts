@@ -175,10 +175,7 @@ class ScalarArg implements Arg {
 class BufferArg implements Arg {
   private data: TypedArray;
 
-  constructor(
-    bufferMetadata: { dtype: string },
-    buffer: DataView,
-  ) {
+  constructor(bufferMetadata: { dtype: string }, buffer: DataView) {
     this.data = getTypedArray(buffer, bufferMetadata);
     this.length = this.data.length;
   }
@@ -195,10 +192,7 @@ class BufferArg implements Arg {
  * Scalars repeat the same value for all indices.
  * Buffer args reference a specific binary buffer by index.
  */
-function getArg(
-  metadata: unknown,
-  buffers: DataView[],
-): Arg {
+function getArg(metadata: unknown, buffers: DataView[]): Arg {
   if (
     metadata === null ||
     typeof metadata === "boolean" ||
@@ -208,11 +202,7 @@ function getArg(
     return new ScalarArg(metadata);
   }
 
-  if (
-    typeof metadata === "object" &&
-    metadata !== null &&
-    "idx" in metadata
-  ) {
+  if (typeof metadata === "object" && metadata !== null && "idx" in metadata) {
     const meta = metadata as { idx: number; dtype: string };
     return new BufferArg(meta, buffers[meta.idx]);
   }
@@ -394,11 +384,7 @@ function drawPolygonOrLineSegments(
   }
 }
 
-function setStyle(
-  ctx: CanvasRenderingContext2D,
-  style: string,
-  fill: boolean,
-) {
+function setStyle(ctx: CanvasRenderingContext2D, style: string, fill: boolean) {
   if (fill) {
     ctx.fillStyle = style;
   } else {
@@ -718,17 +704,13 @@ export async function processCommands(
       drawRects(ctx, args, buffers, (x, y, w, h) => ctx.fillRect(x, y, w, h));
       break;
     case "strokeRects":
-      drawRects(ctx, args, buffers, (x, y, w, h) =>
-        ctx.strokeRect(x, y, w, h),
-      );
+      drawRects(ctx, args, buffers, (x, y, w, h) => ctx.strokeRect(x, y, w, h));
       break;
     case "fillCircles":
       drawCircles(ctx, args, buffers, (x, y, r) => fillCircle(ctx, x, y, r));
       break;
     case "strokeCircles":
-      drawCircles(ctx, args, buffers, (x, y, r) =>
-        strokeCircle(ctx, x, y, r),
-      );
+      drawCircles(ctx, args, buffers, (x, y, r) => strokeCircle(ctx, x, y, r));
       break;
     case "fillArcs":
       drawArcs(ctx, args, buffers, (x, y, r, sa, ea, ac) =>
@@ -884,18 +866,10 @@ export async function processCommands(
 
     // --- Text ---
     case "fillText":
-      ctx.fillText(
-        args[0] as string,
-        args[1] as number,
-        args[2] as number,
-      );
+      ctx.fillText(args[0] as string, args[1] as number, args[2] as number);
       break;
     case "strokeText":
-      ctx.strokeText(
-        args[0] as string,
-        args[1] as number,
-        args[2] as number,
-      );
+      ctx.strokeText(args[0] as string, args[1] as number, args[2] as number);
       break;
 
     // --- Transform ---
