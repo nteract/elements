@@ -17,8 +17,43 @@
  * (e.g. iframe isolation), call createCanvasManagerRouter directly.
  */
 
-import { COMMANDS, getTypedArray } from "./ipycanvas/ipycanvas-commands";
 import type { WidgetStore } from "./widget-store";
+
+// ipycanvas binary protocol: switchCanvas is command index 60.
+// This must match COMMANDS[60] in ipycanvas-commands.ts.
+const SWITCH_CANVAS_CMD = 60;
+
+/**
+ * Convert a DataView to a TypedArray based on dtype metadata.
+ * Inlined here to avoid depending on ipycanvas-commands.ts,
+ * keeping the router self-contained within the widget-store package.
+ */
+function getTypedArray(
+  dataview: DataView,
+  metadata: { dtype: string },
+): ArrayBufferView {
+  const buffer = dataview.buffer;
+  switch (metadata.dtype) {
+    case "int8":
+      return new Int8Array(buffer);
+    case "uint8":
+      return new Uint8Array(buffer);
+    case "int16":
+      return new Int16Array(buffer);
+    case "uint16":
+      return new Uint16Array(buffer);
+    case "int32":
+      return new Int32Array(buffer);
+    case "uint32":
+      return new Uint32Array(buffer);
+    case "float32":
+      return new Float32Array(buffer);
+    case "float64":
+      return new Float64Array(buffer);
+    default:
+      return new Uint8Array(buffer);
+  }
+}
 
 /**
  * Walk a command structure and collect switchCanvas target IDs.
@@ -38,7 +73,7 @@ function collectSwitchCanvasTargets(
     }
   } else {
     const cmdIndex = commands[0] as number;
-    if (COMMANDS[cmdIndex] === "switchCanvas") {
+    if (cmdIndex === SWITCH_CANVAS_CMD) {
       const args = commands[1] as string[] | undefined;
       const ref = args?.[0] ?? "";
       const targetId = ref.startsWith("IPY_MODEL_") ? ref.slice(10) : ref;
