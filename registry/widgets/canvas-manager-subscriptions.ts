@@ -19,9 +19,72 @@
 
 import type { WidgetStore } from "./widget-store";
 
-// ipycanvas binary protocol: switchCanvas is command index 60.
-// This must match COMMANDS[60] in ipycanvas-commands.ts.
-const SWITCH_CANVAS_CMD = 60;
+// ipycanvas drawing command names indexed by protocol number.
+// Duplicated from ipycanvas-commands.ts to keep the router self-contained
+// within the widget-store package. Must match the Python-side enum in ipycanvas.
+const COMMANDS = [
+  "fillRect",
+  "strokeRect",
+  "fillRects",
+  "strokeRects",
+  "clearRect",
+  "fillArc",
+  "fillCircle",
+  "strokeArc",
+  "strokeCircle",
+  "fillArcs",
+  "strokeArcs",
+  "fillCircles",
+  "strokeCircles",
+  "strokeLine",
+  "beginPath",
+  "closePath",
+  "stroke",
+  "strokePath",
+  "fillPath",
+  "fill",
+  "moveTo",
+  "lineTo",
+  "rect",
+  "arc",
+  "ellipse",
+  "arcTo",
+  "quadraticCurveTo",
+  "bezierCurveTo",
+  "fillText",
+  "strokeText",
+  "setLineDash",
+  "drawImage",
+  "putImageData",
+  "clip",
+  "save",
+  "restore",
+  "translate",
+  "rotate",
+  "scale",
+  "transform",
+  "setTransform",
+  "resetTransform",
+  "set",
+  "clear",
+  "sleep",
+  "fillPolygon",
+  "strokePolygon",
+  "strokeLines",
+  "fillPolygons",
+  "strokePolygons",
+  "strokeLineSegments",
+  "fillStyledRects",
+  "strokeStyledRects",
+  "fillStyledCircles",
+  "strokeStyledCircles",
+  "fillStyledArcs",
+  "strokeStyledArcs",
+  "fillStyledPolygons",
+  "strokeStyledPolygons",
+  "strokeStyledLineSegments",
+  "switchCanvas",
+] as const;
 
 /**
  * Convert a DataView to a TypedArray based on dtype metadata.
@@ -73,7 +136,7 @@ function collectSwitchCanvasTargets(
     }
   } else {
     const cmdIndex = commands[0] as number;
-    if (cmdIndex === SWITCH_CANVAS_CMD) {
+    if (COMMANDS[cmdIndex] === "switchCanvas") {
       const args = commands[1] as string[] | undefined;
       const ref = args?.[0] ?? "";
       const targetId = ref.startsWith("IPY_MODEL_") ? ref.slice(10) : ref;
