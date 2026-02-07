@@ -19,9 +19,72 @@
 
 import type { WidgetStore } from "./widget-store";
 
-// ipycanvas binary protocol: switchCanvas is command index 60.
-// This must match COMMANDS[60] in ipycanvas-commands.ts.
-const SWITCH_CANVAS_CMD = 60;
+// ipycanvas drawing command names indexed by protocol number.
+// Duplicated from ipycanvas-commands.ts to keep the router self-contained
+// within the widget-store package. Must match the Python-side enum in ipycanvas.
+const COMMANDS = [
+  "fillRect",
+  "strokeRect",
+  "fillRects",
+  "strokeRects",
+  "clearRect",
+  "fillArc",
+  "fillCircle",
+  "strokeArc",
+  "strokeCircle",
+  "fillArcs",
+  "strokeArcs",
+  "fillCircles",
+  "strokeCircles",
+  "strokeLine",
+  "beginPath",
+  "closePath",
+  "stroke",
+  "strokePath",
+  "fillPath",
+  "fill",
+  "moveTo",
+  "lineTo",
+  "rect",
+  "arc",
+  "ellipse",
+  "arcTo",
+  "quadraticCurveTo",
+  "bezierCurveTo",
+  "fillText",
+  "strokeText",
+  "setLineDash",
+  "drawImage",
+  "putImageData",
+  "clip",
+  "save",
+  "restore",
+  "translate",
+  "rotate",
+  "scale",
+  "transform",
+  "setTransform",
+  "resetTransform",
+  "set",
+  "clear",
+  "sleep",
+  "fillPolygon",
+  "strokePolygon",
+  "strokeLines",
+  "fillPolygons",
+  "strokePolygons",
+  "strokeLineSegments",
+  "fillStyledRects",
+  "strokeStyledRects",
+  "fillStyledCircles",
+  "strokeStyledCircles",
+  "fillStyledArcs",
+  "strokeStyledArcs",
+  "fillStyledPolygons",
+  "strokeStyledPolygons",
+  "strokeStyledLineSegments",
+  "switchCanvas",
+] as const;
 
 /**
  * Convert a DataView to a TypedArray based on dtype metadata.
@@ -73,7 +136,7 @@ function collectSwitchCanvasTargets(
     }
   } else {
     const cmdIndex = commands[0] as number;
-    if (cmdIndex === SWITCH_CANVAS_CMD) {
+    if (COMMANDS[cmdIndex] === "switchCanvas") {
       const args = commands[1] as string[] | undefined;
       const ref = args?.[0] ?? "";
       const targetId = ref.startsWith("IPY_MODEL_") ? ref.slice(10) : ref;
@@ -140,18 +203,43 @@ export function createCanvasManagerRouter(store: WidgetStore): () => void {
     if (models.size === lastSize) return;
     lastSize = models.size;
 
-    models.forEach((model, id) => {
-      if (activeRoutes.has(id)) return;
+    // Find CanvasModel widgets and extract their _canvas_manager reference.
+    // CanvasManagerModel is a headless singleton that isn't added to the store,
+    // but its ID is referenced by each CanvasModel via _canvas_manager.
+    models.forEach((model, _id) => {
+      if (model.modelName !== "CanvasModel") return;
 
-      if (model.modelName === "CanvasManagerModel") {
-        activeRoutes.set(id, setupManagerRouting(store, id));
+      const managerRef = model.state?._canvas_manager as string | undefined;
+      if (!managerRef) return;
+
+      // Extract manager ID from "IPY_MODEL_xxx" reference
+      const managerId = managerRef.startsWith("IPY_MODEL_")
+        ? managerRef.slice(10)
+        : managerRef;
+
+      if (activeRoutes.has(managerId)) return;
+
+      activeRoutes.set(managerId, setupManagerRouting(store, managerId));
+    });
+
+    // Clean up routes for managers no longer referenced by any canvas.
+    const referencedManagers = new Set<string>();
+    models.forEach((model) => {
+      if (model.modelName === "CanvasModel") {
+        const managerRef = model.state?._canvas_manager as string | undefined;
+        if (managerRef) {
+          const managerId = managerRef.startsWith("IPY_MODEL_")
+            ? managerRef.slice(10)
+            : managerRef;
+          referencedManagers.add(managerId);
+        }
       }
     });
 
-    for (const [id, cleanup] of activeRoutes) {
-      if (!models.has(id)) {
+    for (const [managerId, cleanup] of activeRoutes) {
+      if (!referencedManagers.has(managerId)) {
         cleanup();
-        activeRoutes.delete(id);
+        activeRoutes.delete(managerId);
       }
     }
   }
