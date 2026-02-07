@@ -203,18 +203,43 @@ export function createCanvasManagerRouter(store: WidgetStore): () => void {
     if (models.size === lastSize) return;
     lastSize = models.size;
 
-    models.forEach((model, id) => {
-      if (activeRoutes.has(id)) return;
+    // Find CanvasModel widgets and extract their _canvas_manager reference.
+    // CanvasManagerModel is a headless singleton that isn't added to the store,
+    // but its ID is referenced by each CanvasModel via _canvas_manager.
+    models.forEach((model, _id) => {
+      if (model.modelName !== "CanvasModel") return;
 
-      if (model.modelName === "CanvasManagerModel") {
-        activeRoutes.set(id, setupManagerRouting(store, id));
+      const managerRef = model.state?._canvas_manager as string | undefined;
+      if (!managerRef) return;
+
+      // Extract manager ID from "IPY_MODEL_xxx" reference
+      const managerId = managerRef.startsWith("IPY_MODEL_")
+        ? managerRef.slice(10)
+        : managerRef;
+
+      if (activeRoutes.has(managerId)) return;
+
+      activeRoutes.set(managerId, setupManagerRouting(store, managerId));
+    });
+
+    // Clean up routes for managers no longer referenced by any canvas.
+    const referencedManagers = new Set<string>();
+    models.forEach((model) => {
+      if (model.modelName === "CanvasModel") {
+        const managerRef = model.state?._canvas_manager as string | undefined;
+        if (managerRef) {
+          const managerId = managerRef.startsWith("IPY_MODEL_")
+            ? managerRef.slice(10)
+            : managerRef;
+          referencedManagers.add(managerId);
+        }
       }
     });
 
-    for (const [id, cleanup] of activeRoutes) {
-      if (!models.has(id)) {
+    for (const [managerId, cleanup] of activeRoutes) {
+      if (!referencedManagers.has(managerId)) {
         cleanup();
-        activeRoutes.delete(id);
+        activeRoutes.delete(managerId);
       }
     }
   }
