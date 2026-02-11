@@ -131,7 +131,10 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
 
   const onMouseMove = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      sendCustomRef.current(modelId, { event: "mouse_move", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, {
+        event: "mouse_move",
+        ...getCoordinates(event),
+      });
     },
     [modelId, getCoordinates],
   );
@@ -139,21 +142,30 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
   const onMouseDown = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
       canvasRef.current?.focus();
-      sendCustomRef.current(modelId, { event: "mouse_down", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, {
+        event: "mouse_down",
+        ...getCoordinates(event),
+      });
     },
     [modelId, getCoordinates],
   );
 
   const onMouseUp = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      sendCustomRef.current(modelId, { event: "mouse_up", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, {
+        event: "mouse_up",
+        ...getCoordinates(event),
+      });
     },
     [modelId, getCoordinates],
   );
 
   const onMouseOut = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      sendCustomRef.current(modelId, { event: "mouse_out", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, {
+        event: "mouse_out",
+        ...getCoordinates(event),
+      });
     },
     [modelId, getCoordinates],
   );

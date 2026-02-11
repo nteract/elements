@@ -53,7 +53,8 @@ export function PlayWidget({ modelId, className }: WidgetComponentProps) {
     if (playing && !disabled) {
       intervalRef.current = setInterval(() => {
         const { value, min, max, step, repeat } = valuesRef.current;
-        const nextValue = value + step > max ? (repeat ? min : max) : value + step;
+        const nextValue =
+          value + step > max ? (repeat ? min : max) : value + step;
         const shouldStop = value + step > max && !repeat;
         sendUpdateRef.current(modelId, {
           value: nextValue,
