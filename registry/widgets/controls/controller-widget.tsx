@@ -35,15 +35,27 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
   const buttons = useWidgetModelValue<string[]>(modelId, "buttons") ?? [];
   const axes = useWidgetModelValue<string[]>(modelId, "axes") ?? [];
 
-  // Poll gamepad state
+  // Refs for values that need to be fresh but shouldn't trigger effect re-runs.
+  // This prevents the rAF loop from restarting on every state change.
+  const sendUpdateRef = useRef(sendUpdate);
+  const stateRef = useRef({ connected, buttons, axes });
+
+  // Keep refs up-to-date without triggering the polling effect
+  useEffect(() => {
+    sendUpdateRef.current = sendUpdate;
+    stateRef.current = { connected, buttons, axes };
+  });
+
+  // Poll gamepad state - only depends on index and modelId to avoid loop restarts
   const pollGamepad = useCallback(() => {
     const gamepads = navigator.getGamepads();
     const gamepad = gamepads[index];
+    const { connected, buttons, axes } = stateRef.current;
 
     if (gamepad) {
       // Check if we need to update connection state
       if (!connected) {
-        sendUpdate(modelId, {
+        sendUpdateRef.current(modelId, {
           connected: true,
           name: gamepad.id,
           mapping: gamepad.mapping,
@@ -68,7 +80,7 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
           lastButton.pressed !== button.pressed ||
           Math.abs(lastButton.value - button.value) > 0.01
         ) {
-          sendUpdate(buttonId, {
+          sendUpdateRef.current(buttonId, {
             pressed: button.pressed,
             value: button.value,
           });
@@ -86,7 +98,7 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
 
         const lastAxis = lastState?.axes[i];
         if (lastAxis === undefined || Math.abs(lastAxis - axisValue) > 0.01) {
-          sendUpdate(axisId, { value: axisValue });
+          sendUpdateRef.current(axisId, { value: axisValue });
           hasChanges = true;
         }
       });
@@ -104,16 +116,16 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
 
       // Update timestamp
       if (hasChanges) {
-        sendUpdate(modelId, { timestamp: gamepad.timestamp });
+        sendUpdateRef.current(modelId, { timestamp: gamepad.timestamp });
       }
     } else if (connected) {
       // Gamepad disconnected
-      sendUpdate(modelId, { connected: false });
+      sendUpdateRef.current(modelId, { connected: false });
       lastStateRef.current = null;
     }
 
     animationRef.current = requestAnimationFrame(pollGamepad);
-  }, [index, connected, buttons, axes, modelId, sendUpdate]);
+  }, [index, modelId]);
 
   // Start/stop polling based on component lifecycle
   useEffect(() => {
@@ -123,7 +135,7 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
     // Handle gamepad connect/disconnect events
     const handleConnect = (e: GamepadEvent) => {
       if (e.gamepad.index === index) {
-        sendUpdate(modelId, {
+        sendUpdateRef.current(modelId, {
           connected: true,
           name: e.gamepad.id,
           mapping: e.gamepad.mapping,
@@ -133,7 +145,7 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
 
     const handleDisconnect = (e: GamepadEvent) => {
       if (e.gamepad.index === index) {
-        sendUpdate(modelId, { connected: false });
+        sendUpdateRef.current(modelId, { connected: false });
         lastStateRef.current = null;
       }
     };
@@ -148,7 +160,7 @@ export function ControllerWidget({ modelId, className }: WidgetComponentProps) {
       window.removeEventListener("gamepadconnected", handleConnect);
       window.removeEventListener("gamepaddisconnected", handleDisconnect);
     };
-  }, [index, modelId, pollGamepad, sendUpdate]);
+  }, [index, modelId, pollGamepad]);
 
   return (
     <div

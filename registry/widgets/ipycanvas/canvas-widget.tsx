@@ -38,6 +38,17 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
     "image_data",
   );
 
+  // Refs for values that need to be fresh but shouldn't trigger effect re-runs.
+  // This prevents subscription teardown and handler recreation on state changes.
+  const storeRef = useRef(store);
+  const sendCustomRef = useRef(sendCustom);
+
+  // Keep refs up-to-date without triggering the main effects
+  useEffect(() => {
+    storeRef.current = store;
+    sendCustomRef.current = sendCustom;
+  });
+
   // Initialize 2D context
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -63,7 +74,7 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
   // client_ready. Routing is handled by createCanvasManagerRouter at the
   // store level — this widget just processes what it receives.
   useEffect(() => {
-    const unsubscribe = store.subscribeToCustomMessage(
+    const unsubscribe = storeRef.current.subscribeToCustomMessage(
       modelId,
       (content, buffers) => {
         const canvas = canvasRef.current;
@@ -98,11 +109,11 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
     );
 
     if (sendClientReady) {
-      sendCustom(modelId, { event: "client_ready" });
+      sendCustomRef.current(modelId, { event: "client_ready" });
     }
 
     return unsubscribe;
-  }, [store, modelId, sendClientReady, sendCustom]);
+  }, [modelId, sendClientReady]);
 
   // Mouse event helpers
   const getCoordinates = useCallback(
@@ -120,50 +131,50 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
 
   const onMouseMove = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      sendCustom(modelId, { event: "mouse_move", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, { event: "mouse_move", ...getCoordinates(event) });
     },
-    [modelId, sendCustom, getCoordinates],
+    [modelId, getCoordinates],
   );
 
   const onMouseDown = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
       canvasRef.current?.focus();
-      sendCustom(modelId, { event: "mouse_down", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, { event: "mouse_down", ...getCoordinates(event) });
     },
-    [modelId, sendCustom, getCoordinates],
+    [modelId, getCoordinates],
   );
 
   const onMouseUp = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      sendCustom(modelId, { event: "mouse_up", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, { event: "mouse_up", ...getCoordinates(event) });
     },
-    [modelId, sendCustom, getCoordinates],
+    [modelId, getCoordinates],
   );
 
   const onMouseOut = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      sendCustom(modelId, { event: "mouse_out", ...getCoordinates(event) });
+      sendCustomRef.current(modelId, { event: "mouse_out", ...getCoordinates(event) });
     },
-    [modelId, sendCustom, getCoordinates],
+    [modelId, getCoordinates],
   );
 
   const onWheel = useCallback(
     (event: React.WheelEvent<HTMLCanvasElement>) => {
-      sendCustom(modelId, {
+      sendCustomRef.current(modelId, {
         event: "mouse_wheel",
         x: event.deltaX,
         y: event.deltaY,
       });
       event.preventDefault();
     },
-    [modelId, sendCustom],
+    [modelId],
   );
 
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLCanvasElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      sendCustom(modelId, {
+      sendCustomRef.current(modelId, {
         event: "key_down",
         key: event.key,
         shift_key: event.shiftKey,
@@ -171,8 +182,12 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
         meta_key: event.metaKey,
       });
     },
-    [modelId, sendCustom],
+    [modelId],
   );
+
+  const onBlur = useCallback(() => {
+    sendCustomRef.current(modelId, { event: "mouse_out", x: 0, y: 0 });
+  }, [modelId]);
 
   return (
     <canvas
@@ -187,7 +202,7 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseOut={onMouseOut}
-      onBlur={() => sendCustom(modelId, { event: "mouse_out", x: 0, y: 0 })}
+      onBlur={onBlur}
       onWheel={onWheel}
       onKeyDown={onKeyDown}
     />

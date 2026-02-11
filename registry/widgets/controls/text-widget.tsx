@@ -6,7 +6,7 @@
  * Maps to ipywidgets TextModel.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,16 @@ export function TextWidget({ modelId, className }: WidgetComponentProps) {
   // Local state for non-continuous updates
   const [localValue, setLocalValue] = useState(value);
 
+  // Refs for values that need to be fresh but shouldn't trigger callback recreation.
+  const sendUpdateRef = useRef(sendUpdate);
+  const sendCustomRef = useRef(sendCustom);
+
+  // Keep refs up-to-date without triggering callback recreation
+  useEffect(() => {
+    sendUpdateRef.current = sendUpdate;
+    sendCustomRef.current = sendCustom;
+  });
+
   // Sync local state when value changes from kernel
   useEffect(() => {
     setLocalValue(value);
@@ -41,30 +51,30 @@ export function TextWidget({ modelId, className }: WidgetComponentProps) {
       setLocalValue(newValue);
 
       if (continuousUpdate) {
-        sendUpdate(modelId, { value: newValue });
+        sendUpdateRef.current(modelId, { value: newValue });
       }
     },
-    [modelId, continuousUpdate, sendUpdate],
+    [modelId, continuousUpdate],
   );
 
   const handleBlur = useCallback(() => {
     if (!continuousUpdate && localValue !== value) {
-      sendUpdate(modelId, { value: localValue });
+      sendUpdateRef.current(modelId, { value: localValue });
     }
-  }, [modelId, continuousUpdate, localValue, value, sendUpdate]);
+  }, [modelId, continuousUpdate, localValue, value]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         // Send submit event
-        sendCustom(modelId, { event: "submit" });
+        sendCustomRef.current(modelId, { event: "submit" });
         // Also ensure value is synced
         if (!continuousUpdate && localValue !== value) {
-          sendUpdate(modelId, { value: localValue });
+          sendUpdateRef.current(modelId, { value: localValue });
         }
       }
     },
-    [modelId, continuousUpdate, localValue, value, sendUpdate, sendCustom],
+    [modelId, continuousUpdate, localValue, value],
   );
 
   return (
