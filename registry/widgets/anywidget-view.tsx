@@ -512,8 +512,8 @@ export function AnyWidgetView({ modelId, className }: AnyWidgetViewProps) {
     // - stableModelId: different widget instance
     // - esm: different widget code
     // - css: different widget styles
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stableModelId, esm, css]);
+    // getCurrentState and modelId are stable unless modelId changes (safe to include)
+  }, [stableModelId, esm, css, getCurrentState, modelId]);
 
   // Model not ready yet
   const modelExists = model !== undefined;
