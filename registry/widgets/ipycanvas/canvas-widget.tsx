@@ -22,7 +22,6 @@ import { getTypedArray, processCommands } from "./ipycanvas-commands";
 // === CanvasWidget ===
 
 export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
-  // store and sendCustom are now stable (useCommRouter uses refs internally)
   const { store, sendCustom } = useWidgetStoreRequired();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -175,10 +174,6 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
     [modelId, sendCustom],
   );
 
-  const onBlur = useCallback(() => {
-    sendCustom(modelId, { event: "mouse_out", x: 0, y: 0 });
-  }, [modelId, sendCustom]);
-
   return (
     <canvas
       ref={canvasRef}
@@ -192,7 +187,7 @@ export function CanvasWidget({ modelId, className }: WidgetComponentProps) {
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseOut={onMouseOut}
-      onBlur={onBlur}
+      onBlur={() => sendCustom(modelId, { event: "mouse_out", x: 0, y: 0 })}
       onWheel={onWheel}
       onKeyDown={onKeyDown}
     />
