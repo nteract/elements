@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CellBetweener } from "@/registry/cell/CellBetweener";
 import { CellContainer } from "@/registry/cell/CellContainer";
 import { CellControls } from "@/registry/cell/CellControls";
 import { CellHeader } from "@/registry/cell/CellHeader";
@@ -150,7 +151,7 @@ export function NotebookDemo() {
 
   return (
     <div>
-      {cells.map((cell) => {
+      {cells.map((cell, index) => {
         const isFocused = focusedId === cell.id;
         const executionState = executionStates[cell.id] || "idle";
         const executionCount = executionCounts[cell.id] ?? null;
@@ -177,39 +178,47 @@ export function NotebookDemo() {
             </>
           ) : undefined;
 
+        // Get the next cell type for betweener color continuity
+        const nextCellType = cells[index + 1]?.type ?? cell.type;
+
         return (
-          <CellContainer
-            key={cell.id}
-            id={cell.id}
-            cellType={cell.type}
-            isFocused={isFocused}
-            onFocus={() => setFocusedId(cell.id)}
-            gutterContent={gutterContent}
-          >
-            <CellHeader
-              leftContent={<CellTypeButton cellType={cell.type} size="sm" />}
-              rightContent={
-                <CellControls
-                  sourceVisible={true}
-                  toggleSourceVisibility={() => {}}
-                  onDeleteCell={() => {}}
-                  onClearOutputs={() => {}}
-                  hasOutputs={false}
-                  forceVisible={isFocused}
-                />
-              }
-            />
-            <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm whitespace-pre">
-              {cell.content}
-            </div>
-            {executionState === "completed" && (
-              <div className="border-t border-border/40 p-4 text-sm">
-                <span className="text-green-600 dark:text-green-400">
-                  Output for {cell.id}
-                </span>
+          <div key={cell.id}>
+            <CellContainer
+              id={cell.id}
+              cellType={cell.type}
+              isFocused={isFocused}
+              onFocus={() => setFocusedId(cell.id)}
+              gutterContent={gutterContent}
+            >
+              <CellHeader
+                leftContent={<CellTypeButton cellType={cell.type} size="sm" />}
+                rightContent={
+                  <CellControls
+                    sourceVisible={true}
+                    toggleSourceVisibility={() => {}}
+                    onDeleteCell={() => {}}
+                    onClearOutputs={() => {}}
+                    hasOutputs={false}
+                    forceVisible={isFocused}
+                  />
+                }
+              />
+              <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm whitespace-pre">
+                {cell.content}
               </div>
+              {executionState === "completed" && (
+                <div className="border-t border-border/40 p-4 text-sm">
+                  <span className="text-green-600 dark:text-green-400">
+                    Output for {cell.id}
+                  </span>
+                </div>
+              )}
+            </CellContainer>
+            {/* Betweener maintains ribbon continuity between cells */}
+            {index < cells.length - 1 && (
+              <CellBetweener cellType={nextCellType} />
             )}
-          </CellContainer>
+          </div>
         );
       })}
     </div>
@@ -331,7 +340,7 @@ export function GutterNotebookDemo() {
 
   return (
     <div>
-      {cells.map((cell) => {
+      {cells.map((cell, index) => {
         const isFocused = focusedId === cell.id;
         const executionState = executionStates[cell.id] || "idle";
         const executionCount = executionCounts[cell.id] ?? null;
@@ -358,26 +367,34 @@ export function GutterNotebookDemo() {
             </>
           ) : undefined;
 
+        // Get the next cell type for betweener color continuity
+        const nextCellType = cells[index + 1]?.type ?? cell.type;
+
         return (
-          <CellContainer
-            key={cell.id}
-            id={cell.id}
-            cellType={cell.type}
-            isFocused={isFocused}
-            onFocus={() => setFocusedId(cell.id)}
-            gutterContent={gutterContent}
-          >
-            <div className="whitespace-pre p-3 font-mono text-sm">
-              {cell.content}
-            </div>
-            {executionState === "completed" && (
-              <div className="border-t border-border/40 p-3 text-sm">
-                <span className="text-green-600 dark:text-green-400">
-                  Output for {cell.id}
-                </span>
+          <div key={cell.id}>
+            <CellContainer
+              id={cell.id}
+              cellType={cell.type}
+              isFocused={isFocused}
+              onFocus={() => setFocusedId(cell.id)}
+              gutterContent={gutterContent}
+            >
+              <div className="whitespace-pre p-3 font-mono text-sm">
+                {cell.content}
               </div>
+              {executionState === "completed" && (
+                <div className="border-t border-border/40 p-3 text-sm">
+                  <span className="text-green-600 dark:text-green-400">
+                    Output for {cell.id}
+                  </span>
+                </div>
+              )}
+            </CellContainer>
+            {/* Betweener maintains ribbon continuity between cells */}
+            {index < cells.length - 1 && (
+              <CellBetweener cellType={nextCellType} />
             )}
-          </CellContainer>
+          </div>
         );
       })}
     </div>
