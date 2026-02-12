@@ -6,7 +6,7 @@ icon: Box
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
-import { CellDemo, NotebookDemo } from '@/app/components/CellDemo';
+import { CellDemo, NotebookDemo, GutterCellDemo, GutterNotebookDemo } from '@/app/components/CellDemo';
 import { CellContainerDemo } from '@/app/components/CellContainerDemo';
 import { CellTypeButtonDemo } from '@/app/components/CellTypeButtonDemo';
 import { PlayButtonDemo } from '@/app/components/PlayButtonDemo';
@@ -94,6 +94,50 @@ Click different cells to see focus behavior:
   <NotebookDemo />
 </div>
 
+## Gutter Ribbon Mode
+
+CellContainer supports a **gutter ribbon** layout that creates a cleaner, paper-like aesthetic. Instead of borders, a thin colored ribbon on the left indicates cell type and focus state.
+
+<div className="my-8 space-y-4">
+  <GutterCellDemo cellType="code" initialFocused />
+  <GutterCellDemo cellType="markdown" />
+</div>
+
+Enable gutter mode by passing a `cellType` prop:
+
+```tsx
+<CellContainer
+  id={cell.id}
+  cellType="code"           // Enables gutter mode
+  isFocused={isFocused}
+  gutterContent={           // Place play button in gutter
+    <PlayButton gutterMode executionState={state} ... />
+  }
+>
+  {/* Cell content - no CellHeader needed for play button */}
+</CellContainer>
+```
+
+### Gutter Notebook Demo
+
+Click cells to see the continuous ribbon effect:
+
+<div className="my-8">
+  <GutterNotebookDemo />
+</div>
+
+### Ribbon Colors
+
+| Cell Type | Ribbon Color |
+| --- | --- |
+| `code` | Gray |
+| `markdown` | Amber |
+| `sql` | Blue |
+| `ai` | Purple |
+| `raw` | Rose |
+
+Custom colors can be provided via `customGutterColors` prop.
+
 ## Installation
 
 Install all cell components:
@@ -135,15 +179,18 @@ The outer wrapper that provides focus styling and the `data-cell-id` attribute.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `id` | `string` | — | Cell identifier for `data-cell-id` |
-| `isFocused` | `boolean` | `false` | Shows focus border when true |
+| `isFocused` | `boolean` | `false` | Shows focus styling when true |
 | `onFocus` | `() => void` | — | Called on mousedown |
 | `children` | `ReactNode` | — | Cell content |
+| `cellType` | `string` | — | Enables gutter mode with ribbon coloring |
+| `gutterContent` | `ReactNode` | — | Content for gutter action area (e.g., PlayButton) |
+| `customGutterColors` | `Record<string, GutterColorConfig>` | — | Custom ribbon colors |
 | `onDragStart` | `(e: DragEvent) => void` | — | Enables dragging when provided |
 | `onDragOver` | `(e: DragEvent) => void` | — | Drag over handler |
 | `onDrop` | `(e: DragEvent) => void` | — | Drop handler |
 | `className` | `string` | — | Additional classes |
-| `focusBgColor` | `string` | `"bg-primary/5"` | Focus background |
-| `focusBorderColor` | `string` | `"border-primary/60"` | Focus border |
+| `focusBgColor` | `string` | `"bg-primary/5"` | Legacy: Focus background |
+| `focusBorderColor` | `string` | `"border-primary/60"` | Legacy: Focus border |
 
 ### CellHeader
 
@@ -198,6 +245,7 @@ Execute/interrupt button with state-based icons.
 | `onExecute` | `() => void` | Run callback |
 | `onInterrupt` | `() => void` | Stop callback |
 | `isAutoLaunching` | `boolean` | Show loading spinner |
+| `gutterMode` | `boolean` | Optimized visibility for gutter layout |
 
 ### ExecutionStatus
 
