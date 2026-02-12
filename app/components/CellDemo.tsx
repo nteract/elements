@@ -5,7 +5,7 @@ import { CellBetweener } from "@/registry/cell/CellBetweener";
 import { CellContainer } from "@/registry/cell/CellContainer";
 import { CellControls } from "@/registry/cell/CellControls";
 import { CellHeader } from "@/registry/cell/CellHeader";
-import { type CellType, CellTypeButton } from "@/registry/cell/CellTypeButton";
+import type { CellType } from "@/registry/cell/CellTypeButton";
 import { ExecutionCount } from "@/registry/cell/ExecutionCount";
 import { ExecutionStatus } from "@/registry/cell/ExecutionStatus";
 import { PlayButton } from "@/registry/cell/PlayButton";
@@ -71,12 +71,7 @@ export function CellDemo({
       gutterContent={gutterContent}
     >
       <CellHeader
-        leftContent={
-          <>
-            <CellTypeButton cellType={cellType} size="sm" />
-            <ExecutionStatus executionState={executionState} />
-          </>
-        }
+        leftContent={<ExecutionStatus executionState={executionState} />}
         rightContent={
           <CellControls
             sourceVisible={sourceVisible}
@@ -191,7 +186,6 @@ export function NotebookDemo() {
               gutterContent={gutterContent}
             >
               <CellHeader
-                leftContent={<CellTypeButton cellType={cell.type} size="sm" />}
                 rightContent={
                   <CellControls
                     sourceVisible={true}
