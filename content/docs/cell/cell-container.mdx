@@ -6,7 +6,7 @@ icon: Box
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
-import { CellDemo, NotebookDemo } from '@/app/components/CellDemo';
+import { CellDemo, NotebookDemo, GutterCellDemo, GutterNotebookDemo } from '@/app/components/CellDemo';
 import { CellContainerDemo } from '@/app/components/CellContainerDemo';
 import { CellTypeButtonDemo } from '@/app/components/CellTypeButtonDemo';
 import { PlayButtonDemo } from '@/app/components/PlayButtonDemo';
@@ -20,13 +20,13 @@ The cell components work together to create notebook cell interfaces. Click the 
 
 ## Composition Pattern
 
-A notebook cell is built from composable parts:
+CellContainer uses a **gutter ribbon** layout - a thin colored ribbon on the left indicates cell type and focus state, creating a clean paper-like aesthetic.
 
 ```
-CellContainer          <- Focus wrapper with selection border
+CellContainer          <- Gutter ribbon + content wrapper
+├── [gutterContent]    <- Play button in the gutter
 └── CellHeader         <- Toolbar layout (left/right slots)
-    ├── PlayButton     <- Execute/interrupt control
-    ├── CellTypeButton <- Cell type indicator (code, markdown, etc.)
+    ├── CellTypeButton <- Cell type indicator
     ├── ExecutionStatus<- Running/queued/error badges
     └── CellControls   <- Source toggle, move, delete actions
 └── [Source content]   <- Your editor component
@@ -48,22 +48,28 @@ import { ExecutionStatus } from "@/components/cell/ExecutionStatus";
 function NotebookCell({ cell, isFocused, onFocus }) {
   const [sourceVisible, setSourceVisible] = useState(true);
 
+  const playButton = cell.type === "code" ? (
+    <PlayButton
+      executionState={cell.executionState}
+      cellType={cell.type}
+      isFocused={isFocused}
+      onExecute={() => executeCell(cell.id)}
+      onInterrupt={() => interruptCell(cell.id)}
+      gutterMode
+    />
+  ) : undefined;
+
   return (
     <CellContainer
       id={cell.id}
+      cellType={cell.type}
       isFocused={isFocused}
       onFocus={onFocus}
+      gutterContent={playButton}
     >
       <CellHeader
         leftContent={
           <>
-            <PlayButton
-              executionState={cell.executionState}
-              cellType={cell.type}
-              isFocused={isFocused}
-              onExecute={() => executeCell(cell.id)}
-              onInterrupt={() => interruptCell(cell.id)}
-            />
             <CellTypeButton cellType={cell.type} size="sm" />
             <ExecutionStatus executionState={cell.executionState} />
           </>
@@ -94,6 +100,31 @@ Click different cells to see focus behavior:
   <NotebookDemo />
 </div>
 
+## Minimal Layout
+
+For a cleaner look without a header toolbar, just use the gutter:
+
+<div className="my-8 space-y-4">
+  <GutterCellDemo cellType="code" initialFocused />
+  <GutterCellDemo cellType="markdown" />
+</div>
+
+<div className="my-8">
+  <GutterNotebookDemo />
+</div>
+
+## Ribbon Colors
+
+| Cell Type | Ribbon Color |
+| --- | --- |
+| `code` | Gray |
+| `markdown` | Amber |
+| `sql` | Blue |
+| `ai` | Purple |
+| `raw` | Rose |
+
+Custom colors can be provided via `customGutterColors` prop.
+
 ## Installation
 
 Install all cell components:
@@ -121,29 +152,33 @@ Install all cell components:
 
 ### CellContainer
 
-The outer wrapper that provides focus styling and the `data-cell-id` attribute.
+The outer wrapper with gutter ribbon and focus styling.
 
 <div className="my-4 space-y-2">
-  <CellContainerDemo id="unfocused" isFocused={false}>
-    <div className="p-4 text-sm text-muted-foreground">Unfocused cell (hover to see border)</div>
+  <CellContainerDemo id="unfocused" cellType="code" isFocused={false}>
+    <div className="p-4 text-sm text-muted-foreground">Unfocused code cell</div>
   </CellContainerDemo>
-  <CellContainerDemo id="focused" isFocused={true}>
-    <div className="p-4 text-sm">Focused cell with selection border</div>
+  <CellContainerDemo id="focused" cellType="code" isFocused={true}>
+    <div className="p-4 text-sm">Focused code cell</div>
+  </CellContainerDemo>
+  <CellContainerDemo id="markdown" cellType="markdown" isFocused={true}>
+    <div className="p-4 text-sm">Focused markdown cell (amber ribbon)</div>
   </CellContainerDemo>
 </div>
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `id` | `string` | — | Cell identifier for `data-cell-id` |
-| `isFocused` | `boolean` | `false` | Shows focus border when true |
+| `cellType` | `string` | **required** | Cell type for ribbon coloring |
+| `isFocused` | `boolean` | `false` | Shows focus styling when true |
 | `onFocus` | `() => void` | — | Called on mousedown |
 | `children` | `ReactNode` | — | Cell content |
+| `gutterContent` | `ReactNode` | — | Content for gutter action area (e.g., PlayButton) |
+| `customGutterColors` | `Record<string, GutterColorConfig>` | — | Custom ribbon colors |
 | `onDragStart` | `(e: DragEvent) => void` | — | Enables dragging when provided |
 | `onDragOver` | `(e: DragEvent) => void` | — | Drag over handler |
 | `onDrop` | `(e: DragEvent) => void` | — | Drop handler |
 | `className` | `string` | — | Additional classes |
-| `focusBgColor` | `string` | `"bg-primary/5"` | Focus background |
-| `focusBorderColor` | `string` | `"border-primary/60"` | Focus border |
 
 ### CellHeader
 
@@ -151,7 +186,7 @@ Slot-based layout for the cell toolbar.
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `leftContent` | `ReactNode` | Left side (play button, type, status) |
+| `leftContent` | `ReactNode` | Left side (cell type, status) |
 | `rightContent` | `ReactNode` | Right side (controls) |
 | `draggable` | `boolean` | Enable drag handle |
 | `onDragStart` | `(e: DragEvent) => void` | Drag handler |
@@ -177,7 +212,7 @@ Color-coded button showing cell type. Also exports convenience components: `Code
 
 ### PlayButton
 
-Execute/interrupt button with state-based icons.
+Execute/interrupt button with state-based icons. Use `gutterMode` when placing in the gutter.
 
 <div className="my-4 flex gap-4 items-center">
   <div className="flex flex-col items-center gap-1">
@@ -198,6 +233,7 @@ Execute/interrupt button with state-based icons.
 | `onExecute` | `() => void` | Run callback |
 | `onInterrupt` | `() => void` | Stop callback |
 | `isAutoLaunching` | `boolean` | Show loading spinner |
+| `gutterMode` | `boolean` | Smart visibility for gutter (hidden unfocused, visible on focus/hover) |
 
 ### ExecutionStatus
 

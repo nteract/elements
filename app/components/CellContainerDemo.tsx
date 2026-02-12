@@ -6,8 +6,13 @@ import { CellContainer } from "@/registry/cell/CellContainer";
 type CellContainerDemoProps = Omit<
   ComponentProps<typeof CellContainer>,
   "onFocus" | "onDragStart" | "onDragOver" | "onDrop"
->;
+> & {
+  cellType?: string;
+};
 
-export function CellContainerDemo(props: CellContainerDemoProps) {
-  return <CellContainer onFocus={() => {}} {...props} />;
+export function CellContainerDemo({
+  cellType = "code",
+  ...props
+}: CellContainerDemoProps) {
+  return <CellContainer cellType={cellType} onFocus={() => {}} {...props} />;
 }
