@@ -8,7 +8,7 @@ interface CellContainerProps {
   isFocused?: boolean;
   onFocus?: () => void;
   children: ReactNode;
-  /** Content to render in the gutter action area (e.g., play button) */
+  /** Content to render in the gutter action area (e.g., play button, execution count) */
   gutterContent?: ReactNode;
   /** Custom color configuration for cell types not in defaults */
   customGutterColors?: Record<string, GutterColorConfig>;
@@ -58,15 +58,18 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        {/* Gutter area: action button + thin ribbon */}
+        {/* Gutter area: action content + thin ribbon */}
         <div className="flex flex-shrink-0">
-          {/* Action button area (24px / w-6) */}
-          <div className="flex w-6 items-start justify-center pt-1.5">
+          {/* Action area - wider to fit play button + execution count */}
+          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1 pt-1">
             {gutterContent}
           </div>
-          {/* Thin ribbon (4px / w-1) */}
+          {/* Thin ribbon - self-stretch ensures it fills full height */}
           <div
-            className={cn("w-1 transition-colors duration-150", ribbonColor)}
+            className={cn(
+              "w-1 self-stretch transition-colors duration-150",
+              ribbonColor,
+            )}
           />
         </div>
         {/* Cell content */}
