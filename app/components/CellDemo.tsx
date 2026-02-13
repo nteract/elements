@@ -44,7 +44,7 @@ export function CellDemo({
     setTimeout(() => {
       setExecutionState("completed");
       setExecutionCount((prev) => (prev ?? 0) + 1);
-    }, 2000);
+    }, 800);
   };
 
   const handleInterrupt = () => {
@@ -177,7 +177,7 @@ export function NotebookDemo() {
         ...prev,
         [cellId]: (prev[cellId] ?? 0) + 1,
       }));
-    }, 2000);
+    }, 800);
   };
 
   return (
@@ -294,7 +294,7 @@ export function GutterCellDemo({
     setTimeout(() => {
       setExecutionState("completed");
       setExecutionCount((prev) => (prev ?? 0) + 1);
-    }, 2000);
+    }, 800);
   };
 
   const isExecuting = executionState === "running";
@@ -389,7 +389,7 @@ export function GutterNotebookDemo() {
         ...prev,
         [cellId]: (prev[cellId] ?? 0) + 1,
       }));
-    }, 2000);
+    }, 800);
   };
 
   return (
@@ -482,7 +482,7 @@ export function CompactCellDemo({
     setTimeout(() => {
       setExecutionState("completed");
       setExecutionCount((prev) => (prev ?? 0) + 1);
-    }, 2000);
+    }, 800);
   };
 
   const isExecuting = executionState === "running";
@@ -554,7 +554,7 @@ export function CompactNotebookDemo() {
         ...prev,
         [cellId]: (prev[cellId] ?? 0) + 1,
       }));
-    }, 1500);
+    }, 800);
   };
 
   return (
