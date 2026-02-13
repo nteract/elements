@@ -53,10 +53,9 @@ export function CellDemo({
 
   const isExecuting = executionState === "running";
 
-  // pt-4 aligns with content's p-4 padding
   const gutterContent =
     cellType === "code" ? (
-      <div className="flex flex-col items-end gap-0.5 pt-4">
+      <>
         <PlayButton
           executionState={executionState}
           cellType={cellType}
@@ -67,11 +66,11 @@ export function CellDemo({
           focusedClass="text-gray-700 dark:text-gray-300"
         />
         <ExecutionCount count={executionCount} isExecuting={isExecuting} />
-      </div>
+      </>
     ) : undefined;
 
   const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1 pt-4">
+    <div className="flex flex-col items-center gap-1">
       <Button
         variant="ghost"
         size="sm"
@@ -128,7 +127,7 @@ export function CellDemo({
       rightGutterContent={rightGutterContent}
     >
       {showSource && sourceVisible && (
-        <div className="bg-muted/30 p-4 font-mono text-sm">
+        <div className="bg-muted/30 font-mono text-sm">
           <span className="text-muted-foreground">
             # Click the play button to run
           </span>
@@ -137,7 +136,7 @@ export function CellDemo({
         </div>
       )}
       {showOutput && executionState === "completed" && (
-        <div className="border-t border-border/40 p-4 text-sm">
+        <div className="border-t border-border/40 text-sm">
           <span className="text-green-600">Hello from nteract-elements!</span>
         </div>
       )}
@@ -194,7 +193,7 @@ export function NotebookDemo() {
 
         const gutterContent =
           cell.type === "code" ? (
-            <div className="flex flex-col items-end gap-0.5 pt-4">
+            <>
               <PlayButton
                 executionState={executionState}
                 cellType={cell.type}
@@ -210,14 +209,14 @@ export function NotebookDemo() {
                 count={executionCount}
                 isExecuting={isExecuting}
               />
-            </div>
+            </>
           ) : undefined;
 
         // Get the next cell type for betweener color continuity
         const nextCellType = cells[index + 1]?.type ?? cell.type;
 
         const rightGutterContent = (
-          <div className="flex flex-col items-center gap-1 pt-4">
+          <div className="flex flex-col items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
@@ -261,11 +260,11 @@ export function NotebookDemo() {
               gutterContent={gutterContent}
               rightGutterContent={rightGutterContent}
             >
-              <div className="bg-muted/30 p-4 font-mono text-sm whitespace-pre">
+              <div className="bg-muted/30 font-mono text-sm whitespace-pre">
                 {cell.content}
               </div>
               {executionState === "completed" && (
-                <div className="border-t border-border/40 p-4 text-sm">
+                <div className="border-t border-border/40 text-sm">
                   <span className="text-green-600 dark:text-green-400">
                     Output for {cell.id}
                   </span>
@@ -305,10 +304,9 @@ export function GutterCellDemo({
 
   const isExecuting = executionState === "running";
 
-  // pt-3 aligns with content's p-3 padding
   const gutterContent =
     cellType === "code" ? (
-      <div className="flex flex-col items-end gap-0.5 pt-3">
+      <>
         <PlayButton
           executionState={executionState}
           cellType={cellType}
@@ -319,15 +317,13 @@ export function GutterCellDemo({
           focusedClass="text-gray-700 dark:text-gray-300"
         />
         <ExecutionCount count={executionCount} isExecuting={isExecuting} />
-      </div>
+      </>
     ) : undefined;
 
   const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1 pt-3">
-      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
-        <MoreVertical className="h-3 w-3" />
-      </Button>
-    </div>
+    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
+      <MoreVertical className="h-3 w-3" />
+    </Button>
   );
 
   return (
@@ -339,7 +335,7 @@ export function GutterCellDemo({
       gutterContent={gutterContent}
       rightGutterContent={rightGutterContent}
     >
-      <div className="p-3 font-mono text-sm">
+      <div className="font-mono text-sm">
         {cellType === "code" ? (
           <>
             <span className="text-muted-foreground">
@@ -357,7 +353,7 @@ export function GutterCellDemo({
         )}
       </div>
       {executionState === "completed" && (
-        <div className="border-t border-border/40 p-3 text-sm">
+        <div className="border-t border-border/40 text-sm">
           <span className="text-green-600 dark:text-green-400">
             Hello from paper mode!
           </span>
@@ -416,7 +412,7 @@ export function GutterNotebookDemo() {
 
         const gutterContent =
           cell.type === "code" ? (
-            <div className="flex flex-col items-end gap-0.5 pt-3">
+            <>
               <PlayButton
                 executionState={executionState}
                 cellType={cell.type}
@@ -432,23 +428,21 @@ export function GutterNotebookDemo() {
                 count={executionCount}
                 isExecuting={isExecuting}
               />
-            </div>
+            </>
           ) : undefined;
 
         // Get the next cell type for betweener color continuity
         const nextCellType = cells[index + 1]?.type ?? cell.type;
 
         const rightGutterContent = (
-          <div className="flex flex-col items-center gap-1 pt-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
-              title="Options"
-            >
-              <MoreVertical className="h-3 w-3" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0"
+            title="Options"
+          >
+            <MoreVertical className="h-3 w-3" />
+          </Button>
         );
 
         return (
@@ -461,11 +455,11 @@ export function GutterNotebookDemo() {
               gutterContent={gutterContent}
               rightGutterContent={rightGutterContent}
             >
-              <div className="whitespace-pre p-3 font-mono text-sm">
+              <div className="whitespace-pre font-mono text-sm">
                 {cell.content}
               </div>
               {executionState === "completed" && (
-                <div className="border-t border-border/40 p-3 text-sm">
+                <div className="border-t border-border/40 text-sm">
                   <span className="text-green-600 dark:text-green-400">
                     Output for {cell.id}
                   </span>
@@ -505,25 +499,20 @@ export function CompactCellDemo({
 
   const isExecuting = executionState === "running";
 
-  // pt-3 aligns with content's p-3 padding
   const gutterContent =
     cellType === "code" ? (
-      <div className="pt-3">
-        <CompactExecutionButton
-          count={executionCount}
-          isExecuting={isExecuting}
-          onExecute={handleExecute}
-          onInterrupt={() => setExecutionState("idle")}
-        />
-      </div>
+      <CompactExecutionButton
+        count={executionCount}
+        isExecuting={isExecuting}
+        onExecute={handleExecute}
+        onInterrupt={() => setExecutionState("idle")}
+      />
     ) : undefined;
 
   const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1 pt-3">
-      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
-        <MoreVertical className="h-3 w-3" />
-      </Button>
-    </div>
+    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
+      <MoreVertical className="h-3 w-3" />
+    </Button>
   );
 
   return (
@@ -535,7 +524,7 @@ export function CompactCellDemo({
       gutterContent={gutterContent}
       rightGutterContent={rightGutterContent}
     >
-      <div className="p-3 font-mono text-sm">
+      <div className="font-mono text-sm">
         {cellType === "code" ? (
           <>
             <span className="text-muted-foreground"># Compact [n]: style</span>
@@ -549,7 +538,7 @@ export function CompactCellDemo({
         )}
       </div>
       {executionState === "completed" && (
-        <div className="border-t border-border/40 p-3 text-sm">
+        <div className="border-t border-border/40 text-sm">
           <span className="text-green-600 dark:text-green-400">Hello!</span>
         </div>
       )}
@@ -601,34 +590,30 @@ export function CompactNotebookDemo() {
               isFocused={isFocused}
               onFocus={() => setFocusedId(cell.id)}
               gutterContent={
-                <div className="pt-2">
-                  <CompactExecutionButton
-                    count={executionCount}
-                    isExecuting={isExecuting}
-                    onExecute={() => handleExecute(cell.id)}
-                    onInterrupt={() =>
-                      setExecutionStates((prev) => ({
-                        ...prev,
-                        [cell.id]: "idle",
-                      }))
-                    }
-                  />
-                </div>
+                <CompactExecutionButton
+                  count={executionCount}
+                  isExecuting={isExecuting}
+                  onExecute={() => handleExecute(cell.id)}
+                  onInterrupt={() =>
+                    setExecutionStates((prev) => ({
+                      ...prev,
+                      [cell.id]: "idle",
+                    }))
+                  }
+                />
               }
               rightGutterContent={
-                <div className="pt-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 w-7 p-0"
-                    title="Options"
-                  >
-                    <MoreVertical className="h-3 w-3" />
-                  </Button>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  title="Options"
+                >
+                  <MoreVertical className="h-3 w-3" />
+                </Button>
               }
             >
-              <div className="whitespace-pre p-2 font-mono text-sm">
+              <div className="whitespace-pre font-mono text-sm">
                 {cell.content}
               </div>
             </CellContainer>
