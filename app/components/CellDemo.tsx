@@ -127,17 +127,11 @@ export function CellDemo({
       rightGutterContent={rightGutterContent}
     >
       {showSource && sourceVisible && (
-        <div className="bg-muted/30 font-mono text-sm">
-          <span className="text-muted-foreground">
-            # Click the play button to run
-          </span>
-          <br />
-          print("Hello from nteract-elements!")
-        </div>
+        <div className="font-mono text-sm whitespace-pre">print("Hello from nteract!")</div>
       )}
       {showOutput && executionState === "completed" && (
-        <div className="border-t border-border/40 text-sm">
-          <span className="text-green-600">Hello from nteract-elements!</span>
+        <div className="border-t border-border/40 pt-2 font-mono text-sm">
+          Hello from nteract!
         </div>
       )}
     </CellContainer>
@@ -159,16 +153,19 @@ export function NotebookDemo() {
       id: "cell-1",
       type: "code" as CellType,
       content: 'x = 42\nprint(f"The answer is {x}")',
+      output: "The answer is 42",
     },
     {
       id: "cell-2",
       type: "markdown" as CellType,
       content: "## Results\nThis cell shows markdown content.",
+      output: null,
     },
     {
       id: "cell-3",
       type: "code" as CellType,
       content: "import pandas as pd\ndf = pd.DataFrame({'a': [1,2,3]})",
+      output: null,
     },
   ];
 
@@ -260,14 +257,12 @@ export function NotebookDemo() {
               gutterContent={gutterContent}
               rightGutterContent={rightGutterContent}
             >
-              <div className="bg-muted/30 font-mono text-sm whitespace-pre">
+              <div className="font-mono text-sm whitespace-pre">
                 {cell.content}
               </div>
-              {executionState === "completed" && (
-                <div className="border-t border-border/40 text-sm">
-                  <span className="text-green-600 dark:text-green-400">
-                    Output for {cell.id}
-                  </span>
+              {executionState === "completed" && cell.output && (
+                <div className="border-t border-border/40 pt-2 font-mono text-sm">
+                  {cell.output}
                 </div>
               )}
             </CellContainer>
@@ -337,26 +332,18 @@ export function GutterCellDemo({
     >
       <div className="font-mono text-sm">
         {cellType === "code" ? (
-          <>
-            <span className="text-muted-foreground">
-              # Hover to see margins
-            </span>
-            <br />
-            print(&quot;Hello from paper mode!&quot;)
-          </>
+          <span className="whitespace-pre">print("Hello!")</span>
         ) : (
           <div className="prose prose-sm dark:prose-invert">
             <p className="text-foreground">
-              This is a <strong>markdown</strong> cell with the gutter ribbon.
+              This is a <strong>markdown</strong> cell.
             </p>
           </div>
         )}
       </div>
       {executionState === "completed" && (
-        <div className="border-t border-border/40 text-sm">
-          <span className="text-green-600 dark:text-green-400">
-            Hello from paper mode!
-          </span>
+        <div className="border-t border-border/40 pt-2 font-mono text-sm">
+          Hello!
         </div>
       )}
     </CellContainer>
@@ -378,16 +365,19 @@ export function GutterNotebookDemo() {
       id: "gutter-cell-1",
       type: "code" as CellType,
       content: 'x = 42\nprint(f"The answer is {x}")',
+      output: "The answer is 42",
     },
     {
       id: "gutter-cell-2",
       type: "markdown" as CellType,
       content: "## Results\nThis cell shows **markdown** content.",
+      output: null,
     },
     {
       id: "gutter-cell-3",
       type: "code" as CellType,
       content: "import pandas as pd\ndf = pd.DataFrame({'a': [1,2,3]})",
+      output: null,
     },
   ];
 
@@ -458,11 +448,9 @@ export function GutterNotebookDemo() {
               <div className="whitespace-pre font-mono text-sm">
                 {cell.content}
               </div>
-              {executionState === "completed" && (
-                <div className="border-t border-border/40 text-sm">
-                  <span className="text-green-600 dark:text-green-400">
-                    Output for {cell.id}
-                  </span>
+              {executionState === "completed" && cell.output && (
+                <div className="border-t border-border/40 pt-2 font-mono text-sm">
+                  {cell.output}
                 </div>
               )}
             </CellContainer>
@@ -526,11 +514,7 @@ export function CompactCellDemo({
     >
       <div className="font-mono text-sm">
         {cellType === "code" ? (
-          <>
-            <span className="text-muted-foreground"># Compact [n]: style</span>
-            <br />
-            print(&quot;Hello!&quot;)
-          </>
+          <span className="whitespace-pre">print("Hello, World!")</span>
         ) : (
           <div className="prose prose-sm dark:prose-invert">
             <p className="text-foreground">Markdown cell</p>
@@ -538,8 +522,8 @@ export function CompactCellDemo({
         )}
       </div>
       {executionState === "completed" && (
-        <div className="border-t border-border/40 text-sm">
-          <span className="text-green-600 dark:text-green-400">Hello!</span>
+        <div className="border-t border-border/40 pt-2 font-mono text-sm">
+          Hello, World!
         </div>
       )}
     </CellContainer>
@@ -557,9 +541,9 @@ export function CompactNotebookDemo() {
   >({});
 
   const cells = [
-    { id: "compact-cell-1", type: "code" as CellType, content: "x = 1" },
-    { id: "compact-cell-2", type: "code" as CellType, content: "y = 2" },
-    { id: "compact-cell-3", type: "code" as CellType, content: "print(x + y)" },
+    { id: "compact-cell-1", type: "code" as CellType, content: "x = 1", output: null },
+    { id: "compact-cell-2", type: "code" as CellType, content: "y = 2", output: null },
+    { id: "compact-cell-3", type: "code" as CellType, content: "print(x + y)", output: "3" },
   ];
 
   const handleExecute = (cellId: string) => {
@@ -616,6 +600,11 @@ export function CompactNotebookDemo() {
               <div className="whitespace-pre font-mono text-sm">
                 {cell.content}
               </div>
+              {executionState === "completed" && cell.output && (
+                <div className="border-t border-border/40 pt-2 font-mono text-sm">
+                  {cell.output}
+                </div>
+              )}
             </CellContainer>
             {index < cells.length - 1 && (
               <CellBetweener cellType={nextCellType} />
