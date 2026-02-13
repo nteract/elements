@@ -66,8 +66,7 @@ export function CompactExecutionButton({
           <Play className="h-3 w-3 fill-current" />
         )}
       </span>
-      <span className="opacity-60">]</span>
-      {!isExecuting && <span className="opacity-60">:</span>}
+      <span className="opacity-60">]:</span>
     </button>
   );
 }
