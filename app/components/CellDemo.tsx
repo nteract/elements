@@ -1,11 +1,20 @@
 "use client";
 
+import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { CellBetweener } from "@/registry/cell/CellBetweener";
 import { CellContainer } from "@/registry/cell/CellContainer";
-import { CellControls } from "@/registry/cell/CellControls";
-import { CellHeader } from "@/registry/cell/CellHeader";
-import { type CellType, CellTypeButton } from "@/registry/cell/CellTypeButton";
-import { ExecutionStatus } from "@/registry/cell/ExecutionStatus";
+import type { CellType } from "@/registry/cell/CellTypeButton";
+import { CompactExecutionButton } from "@/registry/cell/CompactExecutionButton";
+import { ExecutionCount } from "@/registry/cell/ExecutionCount";
 import { PlayButton } from "@/registry/cell/PlayButton";
 
 interface CellDemoProps {
@@ -28,28 +37,85 @@ export function CellDemo({
     "idle" | "queued" | "running" | "completed" | "error"
   >(initialExecutionState);
   const [sourceVisible, setSourceVisible] = useState(true);
+  const [executionCount, setExecutionCount] = useState<number | null>(null);
 
   const handleExecute = () => {
     setExecutionState("running");
-    setTimeout(() => setExecutionState("completed"), 2000);
+    setTimeout(() => {
+      setExecutionState("completed");
+      setExecutionCount((prev) => (prev ?? 0) + 1);
+    }, 800);
   };
 
   const handleInterrupt = () => {
     setExecutionState("idle");
   };
 
-  const playButton =
+  const isExecuting = executionState === "running";
+
+  const gutterContent =
     cellType === "code" ? (
-      <PlayButton
-        executionState={executionState}
-        cellType={cellType}
-        isFocused={isFocused}
-        onExecute={handleExecute}
-        onInterrupt={handleInterrupt}
-        gutterMode
-        focusedClass="text-gray-700 dark:text-gray-300"
-      />
+      <>
+        <PlayButton
+          executionState={executionState}
+          cellType={cellType}
+          isFocused={isFocused}
+          onExecute={handleExecute}
+          onInterrupt={handleInterrupt}
+          gutterMode
+          focusedClass="text-gray-700 dark:text-gray-300"
+        />
+        <ExecutionCount count={executionCount} isExecuting={isExecuting} />
+      </>
     ) : undefined;
+
+  const rightGutterContent = (
+    <div className="flex flex-col items-center gap-1">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 w-7 p-0"
+        onClick={() => setSourceVisible(!sourceVisible)}
+        title={sourceVisible ? "Hide source" : "Show source"}
+      >
+        {sourceVisible ? (
+          <ChevronUp className="h-3 w-3" />
+        ) : (
+          <ChevronDown className="h-3 w-3" />
+        )}
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0"
+            title="More options"
+          >
+            <MoreVertical className="h-3 w-3" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => alert("Change to Markdown")}>
+            Change to Markdown
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setExecutionState("idle")}
+            disabled={executionState !== "completed"}
+          >
+            Clear outputs
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => alert("Delete cell")}
+            className="text-destructive"
+          >
+            Delete cell
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
 
   return (
     <CellContainer
@@ -57,42 +123,17 @@ export function CellDemo({
       cellType={cellType}
       isFocused={isFocused}
       onFocus={() => setIsFocused(true)}
-      gutterContent={playButton}
+      gutterContent={gutterContent}
+      rightGutterContent={rightGutterContent}
     >
-      <CellHeader
-        leftContent={
-          <>
-            <CellTypeButton cellType={cellType} size="sm" />
-            <ExecutionStatus executionState={executionState} />
-          </>
-        }
-        rightContent={
-          <CellControls
-            sourceVisible={sourceVisible}
-            toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
-            onDeleteCell={() => alert("Delete cell")}
-            onClearOutputs={() => setExecutionState("idle")}
-            hasOutputs={executionState === "completed"}
-            canMoveUp
-            canMoveDown
-            onMoveUp={() => {}}
-            onMoveDown={() => {}}
-            forceVisible={isFocused}
-          />
-        }
-      />
       {showSource && sourceVisible && (
-        <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm">
-          <span className="text-muted-foreground">
-            # Click the play button to run
-          </span>
-          <br />
-          print("Hello from nteract-elements!")
+        <div className="font-mono text-sm whitespace-pre">
+          print("Hello from nteract!")
         </div>
       )}
       {showOutput && executionState === "completed" && (
-        <div className="border-t border-border/40 p-4 text-sm">
-          <span className="text-green-600">Hello from nteract-elements!</span>
+        <div className="border-t border-border/40 pt-2 font-mono text-sm">
+          Hello from nteract!
         </div>
       )}
     </CellContainer>
@@ -105,22 +146,30 @@ export function NotebookDemo() {
   const [executionStates, setExecutionStates] = useState<
     Record<string, "idle" | "queued" | "running" | "completed" | "error">
   >({});
+  const [executionCounts, setExecutionCounts] = useState<
+    Record<string, number | null>
+  >({});
+  // Global counter for sequential execution counts like real Jupyter
+  const [, setGlobalCounter] = useState(0);
 
   const cells = [
     {
       id: "cell-1",
       type: "code" as CellType,
       content: 'x = 42\nprint(f"The answer is {x}")',
+      output: "The answer is 42",
     },
     {
       id: "cell-2",
       type: "markdown" as CellType,
       content: "## Results\nThis cell shows markdown content.",
+      output: null,
     },
     {
       id: "cell-3",
       type: "code" as CellType,
       content: "import pandas as pd\ndf = pd.DataFrame({'a': [1,2,3]})",
+      output: null,
     },
   ];
 
@@ -128,63 +177,105 @@ export function NotebookDemo() {
     setExecutionStates((prev) => ({ ...prev, [cellId]: "running" }));
     setTimeout(() => {
       setExecutionStates((prev) => ({ ...prev, [cellId]: "completed" }));
-    }, 2000);
+      setGlobalCounter((prev) => {
+        const newCount = prev + 1;
+        setExecutionCounts((counts) => ({ ...counts, [cellId]: newCount }));
+        return newCount;
+      });
+    }, 800);
   };
 
   return (
-    <div className="space-y-0">
-      {cells.map((cell) => {
+    <div>
+      {cells.map((cell, index) => {
         const isFocused = focusedId === cell.id;
         const executionState = executionStates[cell.id] || "idle";
+        const executionCount = executionCounts[cell.id] ?? null;
+        const isExecuting = executionState === "running";
 
-        const playButton =
+        const gutterContent =
           cell.type === "code" ? (
-            <PlayButton
-              executionState={executionState}
-              cellType={cell.type}
-              isFocused={isFocused}
-              onExecute={() => handleExecute(cell.id)}
-              onInterrupt={() =>
-                setExecutionStates((prev) => ({ ...prev, [cell.id]: "idle" }))
-              }
-              gutterMode
-              focusedClass="text-gray-700 dark:text-gray-300"
-            />
+            <>
+              <PlayButton
+                executionState={executionState}
+                cellType={cell.type}
+                isFocused={isFocused}
+                onExecute={() => handleExecute(cell.id)}
+                onInterrupt={() =>
+                  setExecutionStates((prev) => ({ ...prev, [cell.id]: "idle" }))
+                }
+                gutterMode
+                focusedClass="text-gray-700 dark:text-gray-300"
+              />
+              <ExecutionCount
+                count={executionCount}
+                isExecuting={isExecuting}
+              />
+            </>
           ) : undefined;
 
+        // Get the next cell type for betweener color continuity
+        const nextCellType = cells[index + 1]?.type ?? cell.type;
+
+        const rightGutterContent = (
+          <div className="flex flex-col items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0"
+              title="Toggle source"
+            >
+              <ChevronUp className="h-3 w-3" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  title="More options"
+                >
+                  <MoreVertical className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  Change to {cell.type === "code" ? "Markdown" : "Code"}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Clear outputs</DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive">
+                  Delete cell
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+
         return (
-          <CellContainer
-            key={cell.id}
-            id={cell.id}
-            cellType={cell.type}
-            isFocused={isFocused}
-            onFocus={() => setFocusedId(cell.id)}
-            gutterContent={playButton}
-          >
-            <CellHeader
-              leftContent={<CellTypeButton cellType={cell.type} size="sm" />}
-              rightContent={
-                <CellControls
-                  sourceVisible={true}
-                  toggleSourceVisibility={() => {}}
-                  onDeleteCell={() => {}}
-                  onClearOutputs={() => {}}
-                  hasOutputs={false}
-                  forceVisible={isFocused}
-                />
-              }
-            />
-            <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm whitespace-pre">
-              {cell.content}
-            </div>
-            {executionState === "completed" && (
-              <div className="border-t border-border/40 p-4 text-sm">
-                <span className="text-green-600 dark:text-green-400">
-                  Output for {cell.id}
-                </span>
+          <div key={cell.id}>
+            <CellContainer
+              id={cell.id}
+              cellType={cell.type}
+              isFocused={isFocused}
+              onFocus={() => setFocusedId(cell.id)}
+              gutterContent={gutterContent}
+              rightGutterContent={rightGutterContent}
+            >
+              <div className="font-mono text-sm whitespace-pre">
+                {cell.content}
               </div>
+              {executionState === "completed" && cell.output && (
+                <div className="border-t border-border/40 pt-2 font-mono text-sm">
+                  {cell.output}
+                </div>
+              )}
+            </CellContainer>
+            {/* Betweener maintains ribbon continuity between cells */}
+            {index < cells.length - 1 && (
+              <CellBetweener cellType={nextCellType} />
             )}
-          </CellContainer>
+          </div>
         );
       })}
     </div>
@@ -201,24 +292,39 @@ export function GutterCellDemo({
   const [executionState, setExecutionState] = useState<
     "idle" | "queued" | "running" | "completed" | "error"
   >(initialExecutionState);
+  const [executionCount, setExecutionCount] = useState<number | null>(null);
 
   const handleExecute = () => {
     setExecutionState("running");
-    setTimeout(() => setExecutionState("completed"), 2000);
+    setTimeout(() => {
+      setExecutionState("completed");
+      setExecutionCount((prev) => (prev ?? 0) + 1);
+    }, 800);
   };
 
-  const playButton =
+  const isExecuting = executionState === "running";
+
+  const gutterContent =
     cellType === "code" ? (
-      <PlayButton
-        executionState={executionState}
-        cellType={cellType}
-        isFocused={isFocused}
-        onExecute={handleExecute}
-        onInterrupt={() => setExecutionState("idle")}
-        gutterMode
-        focusedClass="text-gray-700 dark:text-gray-300"
-      />
+      <>
+        <PlayButton
+          executionState={executionState}
+          cellType={cellType}
+          isFocused={isFocused}
+          onExecute={handleExecute}
+          onInterrupt={() => setExecutionState("idle")}
+          gutterMode
+          focusedClass="text-gray-700 dark:text-gray-300"
+        />
+        <ExecutionCount count={executionCount} isExecuting={isExecuting} />
+      </>
     ) : undefined;
+
+  const rightGutterContent = (
+    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
+      <MoreVertical className="h-3 w-3" />
+    </Button>
+  );
 
   return (
     <CellContainer
@@ -226,30 +332,23 @@ export function GutterCellDemo({
       cellType={cellType}
       isFocused={isFocused}
       onFocus={() => setIsFocused(true)}
-      gutterContent={playButton}
+      gutterContent={gutterContent}
+      rightGutterContent={rightGutterContent}
     >
-      <div className="p-3 font-mono text-sm">
+      <div className="font-mono text-sm">
         {cellType === "code" ? (
-          <>
-            <span className="text-muted-foreground">
-              # Hover to see play button
-            </span>
-            <br />
-            print(&quot;Hello from gutter mode!&quot;)
-          </>
+          <span className="whitespace-pre">print("Hello!")</span>
         ) : (
           <div className="prose prose-sm dark:prose-invert">
             <p className="text-foreground">
-              This is a <strong>markdown</strong> cell with the gutter ribbon.
+              This is a <strong>markdown</strong> cell.
             </p>
           </div>
         )}
       </div>
       {executionState === "completed" && (
-        <div className="border-t border-border/40 p-3 text-sm">
-          <span className="text-green-600 dark:text-green-400">
-            Hello from gutter mode!
-          </span>
+        <div className="border-t border-border/40 pt-2 font-mono text-sm">
+          Hello!
         </div>
       )}
     </CellContainer>
@@ -262,22 +361,30 @@ export function GutterNotebookDemo() {
   const [executionStates, setExecutionStates] = useState<
     Record<string, "idle" | "queued" | "running" | "completed" | "error">
   >({});
+  const [executionCounts, setExecutionCounts] = useState<
+    Record<string, number | null>
+  >({});
+  // Global counter for sequential execution counts like real Jupyter
+  const [, setGlobalCounter] = useState(0);
 
   const cells = [
     {
       id: "gutter-cell-1",
       type: "code" as CellType,
       content: 'x = 42\nprint(f"The answer is {x}")',
+      output: "The answer is 42",
     },
     {
       id: "gutter-cell-2",
       type: "markdown" as CellType,
       content: "## Results\nThis cell shows **markdown** content.",
+      output: null,
     },
     {
       id: "gutter-cell-3",
       type: "code" as CellType,
       content: "import pandas as pd\ndf = pd.DataFrame({'a': [1,2,3]})",
+      output: null,
     },
   ];
 
@@ -285,50 +392,250 @@ export function GutterNotebookDemo() {
     setExecutionStates((prev) => ({ ...prev, [cellId]: "running" }));
     setTimeout(() => {
       setExecutionStates((prev) => ({ ...prev, [cellId]: "completed" }));
-    }, 2000);
+      setGlobalCounter((prev) => {
+        const newCount = prev + 1;
+        setExecutionCounts((counts) => ({ ...counts, [cellId]: newCount }));
+        return newCount;
+      });
+    }, 800);
   };
 
   return (
-    <div className="space-y-0">
-      {cells.map((cell) => {
+    <div>
+      {cells.map((cell, index) => {
         const isFocused = focusedId === cell.id;
         const executionState = executionStates[cell.id] || "idle";
+        const executionCount = executionCounts[cell.id] ?? null;
+        const isExecuting = executionState === "running";
 
-        const playButton =
+        const gutterContent =
           cell.type === "code" ? (
-            <PlayButton
-              executionState={executionState}
-              cellType={cell.type}
-              isFocused={isFocused}
-              onExecute={() => handleExecute(cell.id)}
-              onInterrupt={() =>
-                setExecutionStates((prev) => ({ ...prev, [cell.id]: "idle" }))
-              }
-              gutterMode
-              focusedClass="text-gray-700 dark:text-gray-300"
-            />
+            <>
+              <PlayButton
+                executionState={executionState}
+                cellType={cell.type}
+                isFocused={isFocused}
+                onExecute={() => handleExecute(cell.id)}
+                onInterrupt={() =>
+                  setExecutionStates((prev) => ({ ...prev, [cell.id]: "idle" }))
+                }
+                gutterMode
+                focusedClass="text-gray-700 dark:text-gray-300"
+              />
+              <ExecutionCount
+                count={executionCount}
+                isExecuting={isExecuting}
+              />
+            </>
           ) : undefined;
 
-        return (
-          <CellContainer
-            key={cell.id}
-            id={cell.id}
-            cellType={cell.type}
-            isFocused={isFocused}
-            onFocus={() => setFocusedId(cell.id)}
-            gutterContent={playButton}
+        // Get the next cell type for betweener color continuity
+        const nextCellType = cells[index + 1]?.type ?? cell.type;
+
+        const rightGutterContent = (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0"
+            title="Options"
           >
-            <div className="whitespace-pre p-3 font-mono text-sm">
-              {cell.content}
-            </div>
-            {executionState === "completed" && (
-              <div className="border-t border-border/40 p-3 text-sm">
-                <span className="text-green-600 dark:text-green-400">
-                  Output for {cell.id}
-                </span>
+            <MoreVertical className="h-3 w-3" />
+          </Button>
+        );
+
+        return (
+          <div key={cell.id}>
+            <CellContainer
+              id={cell.id}
+              cellType={cell.type}
+              isFocused={isFocused}
+              onFocus={() => setFocusedId(cell.id)}
+              gutterContent={gutterContent}
+              rightGutterContent={rightGutterContent}
+            >
+              <div className="whitespace-pre font-mono text-sm">
+                {cell.content}
               </div>
+              {executionState === "completed" && cell.output && (
+                <div className="border-t border-border/40 pt-2 font-mono text-sm">
+                  {cell.output}
+                </div>
+              )}
+            </CellContainer>
+            {/* Betweener maintains ribbon continuity between cells */}
+            {index < cells.length - 1 && (
+              <CellBetweener cellType={nextCellType} />
             )}
-          </CellContainer>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Compact execution button demo - combines play + count into one element */
+export function CompactCellDemo({
+  cellType = "code",
+  initialExecutionState = "idle",
+  initialFocused = false,
+}: CellDemoProps) {
+  const [isFocused, setIsFocused] = useState(initialFocused);
+  const [executionState, setExecutionState] = useState<
+    "idle" | "queued" | "running" | "completed" | "error"
+  >(initialExecutionState);
+  const [executionCount, setExecutionCount] = useState<number | null>(null);
+
+  const handleExecute = () => {
+    setExecutionState("running");
+    setTimeout(() => {
+      setExecutionState("completed");
+      setExecutionCount((prev) => (prev ?? 0) + 1);
+    }, 800);
+  };
+
+  const isExecuting = executionState === "running";
+
+  const gutterContent =
+    cellType === "code" ? (
+      <CompactExecutionButton
+        count={executionCount}
+        isExecuting={isExecuting}
+        onExecute={handleExecute}
+        onInterrupt={() => setExecutionState("idle")}
+      />
+    ) : undefined;
+
+  const rightGutterContent = (
+    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
+      <MoreVertical className="h-3 w-3" />
+    </Button>
+  );
+
+  return (
+    <CellContainer
+      id="demo-compact-cell"
+      cellType={cellType}
+      isFocused={isFocused}
+      onFocus={() => setIsFocused(true)}
+      gutterContent={gutterContent}
+      rightGutterContent={rightGutterContent}
+    >
+      <div className="font-mono text-sm">
+        {cellType === "code" ? (
+          <span className="whitespace-pre">print("Hello, World!")</span>
+        ) : (
+          <div className="prose prose-sm dark:prose-invert">
+            <p className="text-foreground">Markdown cell</p>
+          </div>
+        )}
+      </div>
+      {executionState === "completed" && (
+        <div className="border-t border-border/40 pt-2 font-mono text-sm">
+          Hello, World!
+        </div>
+      )}
+    </CellContainer>
+  );
+}
+
+/** Multi-cell demo with compact execution buttons */
+export function CompactNotebookDemo() {
+  const [focusedId, setFocusedId] = useState<string | null>("compact-cell-1");
+  const [executionStates, setExecutionStates] = useState<
+    Record<string, "idle" | "queued" | "running" | "completed" | "error">
+  >({});
+  const [executionCounts, setExecutionCounts] = useState<
+    Record<string, number | null>
+  >({});
+  // Global counter for sequential execution counts like real Jupyter
+  const [, setGlobalCounter] = useState(0);
+
+  const cells = [
+    {
+      id: "compact-cell-1",
+      type: "code" as CellType,
+      content: "x = 1",
+      output: null,
+    },
+    {
+      id: "compact-cell-2",
+      type: "code" as CellType,
+      content: "y = 2",
+      output: null,
+    },
+    {
+      id: "compact-cell-3",
+      type: "code" as CellType,
+      content: "print(x + y)",
+      output: "3",
+    },
+  ];
+
+  const handleExecute = (cellId: string) => {
+    setExecutionStates((prev) => ({ ...prev, [cellId]: "running" }));
+    setTimeout(() => {
+      setExecutionStates((prev) => ({ ...prev, [cellId]: "completed" }));
+      setGlobalCounter((prev) => {
+        const newCount = prev + 1;
+        setExecutionCounts((counts) => ({ ...counts, [cellId]: newCount }));
+        return newCount;
+      });
+    }, 800);
+  };
+
+  return (
+    <div>
+      {cells.map((cell, index) => {
+        const isFocused = focusedId === cell.id;
+        const executionState = executionStates[cell.id] || "idle";
+        const executionCount = executionCounts[cell.id] ?? null;
+        const isExecuting = executionState === "running";
+        const nextCellType = cells[index + 1]?.type ?? cell.type;
+
+        return (
+          <div key={cell.id}>
+            <CellContainer
+              id={cell.id}
+              cellType={cell.type}
+              isFocused={isFocused}
+              onFocus={() => setFocusedId(cell.id)}
+              gutterContent={
+                <CompactExecutionButton
+                  count={executionCount}
+                  isExecuting={isExecuting}
+                  onExecute={() => handleExecute(cell.id)}
+                  onInterrupt={() =>
+                    setExecutionStates((prev) => ({
+                      ...prev,
+                      [cell.id]: "idle",
+                    }))
+                  }
+                />
+              }
+              rightGutterContent={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  title="Options"
+                >
+                  <MoreVertical className="h-3 w-3" />
+                </Button>
+              }
+            >
+              <div className="whitespace-pre font-mono text-sm">
+                {cell.content}
+              </div>
+              {executionState === "completed" && cell.output && (
+                <div className="border-t border-border/40 pt-2 font-mono text-sm">
+                  {cell.output}
+                </div>
+              )}
+            </CellContainer>
+            {index < cells.length - 1 && (
+              <CellBetweener cellType={nextCellType} />
+            )}
+          </div>
         );
       })}
     </div>

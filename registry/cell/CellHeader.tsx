@@ -7,8 +7,8 @@ interface CellHeaderProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLElement>) => void;
   onDragStart?: (e: React.DragEvent) => void;
   draggable?: boolean;
-  leftContent: ReactNode;
-  rightContent: ReactNode;
+  leftContent?: ReactNode;
+  rightContent?: ReactNode;
 }
 
 export const CellHeader: React.FC<CellHeaderProps> = ({

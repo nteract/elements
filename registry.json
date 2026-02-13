@@ -217,12 +217,31 @@
       "name": "cell-container",
       "type": "registry:component",
       "title": "CellContainer",
-      "description": "A focus and selection wrapper for notebook cells. Handles focus styling, data-cell-id attribute, and optional drag-and-drop callbacks.",
+      "description": "A focus and selection wrapper for notebook cells with gutter ribbon system. Color-coded ribbons indicate cell type, with action area for play button and execution count.",
       "files": [
         {
           "path": "registry/cell/CellContainer.tsx",
           "type": "registry:component",
           "target": "components/cell/CellContainer.tsx"
+        },
+        {
+          "path": "registry/cell/gutter-colors.ts",
+          "type": "registry:lib",
+          "target": "components/cell/gutter-colors.ts"
+        }
+      ]
+    },
+    {
+      "name": "cell-betweener",
+      "type": "registry:component",
+      "title": "CellBetweener",
+      "description": "Spacer component that maintains gutter ribbon continuity between cells. Creates an unbroken 'paper edge' effect down the left side of the notebook.",
+      "registryDependencies": ["@nteract/cell-container"],
+      "files": [
+        {
+          "path": "registry/cell/CellBetweener.tsx",
+          "type": "registry:component",
+          "target": "components/cell/CellBetweener.tsx"
         }
       ]
     },
