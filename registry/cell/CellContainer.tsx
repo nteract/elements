@@ -64,7 +64,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
         {/* Gutter area: action content + thin ribbon */}
         <div className="flex flex-shrink-0">
           {/* Action area - wider to fit play button + execution count */}
-          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1 pt-1">
+          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1">
             {gutterContent}
           </div>
           {/* Thin ribbon - self-stretch ensures it fills full height */}
@@ -81,7 +81,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
         {rightGutterContent && (
           <div
             className={cn(
-              "flex w-10 flex-shrink-0 flex-col items-center gap-1 pt-1",
+              "flex w-10 flex-shrink-0 flex-col items-center gap-1",
               "opacity-100 transition-opacity duration-150",
               "sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100",
               isFocused && "sm:opacity-100",

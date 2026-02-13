@@ -53,9 +53,10 @@ export function CellDemo({
 
   const isExecuting = executionState === "running";
 
+  // pt-4 aligns with content's p-4 padding
   const gutterContent =
     cellType === "code" ? (
-      <>
+      <div className="flex flex-col items-end gap-0.5 pt-4">
         <PlayButton
           executionState={executionState}
           cellType={cellType}
@@ -66,11 +67,11 @@ export function CellDemo({
           focusedClass="text-gray-700 dark:text-gray-300"
         />
         <ExecutionCount count={executionCount} isExecuting={isExecuting} />
-      </>
+      </div>
     ) : undefined;
 
   const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1 pt-4">
       <Button
         variant="ghost"
         size="sm"
@@ -193,7 +194,7 @@ export function NotebookDemo() {
 
         const gutterContent =
           cell.type === "code" ? (
-            <>
+            <div className="flex flex-col items-end gap-0.5 pt-4">
               <PlayButton
                 executionState={executionState}
                 cellType={cell.type}
@@ -209,14 +210,14 @@ export function NotebookDemo() {
                 count={executionCount}
                 isExecuting={isExecuting}
               />
-            </>
+            </div>
           ) : undefined;
 
         // Get the next cell type for betweener color continuity
         const nextCellType = cells[index + 1]?.type ?? cell.type;
 
         const rightGutterContent = (
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 pt-4">
             <Button
               variant="ghost"
               size="sm"
@@ -304,9 +305,10 @@ export function GutterCellDemo({
 
   const isExecuting = executionState === "running";
 
+  // pt-3 aligns with content's p-3 padding
   const gutterContent =
     cellType === "code" ? (
-      <>
+      <div className="flex flex-col items-end gap-0.5 pt-3">
         <PlayButton
           executionState={executionState}
           cellType={cellType}
@@ -317,11 +319,11 @@ export function GutterCellDemo({
           focusedClass="text-gray-700 dark:text-gray-300"
         />
         <ExecutionCount count={executionCount} isExecuting={isExecuting} />
-      </>
+      </div>
     ) : undefined;
 
   const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1 pt-3">
       <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
         <MoreVertical className="h-3 w-3" />
       </Button>
@@ -414,7 +416,7 @@ export function GutterNotebookDemo() {
 
         const gutterContent =
           cell.type === "code" ? (
-            <>
+            <div className="flex flex-col items-end gap-0.5 pt-3">
               <PlayButton
                 executionState={executionState}
                 cellType={cell.type}
@@ -430,14 +432,14 @@ export function GutterNotebookDemo() {
                 count={executionCount}
                 isExecuting={isExecuting}
               />
-            </>
+            </div>
           ) : undefined;
 
         // Get the next cell type for betweener color continuity
         const nextCellType = cells[index + 1]?.type ?? cell.type;
 
         const rightGutterContent = (
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 pt-3">
             <Button
               variant="ghost"
               size="sm"
@@ -503,18 +505,21 @@ export function CompactCellDemo({
 
   const isExecuting = executionState === "running";
 
+  // pt-3 aligns with content's p-3 padding
   const gutterContent =
     cellType === "code" ? (
-      <CompactExecutionButton
-        count={executionCount}
-        isExecuting={isExecuting}
-        onExecute={handleExecute}
-        onInterrupt={() => setExecutionState("idle")}
-      />
+      <div className="pt-3">
+        <CompactExecutionButton
+          count={executionCount}
+          isExecuting={isExecuting}
+          onExecute={handleExecute}
+          onInterrupt={() => setExecutionState("idle")}
+        />
+      </div>
     ) : undefined;
 
   const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1 pt-3">
       <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
         <MoreVertical className="h-3 w-3" />
       </Button>
@@ -596,27 +601,31 @@ export function CompactNotebookDemo() {
               isFocused={isFocused}
               onFocus={() => setFocusedId(cell.id)}
               gutterContent={
-                <CompactExecutionButton
-                  count={executionCount}
-                  isExecuting={isExecuting}
-                  onExecute={() => handleExecute(cell.id)}
-                  onInterrupt={() =>
-                    setExecutionStates((prev) => ({
-                      ...prev,
-                      [cell.id]: "idle",
-                    }))
-                  }
-                />
+                <div className="pt-2">
+                  <CompactExecutionButton
+                    count={executionCount}
+                    isExecuting={isExecuting}
+                    onExecute={() => handleExecute(cell.id)}
+                    onInterrupt={() =>
+                      setExecutionStates((prev) => ({
+                        ...prev,
+                        [cell.id]: "idle",
+                      }))
+                    }
+                  />
+                </div>
               }
               rightGutterContent={
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0"
-                  title="Options"
-                >
-                  <MoreVertical className="h-3 w-3" />
-                </Button>
+                <div className="pt-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    title="Options"
+                  >
+                    <MoreVertical className="h-3 w-3" />
+                  </Button>
+                </div>
               }
             >
               <div className="whitespace-pre p-2 font-mono text-sm">
