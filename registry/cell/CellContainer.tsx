@@ -63,8 +63,8 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
       >
         {/* Gutter area: action content + thin ribbon */}
         <div className="flex flex-shrink-0">
-          {/* Action area - pt-3 aligns with content's p-3 */}
-          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1 pt-3">
+          {/* Action area - pt-2 to align with first line of CodeMirror (which has internal padding) */}
+          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1 pt-2">
             {gutterContent}
           </div>
           {/* Thin ribbon - self-stretch ensures it fills full height */}
@@ -75,13 +75,13 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
             )}
           />
         </div>
-        {/* Cell content - p-3 provides default padding, gutters use pt-3 to align */}
+        {/* Cell content - p-3 provides default padding, gutters use pt-2 to offset for editor internal padding */}
         <div className="min-w-0 flex-1 p-3">{children}</div>
-        {/* Right margin - pt-3 aligns with content's p-3, appears on hover/focus */}
+        {/* Right margin - pt-2 aligns with left gutter, appears on hover/focus */}
         {rightGutterContent && (
           <div
             className={cn(
-              "flex w-10 flex-shrink-0 flex-col items-center gap-1 pt-3",
+              "flex w-10 flex-shrink-0 flex-col items-center gap-1 pt-2",
               "opacity-100 transition-opacity duration-150",
               "sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100",
               isFocused && "sm:opacity-100",
