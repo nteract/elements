@@ -16,48 +16,79 @@ import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
   <CellDemo cellType="code" initialFocused />
 </div>
 
-The cell components work together to create notebook cell interfaces. Click the **play button** above to see it in action.
+The cell components work together to create notebook cell interfaces. Click the **play button** above to see it in action. Hover to see the right margin controls appear.
 
-## Composition Pattern
+## Paper Margins Layout
 
-CellContainer uses a **gutter ribbon** layout - a thin colored ribbon on the left indicates cell type and focus state, creating a clean paper-like aesthetic.
+CellContainer uses a **paper margins** design - symmetric gutters on left and right create a clean paper-like aesthetic:
 
 ```
-CellContainer          <- Gutter ribbon + content wrapper
-├── [gutterContent]    <- Play button in the gutter
-└── CellHeader         <- Toolbar layout (left/right slots)
-    ├── CellTypeButton <- Cell type indicator
-    ├── ExecutionStatus<- Running/queued/error badges
-    └── CellControls   <- Source toggle, move, delete actions
-└── [Source content]   <- Your editor component
-└── [Output content]   <- Your output renderer
+┌──────────────────────────────────────────────────────────┐
+│ Left    │                                    │   Right   │
+│ Margin  │         Content Area               │   Margin  │
+├─────────┼────────────────────────────────────┼───────────┤
+│ ▶  │▮│  │ Source code                        │     [^]   │
+│[1]:│▮│  │ print("Hello")                     │     [⋮]   │
+│    │▮│  │                                    │           │
+│    │▮│  ├────────────────────────────────────┤           │
+│    │▮│  │ Output: Hello                      │           │
+└────┴─┴──┴────────────────────────────────────┴───────────┘
+  ^    ^                                            ^
+  │    └── ribbon (colored by cell type)            │
+  │                                                 └── controls (hover/focus)
+  └── play button + execution count
 ```
+
+- **Left margin**: Play button, execution count `[n]:`, colored ribbon
+- **Content**: Clean "paper" with source and output
+- **Right margin**: Cell controls (visible on hover/focus)
 
 ## Full Example
 
-Here's how to compose a complete cell:
+Compose controls from primitives (Button, DropdownMenu):
 
 ```tsx
 import { CellContainer } from "@/components/cell/CellContainer";
-import { CellHeader } from "@/components/cell/CellHeader";
-import { CellControls } from "@/components/cell/CellControls";
-import { CellTypeButton } from "@/components/cell/CellTypeButton";
 import { PlayButton } from "@/components/cell/PlayButton";
-import { ExecutionStatus } from "@/components/cell/ExecutionStatus";
+import { ExecutionCount } from "@/components/cell/ExecutionCount";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { ChevronUp, MoreVertical } from "lucide-react";
 
 function NotebookCell({ cell, isFocused, onFocus }) {
   const [sourceVisible, setSourceVisible] = useState(true);
 
-  const playButton = cell.type === "code" ? (
-    <PlayButton
-      executionState={cell.executionState}
-      cellType={cell.type}
-      isFocused={isFocused}
-      onExecute={() => executeCell(cell.id)}
-      onInterrupt={() => interruptCell(cell.id)}
-      gutterMode
-    />
+  const gutterContent = cell.type === "code" ? (
+    <>
+      <PlayButton
+        executionState={cell.executionState}
+        cellType={cell.type}
+        isFocused={isFocused}
+        onExecute={() => executeCell(cell.id)}
+        onInterrupt={() => interruptCell(cell.id)}
+        gutterMode
+      />
+      <ExecutionCount count={cell.executionCount} isExecuting={cell.executionState === "running"} />
+    </>
   ) : undefined;
+
+  const rightGutterContent = (
+    <div className="flex flex-col items-center gap-1">
+      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setSourceVisible(!sourceVisible)}>
+        <ChevronUp className="h-3 w-3" />
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+            <MoreVertical className="h-3 w-3" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => deleteCell(cell.id)}>Delete cell</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
 
   return (
     <CellContainer
@@ -65,26 +96,9 @@ function NotebookCell({ cell, isFocused, onFocus }) {
       cellType={cell.type}
       isFocused={isFocused}
       onFocus={onFocus}
-      gutterContent={playButton}
+      gutterContent={gutterContent}
+      rightGutterContent={rightGutterContent}
     >
-      <CellHeader
-        leftContent={
-          <>
-            <CellTypeButton cellType={cell.type} size="sm" />
-            <ExecutionStatus executionState={cell.executionState} />
-          </>
-        }
-        rightContent={
-          <CellControls
-            sourceVisible={sourceVisible}
-            toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
-            onDeleteCell={() => deleteCell(cell.id)}
-            onClearOutputs={() => clearOutputs(cell.id)}
-            hasOutputs={cell.outputs.length > 0}
-            forceVisible={isFocused}
-          />
-        }
-      />
       {sourceVisible && <CodeEditor value={cell.source} />}
       {cell.outputs.map(output => <OutputRenderer output={output} />)}
     </CellContainer>
@@ -173,7 +187,8 @@ The outer wrapper with gutter ribbon and focus styling.
 | `isFocused` | `boolean` | `false` | Shows focus styling when true |
 | `onFocus` | `() => void` | — | Called on mousedown |
 | `children` | `ReactNode` | — | Cell content |
-| `gutterContent` | `ReactNode` | — | Content for gutter action area (e.g., PlayButton) |
+| `gutterContent` | `ReactNode` | — | Left margin content (e.g., PlayButton, ExecutionCount) |
+| `rightGutterContent` | `ReactNode` | — | Right margin content (e.g., controls, kebab menu) |
 | `customGutterColors` | `Record<string, GutterColorConfig>` | — | Custom ribbon colors |
 | `onDragStart` | `(e: DragEvent) => void` | — | Enables dragging when provided |
 | `onDragOver` | `(e: DragEvent) => void` | — | Drag over handler |
