@@ -127,7 +127,9 @@ export function CellDemo({
       rightGutterContent={rightGutterContent}
     >
       {showSource && sourceVisible && (
-        <div className="font-mono text-sm whitespace-pre">print("Hello from nteract!")</div>
+        <div className="font-mono text-sm whitespace-pre">
+          print("Hello from nteract!")
+        </div>
       )}
       {showOutput && executionState === "completed" && (
         <div className="border-t border-border/40 pt-2 font-mono text-sm">
@@ -148,7 +150,7 @@ export function NotebookDemo() {
     Record<string, number | null>
   >({});
   // Global counter for sequential execution counts like real Jupyter
-  const [globalCounter, setGlobalCounter] = useState(0);
+  const [, setGlobalCounter] = useState(0);
 
   const cells = [
     {
@@ -363,7 +365,7 @@ export function GutterNotebookDemo() {
     Record<string, number | null>
   >({});
   // Global counter for sequential execution counts like real Jupyter
-  const [globalCounter, setGlobalCounter] = useState(0);
+  const [, setGlobalCounter] = useState(0);
 
   const cells = [
     {
@@ -546,12 +548,27 @@ export function CompactNotebookDemo() {
     Record<string, number | null>
   >({});
   // Global counter for sequential execution counts like real Jupyter
-  const [globalCounter, setGlobalCounter] = useState(0);
+  const [, setGlobalCounter] = useState(0);
 
   const cells = [
-    { id: "compact-cell-1", type: "code" as CellType, content: "x = 1", output: null },
-    { id: "compact-cell-2", type: "code" as CellType, content: "y = 2", output: null },
-    { id: "compact-cell-3", type: "code" as CellType, content: "print(x + y)", output: "3" },
+    {
+      id: "compact-cell-1",
+      type: "code" as CellType,
+      content: "x = 1",
+      output: null,
+    },
+    {
+      id: "compact-cell-2",
+      type: "code" as CellType,
+      content: "y = 2",
+      output: null,
+    },
+    {
+      id: "compact-cell-3",
+      type: "code" as CellType,
+      content: "print(x + y)",
+      output: "3",
+    },
   ];
 
   const handleExecute = (cellId: string) => {
