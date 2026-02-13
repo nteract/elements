@@ -25,11 +25,11 @@ Components for rendering ANSI escape sequences as colored text. Preserves the te
     <RegistrySetup />
   </Tab>
   <Tab value="Manual">
-    Install the dependency:
+    Install the dependencies:
     ```bash
-    npm install ansi-to-react
+    npm install anser escape-carriage
     ```
-    
+
     Copy the component to your project from [the registry source](https://github.com/nteract/elements/blob/main/registry/outputs/ansi-output.tsx).
   </Tab>
 </Tabs>
@@ -44,6 +44,116 @@ This package exports three components:
 | `AnsiStreamOutput` | Specialized for stdout/stderr streams |
 | `AnsiErrorOutput` | Specialized for error tracebacks |
 
+## Demos
+
+Toggle between light and dark mode to see how each rendering case behaves.
+
+### Plain text (no ANSI codes)
+
+A simple `print("hello")` — no escape sequences at all. Should inherit the page's text color.
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"Hello, world!\nThis is plain uncolored output from a Jupyter kernel.\nNo ANSI escape codes here."}</AnsiOutput>
+</div>
+
+### Standard 16 colors (foreground)
+
+The basic 8 colors (codes 30–37) and their bright variants (90–97).
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Standard (30–37)</div>
+  <AnsiOutput>{"\x1b[30m██ Black \x1b[0m \x1b[31m██ Red \x1b[0m \x1b[32m██ Green \x1b[0m \x1b[33m██ Yellow \x1b[0m \x1b[34m██ Blue \x1b[0m \x1b[35m██ Magenta \x1b[0m \x1b[36m██ Cyan \x1b[0m \x1b[37m██ White \x1b[0m"}</AnsiOutput>
+</div>
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Bright (90–97)</div>
+  <AnsiOutput>{"\x1b[90m██ Bright Black \x1b[0m \x1b[91m██ Bright Red \x1b[0m \x1b[92m██ Bright Green \x1b[0m \x1b[93m██ Bright Yellow \x1b[0m \x1b[94m██ Bright Blue \x1b[0m \x1b[95m██ Bright Magenta \x1b[0m \x1b[96m██ Bright Cyan \x1b[0m \x1b[97m██ Bright White \x1b[0m"}</AnsiOutput>
+</div>
+
+### Background colors
+
+Standard background colors (codes 40–47) and bright backgrounds (100–107).
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Standard backgrounds (40–47)</div>
+  <AnsiOutput>{"\x1b[40m\x1b[37m Black \x1b[0m \x1b[41m\x1b[37m Red \x1b[0m \x1b[42m\x1b[30m Green \x1b[0m \x1b[43m\x1b[30m Yellow \x1b[0m \x1b[44m\x1b[37m Blue \x1b[0m \x1b[45m\x1b[37m Magenta \x1b[0m \x1b[46m\x1b[30m Cyan \x1b[0m \x1b[47m\x1b[30m White \x1b[0m"}</AnsiOutput>
+</div>
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Bright backgrounds (100–107)</div>
+  <AnsiOutput>{"\x1b[100m\x1b[37m Bright Black \x1b[0m \x1b[101m\x1b[30m Bright Red \x1b[0m \x1b[102m\x1b[30m Bright Green \x1b[0m \x1b[103m\x1b[30m Bright Yellow \x1b[0m \x1b[104m\x1b[30m Bright Blue \x1b[0m \x1b[105m\x1b[30m Bright Magenta \x1b[0m \x1b[106m\x1b[30m Bright Cyan \x1b[0m \x1b[107m\x1b[30m Bright White \x1b[0m"}</AnsiOutput>
+</div>
+
+### Text decorations
+
+Bold, italic, underline, dim, strikethrough, and combinations.
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"\x1b[1mBold text\x1b[0m  \x1b[3mItalic text\x1b[0m  \x1b[4mUnderlined text\x1b[0m  \x1b[2mDim text\x1b[0m  \x1b[9mStrikethrough\x1b[0m"}</AnsiOutput>
+</div>
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Combined decorations + color</div>
+  <AnsiOutput>{"\x1b[1;31mBold Red\x1b[0m  \x1b[3;34mItalic Blue\x1b[0m  \x1b[1;4;32mBold Underline Green\x1b[0m  \x1b[2;35mDim Magenta\x1b[0m  \x1b[1;3;4;36mBold Italic Underline Cyan\x1b[0m"}</AnsiOutput>
+</div>
+
+### 256-color palette (codes 38;5;n)
+
+The extended 256-color palette. First 16 match standard/bright, then a 6×6×6 color cube (16–231), then a grayscale ramp (232–255).
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Selected 256-color values</div>
+  <AnsiOutput>{"\x1b[38;5;196m██ 196 \x1b[0m \x1b[38;5;208m██ 208 \x1b[0m \x1b[38;5;226m██ 226 \x1b[0m \x1b[38;5;46m██ 46 \x1b[0m \x1b[38;5;21m██ 21 \x1b[0m \x1b[38;5;93m██ 93 \x1b[0m \x1b[38;5;201m██ 201 \x1b[0m \x1b[38;5;39m██ 39 \x1b[0m \x1b[38;5;170m██ 170 \x1b[0m \x1b[38;5;82m██ 82 \x1b[0m"}</AnsiOutput>
+</div>
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">256-color gradient</div>
+  <AnsiOutput>{"\x1b[38;5;196m█\x1b[38;5;202m█\x1b[38;5;208m█\x1b[38;5;214m█\x1b[38;5;220m█\x1b[38;5;226m█\x1b[38;5;190m█\x1b[38;5;154m█\x1b[38;5;118m█\x1b[38;5;82m█\x1b[38;5;46m█\x1b[38;5;47m█\x1b[38;5;48m█\x1b[38;5;49m█\x1b[38;5;50m█\x1b[38;5;51m█\x1b[38;5;45m█\x1b[38;5;39m█\x1b[38;5;33m█\x1b[38;5;27m█\x1b[38;5;21m█\x1b[38;5;57m█\x1b[38;5;93m█\x1b[38;5;129m█\x1b[38;5;165m█\x1b[38;5;201m█\x1b[38;5;200m█\x1b[38;5;199m█\x1b[38;5;198m█\x1b[38;5;197m█\x1b[38;5;196m█\x1b[0m"}</AnsiOutput>
+</div>
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Grayscale ramp (232–255)</div>
+  <AnsiOutput>{"\x1b[38;5;232m█\x1b[38;5;233m█\x1b[38;5;234m█\x1b[38;5;235m█\x1b[38;5;236m█\x1b[38;5;237m█\x1b[38;5;238m█\x1b[38;5;239m█\x1b[38;5;240m█\x1b[38;5;241m█\x1b[38;5;242m█\x1b[38;5;243m█\x1b[38;5;244m█\x1b[38;5;245m█\x1b[38;5;246m█\x1b[38;5;247m█\x1b[38;5;248m█\x1b[38;5;249m█\x1b[38;5;250m█\x1b[38;5;251m█\x1b[38;5;252m█\x1b[38;5;253m█\x1b[38;5;254m█\x1b[38;5;255m█\x1b[0m"}</AnsiOutput>
+</div>
+
+### 24-bit true color (codes 38;2;r;g;b)
+
+Full RGB — the same encoding used in the nteract banner above.
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">RGB gradient</div>
+  <AnsiOutput>{"\x1b[38;2;255;0;0m█\x1b[38;2;255;32;0m█\x1b[38;2;255;64;0m█\x1b[38;2;255;96;0m█\x1b[38;2;255;128;0m█\x1b[38;2;255;160;0m█\x1b[38;2;255;192;0m█\x1b[38;2;255;224;0m█\x1b[38;2;255;255;0m█\x1b[38;2;192;255;0m█\x1b[38;2;128;255;0m█\x1b[38;2;64;255;0m█\x1b[38;2;0;255;0m█\x1b[38;2;0;255;64m█\x1b[38;2;0;255;128m█\x1b[38;2;0;255;192m█\x1b[38;2;0;255;255m█\x1b[38;2;0;192;255m█\x1b[38;2;0;128;255m█\x1b[38;2;0;64;255m█\x1b[38;2;0;0;255m█\x1b[38;2;64;0;255m█\x1b[38;2;128;0;255m█\x1b[38;2;192;0;255m█\x1b[38;2;255;0;255m█\x1b[38;2;255;0;192m█\x1b[38;2;255;0;128m█\x1b[38;2;255;0;64m█\x1b[38;2;255;0;0m█\x1b[0m"}</AnsiOutput>
+</div>
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">24-bit background gradient</div>
+  <AnsiOutput>{"\x1b[48;2;255;0;0m \x1b[48;2;255;64;0m \x1b[48;2;255;128;0m \x1b[48;2;255;192;0m \x1b[48;2;255;255;0m \x1b[48;2;192;255;0m \x1b[48;2;128;255;0m \x1b[48;2;64;255;0m \x1b[48;2;0;255;0m \x1b[48;2;0;255;64m \x1b[48;2;0;255;128m \x1b[48;2;0;255;192m \x1b[48;2;0;255;255m \x1b[48;2;0;192;255m \x1b[48;2;0;128;255m \x1b[48;2;0;64;255m \x1b[48;2;0;0;255m \x1b[48;2;64;0;255m \x1b[48;2;128;0;255m \x1b[48;2;192;0;255m \x1b[48;2;255;0;255m \x1b[48;2;255;0;192m \x1b[48;2;255;0;128m \x1b[48;2;255;0;64m \x1b[48;2;255;0;0m \x1b[0m"}</AnsiOutput>
+</div>
+
+### Mixed: foreground + background + decoration
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"\x1b[1;37;41m ERROR \x1b[0m File not found\n\x1b[1;30;43m WARN  \x1b[0m Deprecation notice\n\x1b[1;30;42m OK    \x1b[0m All tests passed\n\x1b[1;37;44m INFO  \x1b[0m Server started on port 8888\n\x1b[1;37;45m DEBUG \x1b[0m Connection pool initialized"}</AnsiOutput>
+</div>
+
+### Realistic: pip install
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"Collecting numpy>=1.24\n  Downloading numpy-2.2.6-cp312-cp312-macosx_14_0_arm64.whl (5.1 MB)\n     \x1b[38;2;0;255;0m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m 5.1/5.1 MB 12.3 MB/s eta 0:00:00\nCollecting pandas>=2.0\n  Downloading pandas-2.2.3-cp312-cp312-macosx_14_0_arm64.whl (11.3 MB)\n     \x1b[38;2;0;255;0m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m 11.3/11.3 MB 15.1 MB/s eta 0:00:00\nInstalling collected packages: numpy, pandas\n\x1b[32mSuccessfully installed\x1b[0m numpy-2.2.6 pandas-2.2.3"}</AnsiOutput>
+</div>
+
+### Realistic: pytest output
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m test session starts \x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\x1b[1m\x1b[32m=\x1b[0m=\nplatform darwin -- Python 3.12.4, pytest-8.3.5\ncollected 5 items\n\ntests/test_kernel.py \x1b[32m.\x1b[0m\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m\x1b[31mF\x1b[0m\x1b[32m.\x1b[0m\n\n\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m FAILURES \x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\n\x1b[31m\x1b[1m___ test_execute_timeout ___\x1b[0m\n\n    def test_execute_timeout():\n>       assert result.status == \"ok\"\n\x1b[1m\x1b[31mE       AssertionError: assert 'error' == 'ok'\x1b[0m\n\ntests/test_kernel.py:42: AssertionError\n\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m \x1b[31m\x1b[1m1 failed\x1b[0m, \x1b[32m4 passed\x1b[0m in 3.21s \x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m\x1b[31m=\x1b[0m"}</AnsiOutput>
+</div>
+
+### Realistic: colored Python traceback
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <AnsiOutput>{"\x1b[0;31m---------------------------------------------------------------------------\x1b[0m\n\x1b[0;31mKeyError\x1b[0m                                  Traceback (most recent call last)\nCell \x1b[0;32mIn[4], line 3\x1b[0m\n\x1b[1;32m      1\x1b[0m \x1b[38;5;28;01mimport\x1b[39;00m \x1b[38;5;21;01mpandas\x1b[39;00m \x1b[38;5;28;01mas\x1b[39;00m \x1b[38;5;21;01mpd\x1b[39;00m\n\x1b[1;32m      2\x1b[0m df \x1b[38;5;241m=\x1b[39m pd\x1b[38;5;241m.\x1b[39mDataFrame({\x1b[38;5;124m'\x1b[39m\x1b[38;5;124ma\x1b[39m\x1b[38;5;124m'\x1b[39m: [\x1b[38;5;241m1\x1b[39m, \x1b[38;5;241m2\x1b[39m, \x1b[38;5;241m3\x1b[39m]})\n\x1b[0;32m----> 3\x1b[0m \x1b[43mdf\x1b[49m\x1b[43m[\x1b[49m\x1b[38;5;124;43m'\x1b[39;49m\x1b[38;5;124;43mb\x1b[39;49m\x1b[38;5;124;43m'\x1b[39;49m\x1b[43m]\x1b[49m\n\n\x1b[0;31mKeyError\x1b[0m: 'b'"}</AnsiOutput>
+</div>
+
 ## Usage
 
 ### AnsiOutput
@@ -55,19 +165,13 @@ import { AnsiOutput } from "@/components/outputs/ansi-output"
 
 export function Example() {
   const text = "\x1b[32mSuccess:\x1b[0m Operation completed"
-  
+
   return <AnsiOutput>{text}</AnsiOutput>
 }
 ```
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
   <AnsiOutput>{"\x1b[32mSuccess:\x1b[0m Operation completed"}</AnsiOutput>
-</div>
-
-Here's a more colorful example:
-
-<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
-  <AnsiOutput>{"\x1b[30mBlack\x1b[0m \x1b[31mRed\x1b[0m \x1b[32mGreen\x1b[0m \x1b[33mYellow\x1b[0m \x1b[34mBlue\x1b[0m \x1b[35mMagenta\x1b[0m \x1b[36mCyan\x1b[0m \x1b[37mWhite\x1b[0m"}</AnsiOutput>
 </div>
 
 #### Props
@@ -88,13 +192,13 @@ import { AnsiStreamOutput } from "@/components/outputs/ansi-output"
 export function StreamExample() {
   return (
     <>
-      <AnsiStreamOutput 
-        text="Hello from stdout" 
-        streamName="stdout" 
+      <AnsiStreamOutput
+        text="Hello from stdout"
+        streamName="stdout"
       />
-      <AnsiStreamOutput 
-        text="Warning: something went wrong" 
-        streamName="stderr" 
+      <AnsiStreamOutput
+        text="Warning: something went wrong"
+        streamName="stderr"
       />
     </>
   )
