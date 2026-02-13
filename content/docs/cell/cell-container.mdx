@@ -13,22 +13,22 @@ import { PlayButtonDemo } from '@/app/components/PlayButtonDemo';
 import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
 
 <div className="my-8">
-  <CellDemo cellType="code" initialFocused />
+  <CompactCellDemo cellType="code" initialFocused />
 </div>
 
-The cell components work together to create notebook cell interfaces. Click the **play button** above to see it in action. Hover to see the right margin controls appear.
+The cell components create notebook cell interfaces with a classic `[n]:` execution count. Click to run, hover to see controls.
 
 ## Paper Margins Layout
 
-CellContainer uses a **paper margins** design - symmetric gutters on left and right create a clean paper-like aesthetic:
+CellContainer uses a **paper margins** design with symmetric gutters:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
 │ Left    │                                    │   Right   │
 │ Margin  │         Content Area               │   Margin  │
 ├─────────┼────────────────────────────────────┼───────────┤
-│ ▶  │▮│  │ Source code                        │     [^]   │
-│[1]:│▮│  │ print("Hello")                     │     [⋮]   │
+│[▶]:│▮│  │ Source code                        │     [⋮]   │
+│    │▮│  │ print("Hello")                     │           │
 │    │▮│  │                                    │           │
 │    │▮│  ├────────────────────────────────────┤           │
 │    │▮│  │ Output: Hello                      │           │
@@ -36,108 +36,69 @@ CellContainer uses a **paper margins** design - symmetric gutters on left and ri
   ^    ^                                            ^
   │    └── ribbon (colored by cell type)            │
   │                                                 └── controls (hover/focus)
-  └── play button + execution count
+  └── [n]: execution count (click to run)
 ```
 
-- **Left margin**: Play button, execution count `[n]:`, colored ribbon
+- **Left margin**: `[n]:` execution count with integrated play button, colored ribbon
 - **Content**: Clean "paper" with source and output
 - **Right margin**: Cell controls (visible on hover/focus)
 
-## Full Example
+## Usage
 
-Compose controls from primitives (Button, DropdownMenu):
+Use `CompactExecutionButton` for the classic Jupyter/Colab `[n]:` style:
 
 ```tsx
 import { CellContainer } from "@/components/cell/CellContainer";
-import { PlayButton } from "@/components/cell/PlayButton";
-import { ExecutionCount } from "@/components/cell/ExecutionCount";
+import { CompactExecutionButton } from "@/components/cell/CompactExecutionButton";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { ChevronUp, MoreVertical } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 
 function NotebookCell({ cell, isFocused, onFocus }) {
-  const [sourceVisible, setSourceVisible] = useState(true);
-
-  const gutterContent = cell.type === "code" ? (
-    <>
-      <PlayButton
-        executionState={cell.executionState}
-        cellType={cell.type}
-        isFocused={isFocused}
-        onExecute={() => executeCell(cell.id)}
-        onInterrupt={() => interruptCell(cell.id)}
-        gutterMode
-      />
-      <ExecutionCount count={cell.executionCount} isExecuting={cell.executionState === "running"} />
-    </>
-  ) : undefined;
-
-  const rightGutterContent = (
-    <div className="flex flex-col items-center gap-1">
-      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setSourceVisible(!sourceVisible)}>
-        <ChevronUp className="h-3 w-3" />
-      </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-            <MoreVertical className="h-3 w-3" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => deleteCell(cell.id)}>Delete cell</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-
   return (
     <CellContainer
       id={cell.id}
       cellType={cell.type}
       isFocused={isFocused}
       onFocus={onFocus}
-      gutterContent={gutterContent}
-      rightGutterContent={rightGutterContent}
+      gutterContent={
+        cell.type === "code" ? (
+          <CompactExecutionButton
+            count={cell.executionCount}
+            isExecuting={cell.executionState === "running"}
+            onExecute={() => executeCell(cell.id)}
+            onInterrupt={() => interruptCell(cell.id)}
+          />
+        ) : undefined
+      }
+      rightGutterContent={
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+              <MoreVertical className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => deleteCell(cell.id)}>Delete cell</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      }
     >
-      {sourceVisible && <CodeEditor value={cell.source} />}
+      <CodeEditor value={cell.source} />
       {cell.outputs.map(output => <OutputRenderer output={output} />)}
     </CellContainer>
   );
 }
 ```
 
+The `CompactExecutionButton` shows:
+- `[▶]:` before first run - click to execute
+- `[■]:` while running (pulsing) - click to stop
+- `[1]:` after execution - hover shows play, click to re-run
+
 ## Multiple Cells
 
 Click different cells to see focus behavior:
-
-<div className="my-8">
-  <NotebookDemo />
-</div>
-
-## Minimal Layout
-
-For a cleaner look without a header toolbar, just use the gutter:
-
-<div className="my-8 space-y-4">
-  <GutterCellDemo cellType="code" initialFocused />
-  <GutterCellDemo cellType="markdown" />
-</div>
-
-<div className="my-8">
-  <GutterNotebookDemo />
-</div>
-
-## Compact Layout
-
-For maximum density, `CompactExecutionButton` combines play + execution count into one `[n]:` element (like classic Jupyter/Colab):
-
-<div className="my-8">
-  <CompactCellDemo cellType="code" initialFocused />
-</div>
-
-- `[ ▶ ]` before first run - click to execute
-- `[■]` while running - click to stop
-- `[1]` after execution - hover shows play, click to re-run
 
 <div className="my-8">
   <CompactNotebookDemo />
@@ -155,19 +116,39 @@ For maximum density, `CompactExecutionButton` combines play + execution count in
 
 Custom colors can be provided via `customGutterColors` prop.
 
-## Installation
+## Alternative: Separate Play Button
 
-Install all cell components:
+For a larger play button with separate execution count, use `PlayButton` + `ExecutionCount`:
+
+<div className="my-8">
+  <CellDemo cellType="code" initialFocused />
+</div>
+
+```tsx
+const gutterContent = cell.type === "code" ? (
+  <>
+    <PlayButton
+      executionState={cell.executionState}
+      cellType={cell.type}
+      isFocused={isFocused}
+      onExecute={() => executeCell(cell.id)}
+      onInterrupt={() => interruptCell(cell.id)}
+      gutterMode
+    />
+    <ExecutionCount count={cell.executionCount} isExecuting={cell.executionState === "running"} />
+  </>
+) : undefined;
+```
+
+## Installation
 
 <Tabs items={['CLI', 'Manual']}>
   <Tab value="CLI">
     ```bash
     npx shadcn@latest add @nteract/cell-container
-    npx shadcn@latest add @nteract/cell-header
-    npx shadcn@latest add @nteract/cell-controls
-    npx shadcn@latest add @nteract/cell-type-button
+    npx shadcn@latest add @nteract/compact-execution-button
     npx shadcn@latest add @nteract/play-button
-    npx shadcn@latest add @nteract/execution-status
+    npx shadcn@latest add @nteract/execution-count
     ```
     <RegistrySetup />
   </Tab>
@@ -203,7 +184,7 @@ The outer wrapper with gutter ribbon and focus styling.
 | `isFocused` | `boolean` | `false` | Shows focus styling when true |
 | `onFocus` | `() => void` | — | Called on mousedown |
 | `children` | `ReactNode` | — | Cell content |
-| `gutterContent` | `ReactNode` | — | Left margin content (e.g., PlayButton, ExecutionCount) |
+| `gutterContent` | `ReactNode` | — | Left margin content (e.g., CompactExecutionButton) |
 | `rightGutterContent` | `ReactNode` | — | Right margin content (e.g., controls, kebab menu) |
 | `customGutterColors` | `Record<string, GutterColorConfig>` | — | Custom ribbon colors |
 | `onDragStart` | `(e: DragEvent) => void` | — | Enables dragging when provided |
@@ -211,35 +192,17 @@ The outer wrapper with gutter ribbon and focus styling.
 | `onDrop` | `(e: DragEvent) => void` | — | Drop handler |
 | `className` | `string` | — | Additional classes |
 
-### CellHeader
+### CompactExecutionButton
 
-Slot-based layout for the cell toolbar.
-
-| Prop | Type | Description |
-| --- | --- | --- |
-| `leftContent` | `ReactNode` | Left side (cell type, status) |
-| `rightContent` | `ReactNode` | Right side (controls) |
-| `draggable` | `boolean` | Enable drag handle |
-| `onDragStart` | `(e: DragEvent) => void` | Drag handler |
-| `className` | `string` | Additional classes |
-
-### CellTypeButton
-
-Color-coded button showing cell type. Also exports convenience components: `CodeCellButton`, `MarkdownCellButton`, `SqlCellButton`, `AiCellButton`.
-
-<div className="my-4 flex gap-2 flex-wrap">
-  <CellTypeButtonDemo cellType="code" size="sm" />
-  <CellTypeButtonDemo cellType="markdown" size="sm" />
-  <CellTypeButtonDemo cellType="sql" size="sm" />
-  <CellTypeButtonDemo cellType="ai" size="sm" />
-</div>
+Combines play button + execution count into one `[n]:` element.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `cellType` | `"code" \| "markdown" \| "sql" \| "ai"` | — | Cell type |
-| `showIcon` | `boolean` | `true` | Show type icon |
-| `showPlus` | `boolean` | `false` | Show + icon (for add buttons) |
-| `label` | `string` | — | Custom label |
+| `count` | `number \| null` | — | Execution count (null = never executed) |
+| `isExecuting` | `boolean` | `false` | Shows stop icon with pulse when true |
+| `onExecute` | `() => void` | — | Run callback |
+| `onInterrupt` | `() => void` | — | Stop callback |
+| `className` | `string` | — | Additional classes |
 
 ### PlayButton
 
@@ -263,35 +226,32 @@ Execute/interrupt button with state-based icons. Use `gutterMode` when placing i
 | `isFocused` | `boolean` | Highlight when focused |
 | `onExecute` | `() => void` | Run callback |
 | `onInterrupt` | `() => void` | Stop callback |
-| `isAutoLaunching` | `boolean` | Show loading spinner |
 | `gutterMode` | `boolean` | Smart visibility for gutter (hidden unfocused, visible on focus/hover) |
 
-### ExecutionStatus
+### ExecutionCount
 
-Badge showing execution state.
+Displays `[n]:` execution count badge.
 
-<div className="my-4 flex gap-4 items-center">
-  <ExecutionStatus executionState="queued" />
-  <ExecutionStatus executionState="running" />
-  <ExecutionStatus executionState="error" />
+| Prop | Type | Description |
+| --- | --- | --- |
+| `count` | `number \| null` | Execution count (null shows empty brackets) |
+| `isExecuting` | `boolean` | Shows `[*]:` when true |
+| `className` | `string` | Additional classes |
+
+### CellTypeButton
+
+Color-coded button showing cell type.
+
+<div className="my-4 flex gap-2 flex-wrap">
+  <CellTypeButtonDemo cellType="code" size="sm" />
+  <CellTypeButtonDemo cellType="markdown" size="sm" />
+  <CellTypeButtonDemo cellType="sql" size="sm" />
+  <CellTypeButtonDemo cellType="ai" size="sm" />
 </div>
 
-| Prop | Type | Description |
-| --- | --- | --- |
-| `executionState` | `string` | Shows badge for "queued", "running", "error" |
-
-### CellControls
-
-Action buttons for source visibility, move, delete operations.
-
-| Prop | Type | Description |
-| --- | --- | --- |
-| `sourceVisible` | `boolean` | Current visibility state |
-| `toggleSourceVisibility` | `() => void` | Toggle callback |
-| `onDeleteCell` | `() => void` | Delete callback |
-| `onClearOutputs` | `() => void` | Clear outputs callback |
-| `hasOutputs` | `boolean` | Enable clear outputs |
-| `playButton` | `ReactNode` | Optional play button slot |
-| `onMoveUp/Down/ToTop/ToBottom` | `() => void` | Move callbacks |
-| `canMoveUp/Down` | `boolean` | Enable move buttons |
-| `forceVisible` | `boolean` | Always show (bypass hover) |
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `cellType` | `"code" \| "markdown" \| "sql" \| "ai"` | — | Cell type |
+| `showIcon` | `boolean` | `true` | Show type icon |
+| `showPlus` | `boolean` | `false` | Show + icon (for add buttons) |
+| `label` | `string` | — | Custom label |

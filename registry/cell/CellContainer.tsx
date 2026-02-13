@@ -63,8 +63,8 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
       >
         {/* Gutter area: action content + thin ribbon */}
         <div className="flex flex-shrink-0">
-          {/* Action area - pt-3.5 accounts for content line-height difference */}
-          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1 pt-3.5">
+          {/* Action area - pt-3 matches content padding */}
+          <div className="flex w-10 flex-col items-end justify-start gap-0.5 pr-1 pt-3">
             {gutterContent}
           </div>
           {/* Thin ribbon - self-stretch ensures it fills full height */}
@@ -75,13 +75,13 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
             )}
           />
         </div>
-        {/* Cell content - p-3 provides default padding, gutters use pt-3.5 to align with text baseline */}
+        {/* Cell content - p-3 provides default padding, gutters use pt-3 to match */}
         <div className="min-w-0 flex-1 p-3">{children}</div>
-        {/* Right margin - pt-3.5 aligns with left gutter, appears on hover/focus */}
+        {/* Right margin - pt-3 aligns with left gutter, appears on hover/focus */}
         {rightGutterContent && (
           <div
             className={cn(
-              "flex w-10 flex-shrink-0 flex-col items-center gap-1 pt-3.5",
+              "flex w-10 flex-shrink-0 flex-col items-center gap-1 pt-3",
               "opacity-100 transition-opacity duration-150",
               "sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100",
               isFocused && "sm:opacity-100",
