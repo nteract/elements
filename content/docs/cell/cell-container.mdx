@@ -6,7 +6,7 @@ icon: Box
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
-import { CellDemo, NotebookDemo, GutterCellDemo, GutterNotebookDemo } from '@/app/components/CellDemo';
+import { CellDemo, NotebookDemo, GutterCellDemo, GutterNotebookDemo, CompactCellDemo, CompactNotebookDemo } from '@/app/components/CellDemo';
 import { CellContainerDemo } from '@/app/components/CellContainerDemo';
 import { CellTypeButtonDemo } from '@/app/components/CellTypeButtonDemo';
 import { PlayButtonDemo } from '@/app/components/PlayButtonDemo';
@@ -125,6 +125,22 @@ For a cleaner look without a header toolbar, just use the gutter:
 
 <div className="my-8">
   <GutterNotebookDemo />
+</div>
+
+## Compact Layout
+
+For maximum density, `CompactExecutionButton` combines play + execution count into one `[n]:` element (like classic Jupyter/Colab):
+
+<div className="my-8">
+  <CompactCellDemo cellType="code" initialFocused />
+</div>
+
+- `[ ▶ ]` before first run - click to execute
+- `[■]` while running - click to stop
+- `[1]` after execution - hover shows play, click to re-run
+
+<div className="my-8">
+  <CompactNotebookDemo />
 </div>
 
 ## Ribbon Colors
