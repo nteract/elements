@@ -40,7 +40,7 @@ export function CompactExecutionButton({
       type="button"
       onClick={handleClick}
       className={cn(
-        "group/exec inline-flex items-center font-mono text-xs tabular-nums",
+        "group/exec inline-flex items-center font-mono text-sm tabular-nums",
         "text-muted-foreground hover:text-foreground",
         "transition-colors duration-150",
         className,

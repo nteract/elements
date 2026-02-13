@@ -16,7 +16,7 @@ export function ExecutionCount({
     <span
       data-slot="execution-count"
       className={cn(
-        "font-mono text-xs tabular-nums text-muted-foreground",
+        "font-mono text-sm tabular-nums text-muted-foreground",
         className,
       )}
     >
