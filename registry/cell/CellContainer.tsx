@@ -8,8 +8,10 @@ interface CellContainerProps {
   isFocused?: boolean;
   onFocus?: () => void;
   children: ReactNode;
-  /** Content to render in the gutter action area (e.g., play button, execution count) */
+  /** Content to render in the left gutter action area (e.g., play button, execution count) */
   gutterContent?: ReactNode;
+  /** Content to render in the right margin (e.g., cell controls, kebab menu) */
+  rightGutterContent?: ReactNode;
   /** Custom color configuration for cell types not in defaults */
   customGutterColors?: Record<string, GutterColorConfig>;
   onDragStart?: (e: React.DragEvent) => void;
@@ -27,6 +29,7 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
       onFocus,
       children,
       gutterContent,
+      rightGutterContent,
       customGutterColors,
       onDragStart,
       onDragOver,
@@ -74,6 +77,19 @@ export const CellContainer = forwardRef<HTMLDivElement, CellContainerProps>(
         </div>
         {/* Cell content */}
         <div className="min-w-0 flex-1">{children}</div>
+        {/* Right margin - appears on hover/focus */}
+        {rightGutterContent && (
+          <div
+            className={cn(
+              "flex w-10 flex-shrink-0 flex-col items-center gap-1 pt-1",
+              "opacity-100 transition-opacity duration-150",
+              "sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100",
+              isFocused && "sm:opacity-100",
+            )}
+          >
+            {rightGutterContent}
+          </div>
+        )}
       </div>
     );
   },

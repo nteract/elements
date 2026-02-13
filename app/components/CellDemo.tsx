@@ -1,13 +1,19 @@
 "use client";
 
+import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CellBetweener } from "@/registry/cell/CellBetweener";
 import { CellContainer } from "@/registry/cell/CellContainer";
-import { CellControls } from "@/registry/cell/CellControls";
-import { CellHeader } from "@/registry/cell/CellHeader";
 import type { CellType } from "@/registry/cell/CellTypeButton";
 import { ExecutionCount } from "@/registry/cell/ExecutionCount";
-import { ExecutionStatus } from "@/registry/cell/ExecutionStatus";
 import { PlayButton } from "@/registry/cell/PlayButton";
 
 interface CellDemoProps {
@@ -62,6 +68,54 @@ export function CellDemo({
       </>
     ) : undefined;
 
+  const rightGutterContent = (
+    <div className="flex flex-col items-center gap-1">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 w-7 p-0"
+        onClick={() => setSourceVisible(!sourceVisible)}
+        title={sourceVisible ? "Hide source" : "Show source"}
+      >
+        {sourceVisible ? (
+          <ChevronUp className="h-3 w-3" />
+        ) : (
+          <ChevronDown className="h-3 w-3" />
+        )}
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0"
+            title="More options"
+          >
+            <MoreVertical className="h-3 w-3" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => alert("Change to Markdown")}>
+            Change to Markdown
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setExecutionState("idle")}
+            disabled={executionState !== "completed"}
+          >
+            Clear outputs
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => alert("Delete cell")}
+            className="text-destructive"
+          >
+            Delete cell
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+
   return (
     <CellContainer
       id="demo-cell"
@@ -69,26 +123,10 @@ export function CellDemo({
       isFocused={isFocused}
       onFocus={() => setIsFocused(true)}
       gutterContent={gutterContent}
+      rightGutterContent={rightGutterContent}
     >
-      <CellHeader
-        leftContent={<ExecutionStatus executionState={executionState} />}
-        rightContent={
-          <CellControls
-            sourceVisible={sourceVisible}
-            toggleSourceVisibility={() => setSourceVisible(!sourceVisible)}
-            onDeleteCell={() => alert("Delete cell")}
-            onClearOutputs={() => setExecutionState("idle")}
-            hasOutputs={executionState === "completed"}
-            canMoveUp
-            canMoveDown
-            onMoveUp={() => {}}
-            onMoveDown={() => {}}
-            forceVisible={isFocused}
-          />
-        }
-      />
       {showSource && sourceVisible && (
-        <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm">
+        <div className="bg-muted/30 p-4 font-mono text-sm">
           <span className="text-muted-foreground">
             # Click the play button to run
           </span>
@@ -176,6 +214,41 @@ export function NotebookDemo() {
         // Get the next cell type for betweener color continuity
         const nextCellType = cells[index + 1]?.type ?? cell.type;
 
+        const rightGutterContent = (
+          <div className="flex flex-col items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0"
+              title="Toggle source"
+            >
+              <ChevronUp className="h-3 w-3" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  title="More options"
+                >
+                  <MoreVertical className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  Change to {cell.type === "code" ? "Markdown" : "Code"}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Clear outputs</DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive">
+                  Delete cell
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+
         return (
           <div key={cell.id}>
             <CellContainer
@@ -184,20 +257,9 @@ export function NotebookDemo() {
               isFocused={isFocused}
               onFocus={() => setFocusedId(cell.id)}
               gutterContent={gutterContent}
+              rightGutterContent={rightGutterContent}
             >
-              <CellHeader
-                rightContent={
-                  <CellControls
-                    sourceVisible={true}
-                    toggleSourceVisibility={() => {}}
-                    onDeleteCell={() => {}}
-                    onClearOutputs={() => {}}
-                    hasOutputs={false}
-                    forceVisible={isFocused}
-                  />
-                }
-              />
-              <div className="border-t border-border/40 bg-muted/30 p-4 font-mono text-sm whitespace-pre">
+              <div className="bg-muted/30 p-4 font-mono text-sm whitespace-pre">
                 {cell.content}
               </div>
               {executionState === "completed" && (
@@ -257,6 +319,14 @@ export function GutterCellDemo({
       </>
     ) : undefined;
 
+  const rightGutterContent = (
+    <div className="flex flex-col items-center gap-1">
+      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Options">
+        <MoreVertical className="h-3 w-3" />
+      </Button>
+    </div>
+  );
+
   return (
     <CellContainer
       id="demo-gutter-cell"
@@ -264,15 +334,16 @@ export function GutterCellDemo({
       isFocused={isFocused}
       onFocus={() => setIsFocused(true)}
       gutterContent={gutterContent}
+      rightGutterContent={rightGutterContent}
     >
       <div className="p-3 font-mono text-sm">
         {cellType === "code" ? (
           <>
             <span className="text-muted-foreground">
-              # Hover to see play button
+              # Hover to see margins
             </span>
             <br />
-            print(&quot;Hello from gutter mode!&quot;)
+            print(&quot;Hello from paper mode!&quot;)
           </>
         ) : (
           <div className="prose prose-sm dark:prose-invert">
@@ -285,7 +356,7 @@ export function GutterCellDemo({
       {executionState === "completed" && (
         <div className="border-t border-border/40 p-3 text-sm">
           <span className="text-green-600 dark:text-green-400">
-            Hello from gutter mode!
+            Hello from paper mode!
           </span>
         </div>
       )}
@@ -364,6 +435,19 @@ export function GutterNotebookDemo() {
         // Get the next cell type for betweener color continuity
         const nextCellType = cells[index + 1]?.type ?? cell.type;
 
+        const rightGutterContent = (
+          <div className="flex flex-col items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0"
+              title="Options"
+            >
+              <MoreVertical className="h-3 w-3" />
+            </Button>
+          </div>
+        );
+
         return (
           <div key={cell.id}>
             <CellContainer
@@ -372,6 +456,7 @@ export function GutterNotebookDemo() {
               isFocused={isFocused}
               onFocus={() => setFocusedId(cell.id)}
               gutterContent={gutterContent}
+              rightGutterContent={rightGutterContent}
             >
               <div className="whitespace-pre p-3 font-mono text-sm">
                 {cell.content}
