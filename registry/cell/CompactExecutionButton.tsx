@@ -1,4 +1,3 @@
-import { Play, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CompactExecutionButtonProps {
@@ -49,21 +48,23 @@ export function CompactExecutionButton({
       title={isExecuting ? "Stop execution" : "Run cell"}
     >
       <span className="opacity-60">[</span>
-      <span className="relative flex h-4 w-4 items-center justify-center">
+      <span className="relative inline-flex w-4 items-center justify-center">
         {isExecuting ? (
-          // Running state: show stop icon with pulse
-          <Square className="h-2.5 w-2.5 fill-current text-destructive animate-pulse" />
+          // Running state: show stop with pulse
+          <span className="text-destructive animate-pulse">■</span>
         ) : count !== null ? (
           // Has count: show count, play on hover
           <>
             <span className="group-hover/exec:opacity-0 transition-opacity">
               {count}
             </span>
-            <Play className="absolute h-3 w-3 fill-current opacity-0 group-hover/exec:opacity-100 transition-opacity" />
+            <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/exec:opacity-100 transition-opacity">
+              ▶
+            </span>
           </>
         ) : (
-          // Never run: show play icon
-          <Play className="h-3 w-3 fill-current" />
+          // Never run: show play
+          <span>▶</span>
         )}
       </span>
       <span className="opacity-60">]:</span>
