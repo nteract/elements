@@ -147,6 +147,8 @@ export function NotebookDemo() {
   const [executionCounts, setExecutionCounts] = useState<
     Record<string, number | null>
   >({});
+  // Global counter for sequential execution counts like real Jupyter
+  const [globalCounter, setGlobalCounter] = useState(0);
 
   const cells = [
     {
@@ -173,10 +175,11 @@ export function NotebookDemo() {
     setExecutionStates((prev) => ({ ...prev, [cellId]: "running" }));
     setTimeout(() => {
       setExecutionStates((prev) => ({ ...prev, [cellId]: "completed" }));
-      setExecutionCounts((prev) => ({
-        ...prev,
-        [cellId]: (prev[cellId] ?? 0) + 1,
-      }));
+      setGlobalCounter((prev) => {
+        const newCount = prev + 1;
+        setExecutionCounts((counts) => ({ ...counts, [cellId]: newCount }));
+        return newCount;
+      });
     }, 800);
   };
 
@@ -359,6 +362,8 @@ export function GutterNotebookDemo() {
   const [executionCounts, setExecutionCounts] = useState<
     Record<string, number | null>
   >({});
+  // Global counter for sequential execution counts like real Jupyter
+  const [globalCounter, setGlobalCounter] = useState(0);
 
   const cells = [
     {
@@ -385,10 +390,11 @@ export function GutterNotebookDemo() {
     setExecutionStates((prev) => ({ ...prev, [cellId]: "running" }));
     setTimeout(() => {
       setExecutionStates((prev) => ({ ...prev, [cellId]: "completed" }));
-      setExecutionCounts((prev) => ({
-        ...prev,
-        [cellId]: (prev[cellId] ?? 0) + 1,
-      }));
+      setGlobalCounter((prev) => {
+        const newCount = prev + 1;
+        setExecutionCounts((counts) => ({ ...counts, [cellId]: newCount }));
+        return newCount;
+      });
     }, 800);
   };
 
@@ -539,6 +545,8 @@ export function CompactNotebookDemo() {
   const [executionCounts, setExecutionCounts] = useState<
     Record<string, number | null>
   >({});
+  // Global counter for sequential execution counts like real Jupyter
+  const [globalCounter, setGlobalCounter] = useState(0);
 
   const cells = [
     { id: "compact-cell-1", type: "code" as CellType, content: "x = 1", output: null },
@@ -550,10 +558,11 @@ export function CompactNotebookDemo() {
     setExecutionStates((prev) => ({ ...prev, [cellId]: "running" }));
     setTimeout(() => {
       setExecutionStates((prev) => ({ ...prev, [cellId]: "completed" }));
-      setExecutionCounts((prev) => ({
-        ...prev,
-        [cellId]: (prev[cellId] ?? 0) + 1,
-      }));
+      setGlobalCounter((prev) => {
+        const newCount = prev + 1;
+        setExecutionCounts((counts) => ({ ...counts, [cellId]: newCount }));
+        return newCount;
+      });
     }, 800);
   };
 
