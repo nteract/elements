@@ -128,6 +128,54 @@ plt.show()
 `} />
 </div>
 
+### Dark Mode Support
+
+The component automatically adapts to light and dark themes. Toggle the theme using the site's theme switcher (in the header) to see how code blocks, inline code, tables, and other elements respond.
+
+<Callout type="info">
+  **Testing Dark Mode**: Use your browser's dev tools to toggle `prefers-color-scheme`, or use the site's theme toggle in the header.
+</Callout>
+
+#### Code Blocks
+
+Code blocks switch between light and dark syntax highlighting themes:
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <div className="mb-2 text-xs text-fd-muted-foreground">Toggle theme to see code block adapt</div>
+  <MarkdownOutput content={`\`\`\`python
+def fibonacci(n):
+    """Generate first n Fibonacci numbers."""
+    a, b = 0, 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
+
+# Theme-aware syntax highlighting
+for num in fibonacci(10):
+    print(num)
+\`\`\`
+`} />
+</div>
+
+#### Inline Code
+
+Inline code like `variable_name` adapts its background and text colors:
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <MarkdownOutput content={`Use the \`DataFrame.describe()\` method to get statistical summaries. Import with \`import pandas as pd\`.`} />
+</div>
+
+#### Tables in Dark Mode
+
+<div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
+  <MarkdownOutput content={`| Method | Description |
+| --- | --- |
+| \`head()\` | First n rows |
+| \`tail()\` | Last n rows |
+| \`describe()\` | Statistical summary |
+`} />
+</div>
+
 ## Raw HTML (unsafe mode)
 
 <Callout type="warn">
