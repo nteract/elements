@@ -120,10 +120,26 @@ export function Example() {
 
 - [ ] Component placed in correct `registry/` subfolder
 - [ ] Entry added to `registry.json` with correct path
+- [ ] CSS variables (if any) match between `app/global.css` and `registry.json`
 - [ ] Imports use `@/components/ui/` for UI dependencies
 - [ ] Build passes: `pnpm run types:check`
 - [ ] MDX documentation created with interactive examples
 - [ ] Navigation updated in appropriate `meta.json`
+
+## CSS Variables
+
+Components using CSS variables must define them in **two places**:
+
+1. **`app/global.css`** — For the docs site (`:root` for light, `.dark` for dark)
+2. **`registry.json`** — Under `cssVars.light` and `cssVars.dark` for the component
+
+The shadcn CLI reads `cssVars` from registry.json and injects them into consumer CSS. If values don't match global.css, consumers get different colors than the docs site.
+
+**When changing CSS variables:**
+- Update both files with identical values
+- Test in both light and dark modes
+
+See `contributing/css-variables.md` for full details and examples.
 
 ## Utilities
 
