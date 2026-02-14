@@ -259,7 +259,10 @@ export function MarkdownOutput({
           },
           tr({ children, ...props }) {
             return (
-              <tr className="hover:bg-gray-50 dark:hover:bg-gray-800" {...props}>
+              <tr
+                className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                {...props}
+              >
                 {children}
               </tr>
             );
