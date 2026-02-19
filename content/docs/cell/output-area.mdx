@@ -146,6 +146,12 @@ OutputArea handles all Jupyter output types:
 
 ## Isolated Rendering
 
+HTML outputs render inside a sandboxed iframe for security:
+
+<div className="my-4 rounded border p-4">
+  <OutputAreaDemo variant="html" />
+</div>
+
 Certain output types can contain executable JavaScript and must be rendered in a secure iframe:
 
 | MIME Type | Why Isolation |
