@@ -67,7 +67,13 @@ const htmlOutput: JupyterOutput[] = [
 ];
 
 interface OutputAreaDemoProps {
-  variant?: "simple" | "multi" | "error" | "collapsible" | "scrollable" | "html";
+  variant?:
+    | "simple"
+    | "multi"
+    | "error"
+    | "collapsible"
+    | "scrollable"
+    | "html";
 }
 
 export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
@@ -101,7 +107,13 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
       );
 
     case "html":
-      return <OutputArea outputs={htmlOutput} isolated={true} useReactRenderer={false} />;
+      return (
+        <OutputArea
+          outputs={htmlOutput}
+          isolated={true}
+          useReactRenderer={false}
+        />
+      );
 
     default:
       return <OutputArea outputs={sampleOutputs} />;
