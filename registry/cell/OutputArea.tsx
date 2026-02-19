@@ -109,6 +109,13 @@ interface OutputAreaProps {
    * @deprecated Use the comm bridge instead for full widget support
    */
   onWidgetUpdate?: (commId: string, state: Record<string, unknown>) => void;
+  /**
+   * Whether to use the React renderer bundle inside the iframe.
+   * When true, fetches and loads isolated-renderer.js for full React rendering.
+   * When false, uses the inline JavaScript renderer (simpler, no build required).
+   * @default true
+   */
+  useReactRenderer?: boolean;
 }
 
 /**
@@ -284,6 +291,7 @@ export function OutputArea({
   preloadIframe = false,
   onLinkClick,
   onWidgetUpdate,
+  useReactRenderer = true,
 }: OutputAreaProps) {
   const id = useId();
   const frameRef = useRef<IsolatedFrameHandle>(null);
@@ -471,7 +479,7 @@ export function OutputArea({
               <IsolatedFrame
                 ref={frameRef}
                 darkMode={darkMode}
-                useReactRenderer={true}
+                useReactRenderer={useReactRenderer}
                 minHeight={24}
                 maxHeight={maxHeight ?? 2000}
                 onReady={handleFrameReady}
