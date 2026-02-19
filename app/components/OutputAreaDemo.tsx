@@ -110,13 +110,7 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
       );
 
     case "html":
-      return (
-        <OutputArea
-          outputs={htmlOutput}
-          isolated={true}
-          useReactRenderer={false}
-        />
-      );
+      return <OutputArea outputs={htmlOutput} isolated={true} />;
 
     default:
       return <OutputArea outputs={sampleOutputs} />;

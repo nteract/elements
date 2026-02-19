@@ -36,7 +36,8 @@ export interface IsolatedFrameProps {
    * Whether to bootstrap the React renderer bundle.
    * When true, fetches and evals the isolated-renderer bundle after the iframe is ready.
    * The bundle provides full React-based output rendering with MediaRouter support.
-   * @default false
+   * Falls back to inline renderer if bundle fetch fails.
+   * @default true
    */
   useReactRenderer?: boolean;
 
@@ -229,7 +230,7 @@ export const IsolatedFrame = forwardRef<
     id,
     initialContent,
     darkMode = true,
-    useReactRenderer = false,
+    useReactRenderer = true,
     rendererCode,
     rendererCss,
     minHeight = 24,
