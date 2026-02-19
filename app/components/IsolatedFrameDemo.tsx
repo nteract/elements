@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
@@ -84,8 +85,23 @@ export function IsolatedFrameDemo({
   variant = "table",
 }: IsolatedFrameDemoProps) {
   const frameRef = useRef<IsolatedFrameHandle>(null);
-  const [darkMode, setDarkMode] = useState(false);
+  // Detect page theme and track changes
+  const [darkMode, setDarkMode] = useState(() => detectDarkMode());
   const [ready, setReady] = useState(false);
+
+  // Observe page theme changes (fumadocs adds/removes 'dark' class on html)
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDarkMode(detectDarkMode());
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-mode"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const getContent = () => {
     switch (variant) {
@@ -124,7 +140,7 @@ export function IsolatedFrameDemo({
       <div className="overflow-hidden rounded-lg border">
         <IsolatedFrame
           ref={frameRef}
-          darkMode={variant === "theme" ? darkMode : undefined}
+          darkMode={darkMode}
           initialContent={{
             mimeType: "text/html",
             data: getContent(),
