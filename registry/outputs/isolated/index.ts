@@ -34,5 +34,7 @@ export { isIframeMessage, isMessageType } from "./frame-bridge";
 export type { FrameHtmlOptions } from "./frame-html";
 // HTML template generator
 export { createFrameBlobUrl, generateFrameHtml } from "./frame-html";
+// Security testing component
+export { IsolationTest } from "./IsolationTest";
 export type { IsolatedFrameHandle, IsolatedFrameProps } from "./isolated-frame";
 export { IsolatedFrame } from "./isolated-frame";
