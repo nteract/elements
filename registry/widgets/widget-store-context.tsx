@@ -61,7 +61,10 @@ interface WidgetStoreContextValue {
 
 // === Context ===
 
-const WidgetStoreContext = createContext<WidgetStoreContextValue | null>(null);
+// Export context for use in isolated iframe widget provider
+export const WidgetStoreContext = createContext<WidgetStoreContextValue | null>(
+  null,
+);
 
 // === Provider ===
 

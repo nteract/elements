@@ -36,9 +36,24 @@ export interface IsolatedFrameProps {
    * Whether to bootstrap the React renderer bundle.
    * When true, fetches and evals the isolated-renderer bundle after the iframe is ready.
    * The bundle provides full React-based output rendering with MediaRouter support.
-   * @default false
+   * Falls back to inline renderer if bundle fetch fails.
+   * @default true
    */
   useReactRenderer?: boolean;
+
+  /**
+   * Inline React renderer JavaScript bundle.
+   * When provided with rendererCss, skips fetching from URLs and uses this code directly.
+   * Use with Vite's `?raw` import: `import code from "./renderer.js?raw"`
+   */
+  rendererCode?: string;
+
+  /**
+   * Inline React renderer CSS.
+   * When provided with rendererCode, skips fetching from URLs and uses this CSS directly.
+   * Use with Vite's `?raw` import: `import css from "./renderer.css?raw"`
+   */
+  rendererCss?: string;
 
   /**
    * Minimum height of the iframe in pixels.
@@ -215,7 +230,9 @@ export const IsolatedFrame = forwardRef<
     id,
     initialContent,
     darkMode = true,
-    useReactRenderer = false,
+    useReactRenderer = true,
+    rendererCode,
+    rendererCss,
     minHeight = 24,
     maxHeight = 2000,
     className = "",
@@ -328,36 +345,45 @@ export const IsolatedFrame = forwardRef<
             // Bootstrap the React renderer if not already doing so
             if (!bootstrappingRef.current) {
               bootstrappingRef.current = true;
-              fetchRendererBundle()
-                .then(({ js, css }) => {
-                  // Inject CSS first
-                  const cssCode = `
-                      (function() {
-                        var style = document.createElement('style');
-                        style.textContent = ${JSON.stringify(css)};
-                        document.head.appendChild(style);
-                      })();
-                    `;
-                  iframeRef.current?.contentWindow?.postMessage(
-                    { type: "eval", payload: { code: cssCode } },
-                    "*",
-                  );
-                  // Then inject JS bundle
-                  iframeRef.current?.contentWindow?.postMessage(
-                    { type: "eval", payload: { code: js } },
-                    "*",
-                  );
-                })
-                .catch((err) => {
-                  console.error(
-                    "[IsolatedFrame] Failed to load renderer:",
-                    err,
-                  );
-                  onError?.({ message: err.message });
-                  // Fall back to inline renderer
-                  setIsReady(true);
-                  onReady?.();
-                });
+
+              // Helper to inject the renderer bundle
+              const injectRenderer = (js: string, css: string) => {
+                // Inject CSS first
+                const cssCode = `
+                    (function() {
+                      var style = document.createElement('style');
+                      style.textContent = ${JSON.stringify(css)};
+                      document.head.appendChild(style);
+                    })();
+                  `;
+                iframeRef.current?.contentWindow?.postMessage(
+                  { type: "eval", payload: { code: cssCode } },
+                  "*",
+                );
+                // Then inject JS bundle
+                iframeRef.current?.contentWindow?.postMessage(
+                  { type: "eval", payload: { code: js } },
+                  "*",
+                );
+              };
+
+              // Use inline code if provided, otherwise fetch from URLs
+              if (rendererCode && rendererCss) {
+                injectRenderer(rendererCode, rendererCss);
+              } else {
+                fetchRendererBundle()
+                  .then(({ js, css }) => injectRenderer(js, css))
+                  .catch((err) => {
+                    console.error(
+                      "[IsolatedFrame] Failed to load renderer:",
+                      err,
+                    );
+                    onError?.({ message: err.message });
+                    // Fall back to inline renderer
+                    setIsReady(true);
+                    onReady?.();
+                  });
+              }
             }
           } else {
             // Using inline renderer, mark as ready immediately
@@ -428,6 +454,8 @@ export const IsolatedFrame = forwardRef<
     minHeight,
     maxHeight,
     useReactRenderer,
+    rendererCode,
+    rendererCss,
     onReady,
     onResize,
     onLinkClick,

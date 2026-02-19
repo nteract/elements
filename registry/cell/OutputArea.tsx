@@ -116,6 +116,18 @@ interface OutputAreaProps {
    * @default true
    */
   useReactRenderer?: boolean;
+  /**
+   * Inline React renderer JavaScript bundle for the iframe.
+   * When provided with rendererCss, uses this code directly instead of fetching.
+   * Use with Vite's `?raw` import: `import code from "./renderer.js?raw"`
+   */
+  rendererCode?: string;
+  /**
+   * Inline React renderer CSS for the iframe.
+   * When provided with rendererCode, uses this CSS directly instead of fetching.
+   * Use with Vite's `?raw` import: `import css from "./renderer.css?raw"`
+   */
+  rendererCss?: string;
 }
 
 /**
@@ -292,6 +304,8 @@ export function OutputArea({
   onLinkClick,
   onWidgetUpdate,
   useReactRenderer = true,
+  rendererCode,
+  rendererCss,
 }: OutputAreaProps) {
   const id = useId();
   const frameRef = useRef<IsolatedFrameHandle>(null);
@@ -480,6 +494,8 @@ export function OutputArea({
                 ref={frameRef}
                 darkMode={darkMode}
                 useReactRenderer={useReactRenderer}
+                rendererCode={rendererCode}
+                rendererCss={rendererCss}
                 minHeight={24}
                 maxHeight={maxHeight ?? 2000}
                 onReady={handleFrameReady}

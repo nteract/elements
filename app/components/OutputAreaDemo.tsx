@@ -47,17 +47,20 @@ const htmlOutput: JupyterOutput[] = [
   {
     output_type: "execute_result",
     data: {
-      "text/html": `<table style="border-collapse: collapse; width: 100%; font-family: system-ui;">
+      // Note: HTML output in iframes inherits CSS variables from frame-html.ts
+      // The frame provides: --bg-secondary, --border-color, --text-primary
+      // Tables without explicit styles will use these variables automatically
+      "text/html": `<table>
         <thead>
-          <tr style="background: #f5f5f5;">
-            <th style="border: 1px solid #e0e0e0; padding: 8px;">Model</th>
-            <th style="border: 1px solid #e0e0e0; padding: 8px;">Accuracy</th>
-            <th style="border: 1px solid #e0e0e0; padding: 8px;">F1 Score</th>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>F1 Score</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td style="border: 1px solid #e0e0e0; padding: 8px;">Random Forest</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.94</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.93</td></tr>
-          <tr><td style="border: 1px solid #e0e0e0; padding: 8px;">XGBoost</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.96</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.95</td></tr>
+          <tr><td>Random Forest</td><td>0.94</td><td>0.93</td></tr>
+          <tr><td>XGBoost</td><td>0.96</td><td>0.95</td></tr>
         </tbody>
       </table>`,
       "text/plain": "DataFrame with model results",
@@ -107,13 +110,7 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
       );
 
     case "html":
-      return (
-        <OutputArea
-          outputs={htmlOutput}
-          isolated={true}
-          useReactRenderer={false}
-        />
-      );
+      return <OutputArea outputs={htmlOutput} isolated={true} />;
 
     default:
       return <OutputArea outputs={sampleOutputs} />;
