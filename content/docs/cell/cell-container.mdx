@@ -6,11 +6,10 @@ icon: Box
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
-import { CellDemo, NotebookDemo, GutterCellDemo, GutterNotebookDemo, CompactCellDemo, CompactNotebookDemo } from '@/app/components/CellDemo';
+import { CompactCellDemo, CompactNotebookDemo } from '@/app/components/CellDemo';
 import { CellContainerDemo } from '@/app/components/CellContainerDemo';
 import { CellTypeButtonDemo } from '@/app/components/CellTypeButtonDemo';
 import { PlayButtonDemo } from '@/app/components/PlayButtonDemo';
-import { ExecutionStatus } from '@/registry/cell/ExecutionStatus';
 
 <div className="my-8">
   <CompactCellDemo cellType="code" initialFocused />
@@ -106,39 +105,15 @@ Click different cells to see focus behavior:
 
 ## Ribbon Colors
 
-| Cell Type | Ribbon Color |
+| Cell Type | Ribbon Color (focused) |
 | --- | --- |
-| `code` | Gray |
-| `markdown` | Amber |
+| `code` | Sky blue |
+| `markdown` | Emerald |
 | `sql` | Blue |
 | `ai` | Purple |
 | `raw` | Rose |
 
 Custom colors can be provided via `customGutterColors` prop.
-
-## Alternative: Separate Play Button
-
-For a larger play button with separate execution count, use `PlayButton` + `ExecutionCount`:
-
-<div className="my-8">
-  <CellDemo cellType="code" initialFocused />
-</div>
-
-```tsx
-const gutterContent = cell.type === "code" ? (
-  <>
-    <PlayButton
-      executionState={cell.executionState}
-      cellType={cell.type}
-      isFocused={isFocused}
-      onExecute={() => executeCell(cell.id)}
-      onInterrupt={() => interruptCell(cell.id)}
-      gutterMode
-    />
-    <ExecutionCount count={cell.executionCount} isExecuting={cell.executionState === "running"} />
-  </>
-) : undefined;
-```
 
 ## Installation
 
@@ -173,7 +148,7 @@ The outer wrapper with gutter ribbon and focus styling.
     <div className="p-4 text-sm">Focused code cell</div>
   </CellContainerDemo>
   <CellContainerDemo id="markdown" cellType="markdown" isFocused={true}>
-    <div className="p-4 text-sm">Focused markdown cell (amber ribbon)</div>
+    <div className="p-4 text-sm">Focused markdown cell (emerald ribbon)</div>
   </CellContainerDemo>
 </div>
 
@@ -183,7 +158,10 @@ The outer wrapper with gutter ribbon and focus styling.
 | `cellType` | `string` | **required** | Cell type for ribbon coloring |
 | `isFocused` | `boolean` | `false` | Shows focus styling when true |
 | `onFocus` | `() => void` | — | Called on mousedown |
-| `children` | `ReactNode` | — | Cell content |
+| `children` | `ReactNode` | — | Cell content (legacy, use codeContent/outputContent for segmented ribbon) |
+| `codeContent` | `ReactNode` | — | Code/editor section content (enables segmented ribbon) |
+| `outputContent` | `ReactNode` | — | Output section content (renders with different ribbon color) |
+| `hideOutput` | `boolean` | `false` | Hide output section (useful for preloading) |
 | `gutterContent` | `ReactNode` | — | Left margin content (e.g., CompactExecutionButton) |
 | `rightGutterContent` | `ReactNode` | — | Right margin content (e.g., controls, kebab menu) |
 | `customGutterColors` | `Record<string, GutterColorConfig>` | — | Custom ribbon colors |
