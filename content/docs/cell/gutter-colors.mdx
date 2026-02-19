@@ -1,0 +1,167 @@
+---
+title: Gutter Colors
+description: Color system for cell ribbons and focus states
+icon: Palette
+---
+
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { CellContainerDemo } from '@/app/components/CellContainerDemo';
+
+The gutter color system defines consistent colors for cell ribbons, output ribbons, and focus states across all cell types.
+
+## Color Palette
+
+<div className="my-8 space-y-2">
+  <CellContainerDemo id="code-demo" cellType="code" isFocused={true}>
+    <div className="p-4 text-sm"><strong>code</strong> - Sky blue ribbon</div>
+  </CellContainerDemo>
+  <CellContainerDemo id="markdown-demo" cellType="markdown" isFocused={true}>
+    <div className="p-4 text-sm"><strong>markdown</strong> - Emerald ribbon</div>
+  </CellContainerDemo>
+  <CellContainerDemo id="sql-demo" cellType="sql" isFocused={true}>
+    <div className="p-4 text-sm"><strong>sql</strong> - Blue ribbon</div>
+  </CellContainerDemo>
+  <CellContainerDemo id="ai-demo" cellType="ai" isFocused={true}>
+    <div className="p-4 text-sm"><strong>ai</strong> - Purple ribbon</div>
+  </CellContainerDemo>
+  <CellContainerDemo id="raw-demo" cellType="raw" isFocused={true}>
+    <div className="p-4 text-sm"><strong>raw</strong> - Rose ribbon</div>
+  </CellContainerDemo>
+</div>
+
+## Color Structure
+
+Each cell type defines three color groups:
+
+| Group | States | Purpose |
+| --- | --- | --- |
+| `ribbon` | `default`, `focused` | Main ribbon color (code section) |
+| `outputRibbon` | `default`, `focused` | Output section ribbon (gradient) |
+| `background` | `focused` | Cell background highlight |
+
+## Usage
+
+```tsx
+import { getGutterColors, defaultGutterColors } from "@/components/cell/gutter-colors"
+
+// Get colors for a specific cell type
+const colors = getGutterColors("code")
+
+// Use in className
+<div className={isFocused ? colors.ribbon.focused : colors.ribbon.default} />
+```
+
+### Direct Import
+
+Access the color maps directly:
+
+```tsx
+import { defaultGutterColors, fallbackGutterColors } from "@/components/cell/gutter-colors"
+
+// defaultGutterColors contains: code, markdown, sql, ai, raw
+const codeColors = defaultGutterColors.code
+
+// fallbackGutterColors is used for unknown cell types
+const unknownColors = fallbackGutterColors
+```
+
+## Custom Colors
+
+Override or add new cell types with `customGutterColors`:
+
+```tsx
+import type { GutterColorConfig } from "@/components/cell/gutter-colors"
+
+const customColors: Record<string, GutterColorConfig> = {
+  // Override existing type
+  code: {
+    ribbon: {
+      default: "bg-indigo-200 dark:bg-indigo-800",
+      focused: "bg-indigo-400 dark:bg-indigo-600",
+    },
+    outputRibbon: {
+      default: "bg-gradient-to-b from-indigo-200/60 to-indigo-200 dark:from-indigo-800/60 dark:to-indigo-800",
+      focused: "bg-gradient-to-b from-indigo-400/60 to-indigo-400 dark:from-indigo-600/60 dark:to-indigo-600",
+    },
+    background: {
+      focused: "bg-indigo-50/50 dark:bg-indigo-900/30",
+    },
+  },
+  // Add new cell type
+  custom: {
+    ribbon: {
+      default: "bg-teal-200 dark:bg-teal-800",
+      focused: "bg-teal-400 dark:bg-teal-600",
+    },
+    outputRibbon: {
+      default: "bg-gradient-to-b from-teal-200/60 to-teal-200 dark:from-teal-800/60 dark:to-teal-800",
+      focused: "bg-gradient-to-b from-teal-400/60 to-teal-400 dark:from-teal-600/60 dark:to-teal-600",
+    },
+    background: {
+      focused: "bg-teal-50/50 dark:bg-teal-900/30",
+    },
+  },
+}
+
+<CellContainer
+  cellType="custom"
+  customGutterColors={customColors}
+  ...
+/>
+```
+
+## Output Ribbon Gradients
+
+Output ribbons use a gradient pattern to visually distinguish them from the main code ribbon:
+
+```tsx
+// Pattern: from-{color}/60 to-{color}
+// Creates a top-to-bottom gradient from 60% opacity to full opacity
+
+outputRibbon: {
+  focused: "bg-gradient-to-b from-sky-400/60 to-sky-400 dark:from-sky-600/60 dark:to-sky-600",
+}
+```
+
+This creates a subtle visual separation between the code and output sections when using the [segmented ribbon layout](/docs/cell/cell-container#segmented-ribbon-layout).
+
+## Dark Mode Support
+
+All colors include both light and dark mode variants using Tailwind's `dark:` prefix:
+
+| State | Light Mode | Dark Mode |
+| --- | --- | --- |
+| Default | `bg-gray-200` | `dark:bg-gray-700` |
+| Focused | `bg-sky-400` | `dark:bg-sky-600` |
+| Background | `bg-sky-50/20` | `dark:bg-sky-900/10` |
+
+Colors automatically adapt when the document has `class="dark"` or `data-theme="dark"`.
+
+## GutterColorConfig Type
+
+```tsx
+interface GutterColorConfig {
+  ribbon: {
+    default: string;  // Unfocused ribbon color
+    focused: string;  // Focused ribbon color
+  };
+  outputRibbon: {
+    default: string;  // Unfocused output ribbon (gradient)
+    focused: string;  // Focused output ribbon (gradient)
+  };
+  background: {
+    focused: string;  // Cell background when focused
+  };
+}
+```
+
+## Default Color Values
+
+| Cell Type | Ribbon (focused) | Output Ribbon | Background |
+| --- | --- | --- | --- |
+| `code` | sky-400/600 | sky gradient | sky-50/900 |
+| `markdown` | emerald-400/600 | emerald gradient | emerald-50/900 |
+| `sql` | blue-400/600 | blue gradient | blue-50/900 |
+| `ai` | purple-400/600 | purple gradient | purple-50/900 |
+| `raw` | rose-400/600 | rose gradient | rose-50/900 |
+| fallback | gray-400/500 | gray gradient | gray-50/900 |

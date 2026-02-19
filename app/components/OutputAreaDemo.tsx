@@ -43,8 +43,37 @@ const errorOutput: JupyterOutput[] = [
   },
 ];
 
+const htmlOutput: JupyterOutput[] = [
+  {
+    output_type: "execute_result",
+    data: {
+      "text/html": `<table style="border-collapse: collapse; width: 100%; font-family: system-ui;">
+        <thead>
+          <tr style="background: #f5f5f5;">
+            <th style="border: 1px solid #e0e0e0; padding: 8px;">Model</th>
+            <th style="border: 1px solid #e0e0e0; padding: 8px;">Accuracy</th>
+            <th style="border: 1px solid #e0e0e0; padding: 8px;">F1 Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="border: 1px solid #e0e0e0; padding: 8px;">Random Forest</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.94</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.93</td></tr>
+          <tr><td style="border: 1px solid #e0e0e0; padding: 8px;">XGBoost</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.96</td><td style="border: 1px solid #e0e0e0; padding: 8px;">0.95</td></tr>
+        </tbody>
+      </table>`,
+      "text/plain": "DataFrame with model results",
+    },
+    execution_count: 3,
+  },
+];
+
 interface OutputAreaDemoProps {
-  variant?: "simple" | "multi" | "error" | "collapsible" | "scrollable";
+  variant?:
+    | "simple"
+    | "multi"
+    | "error"
+    | "collapsible"
+    | "scrollable"
+    | "html";
 }
 
 export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
@@ -74,6 +103,15 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
         <OutputArea
           outputs={[...multiOutputs, ...multiOutputs, ...multiOutputs]}
           maxHeight={150}
+        />
+      );
+
+    case "html":
+      return (
+        <OutputArea
+          outputs={htmlOutput}
+          isolated={true}
+          useReactRenderer={false}
         />
       );
 
