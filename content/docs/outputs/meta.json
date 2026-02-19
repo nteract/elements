@@ -9,6 +9,7 @@
     "markdown-output",
     "json-output",
     "media-provider",
-    "media-router"
+    "media-router",
+    "isolated-frame"
   ]
 }

@@ -6,6 +6,7 @@
     "cell-header",
     "collaborator-avatars",
     "output-area",
+    "gutter-colors",
     "cell-type-button",
     "cell-type-selector",
     "execution-count",
