@@ -241,9 +241,124 @@ Sandbox attributes:
 - `allow-popups-to-escape-sandbox` - Popups are unrestricted
 - `allow-modals` - alert/confirm/prompt
 
+## Rendering Modes
+
+IsolatedFrame supports two rendering modes:
+
+### Basic Mode (No Build Required)
+
+For HTML, SVG, images, and plain text, the inline JavaScript in the generated HTML template handles rendering. No additional build step is required.
+
+```tsx
+// Works out of the box
+<IsolatedFrame
+  initialContent={{
+    mimeType: "text/html",
+    data: "<h1>Hello</h1>",
+  }}
+/>
+```
+
+### Widget Mode (Requires Vite Build)
+
+For Jupyter widgets (ipywidgets, anywidget), you need to build a separate **isolated renderer bundle** that runs inside the iframe. This bundle includes React, all output components, and the widget system.
+
+<Callout type="info">
+  The widget renderer is a separate Vite project that builds an IIFE bundle. This bundle is eval'd into the iframe via postMessage, taking over rendering from the inline JavaScript.
+</Callout>
+
+## Building the Isolated Renderer
+
+To support widgets, create an `isolated-renderer` directory with a Vite config:
+
+```ts
+// isolated-renderer/vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    lib: {
+      entry: path.resolve(__dirname, "index.tsx"),
+      name: "IsolatedRenderer",
+      formats: ["iife"],
+      fileName: () => "isolated-renderer.js",
+    },
+    outDir: "public/isolated",
+    rollupOptions: {
+      output: {
+        inlineDynamicImports: true,
+      },
+      // Exclude any desktop/native APIs
+      external: [/@tauri-apps\/.*/],
+    },
+  },
+});
+```
+
+The entry point (`index.tsx`) bootstraps React and registers a message handler:
+
+```tsx
+// isolated-renderer/index.tsx
+import { createRoot } from "react-dom/client";
+import { useState, useEffect, useCallback } from "react";
+
+// Signal that React is handling messages
+window.__REACT_RENDERER_ACTIVE__ = true;
+
+function IsolatedRendererApp() {
+  const [outputs, setOutputs] = useState([]);
+
+  const handleMessage = useCallback((event) => {
+    if (event.source !== window.parent) return;
+    const { type, payload } = event.data;
+
+    if (type === "render") {
+      setOutputs((prev) => [...prev, payload]);
+    } else if (type === "clear") {
+      setOutputs([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("message", handleMessage);
+    window.parent.postMessage({ type: "renderer_ready" }, "*");
+    return () => window.removeEventListener("message", handleMessage);
+  }, [handleMessage]);
+
+  return outputs.map((output, i) => (
+    <OutputRenderer key={i} payload={output} />
+  ));
+}
+
+// Initialize
+const root = createRoot(document.getElementById("root"));
+root.render(<IsolatedRendererApp />);
+```
+
+Build with: `vite build --config isolated-renderer/vite.config.ts`
+
+### Loading the Bundle
+
+Use `useReactRenderer={true}` and provide the bundle URL:
+
+```tsx
+<IsolatedFrame
+  useReactRenderer={true}
+  // Bundle is loaded via eval message after iframe is ready
+  onReady={() => {
+    fetch("/isolated/isolated-renderer.js")
+      .then((r) => r.text())
+      .then((code) => frameRef.current?.eval(code));
+  }}
+/>
+```
+
 ## Widget Integration
 
-For Jupyter widgets, use `CommBridgeManager` to proxy widget communication:
+For Jupyter widgets, use `CommBridgeManager` to proxy widget communication between the parent and the isolated renderer:
 
 ```tsx
 import { CommBridgeManager } from "@/components/outputs/isolated"
@@ -262,5 +377,11 @@ const bridge = new CommBridgeManager({
   onMessage={(msg) => bridge.handleIframeMessage(msg)}
 />
 ```
+
+The comm bridge handles:
+- `comm_open` - Opening new widget connections
+- `comm_msg` - Sending state updates
+- `comm_close` - Closing connections
+- `widget_update` - Receiving state changes from widgets
 
 See the [Widgets documentation](/docs/widgets) for more details on widget integration.
