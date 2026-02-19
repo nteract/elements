@@ -8,10 +8,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type {
-  WidgetModel,
-  WidgetStore,
-} from "@/registry/widgets/widget-store";
+import type { WidgetModel, WidgetStore } from "@/registry/widgets/widget-store";
 
 import {
   CommBridgeManager,
@@ -35,9 +32,7 @@ type SendCustom = (
 type CloseComm = (commId: string) => void;
 
 // Helper to create a mock WidgetStore
-function createMockStore(
-  initialModels: Map<string, WidgetModel> = new Map(),
-): {
+function createMockStore(initialModels: Map<string, WidgetModel> = new Map()): {
   store: WidgetStore;
   triggerChange: () => void;
   listeners: Set<() => void>;
@@ -46,7 +41,7 @@ function createMockStore(
     Set<(content: Record<string, unknown>, buffers?: DataView[]) => void>
   >;
 } {
-  let models = initialModels;
+  const models = initialModels;
   const listeners = new Set<() => void>();
   const customMessageListeners = new Map<
     string,
@@ -423,9 +418,9 @@ describe("CommBridgeManager", () => {
 
       // Simulate adding a new model to the store
       const newModel = createModel("new-comm", { value: 100 });
-      (
-        mockStore.store.getSnapshot as ReturnType<typeof vi.fn>
-      ).mockReturnValue(new Map([["new-comm", newModel]]));
+      (mockStore.store.getSnapshot as ReturnType<typeof vi.fn>).mockReturnValue(
+        new Map([["new-comm", newModel]]),
+      );
 
       // Trigger store change
       mockStore.triggerChange();
@@ -500,8 +495,12 @@ describe("CommBridgeManager", () => {
       // Should have sent comm_msg with update
       const commMsg = mockFrame.sendCalls.find(
         (msg: unknown) =>
-          (msg as { type: string; payload?: { commId: string; method: string } })
-            .type === "comm_msg" &&
+          (
+            msg as {
+              type: string;
+              payload?: { commId: string; method: string };
+            }
+          ).type === "comm_msg" &&
           (msg as { payload: { commId: string } }).payload.commId === "comm-1",
       );
       expect(commMsg).toBeDefined();
@@ -545,7 +544,9 @@ describe("CommBridgeManager", () => {
       // Find the comm_msg that was sent
       const commMsg = mockFrame.sendCalls
         .slice(callsAfterReady)
-        .find((msg: unknown) => (msg as { type: string }).type === "comm_msg") as
+        .find(
+          (msg: unknown) => (msg as { type: string }).type === "comm_msg",
+        ) as
         | {
             type: string;
             payload: { data: Record<string, unknown> };
@@ -654,9 +655,9 @@ describe("CommBridgeManager", () => {
 
       // Add a new model
       const newModel = createModel("new-comm", { value: 100 });
-      (
-        mockStore.store.getSnapshot as ReturnType<typeof vi.fn>
-      ).mockReturnValue(new Map([["new-comm", newModel]]));
+      (mockStore.store.getSnapshot as ReturnType<typeof vi.fn>).mockReturnValue(
+        new Map([["new-comm", newModel]]),
+      );
       mockStore.triggerChange();
 
       // Should have sent comm_open (flag was reset)
@@ -806,7 +807,7 @@ describe("CommBridgeManager", () => {
       const manager = createManager();
 
       // Subscribe returns an unsubscribe function
-      const unsubscribe = (
+      const _unsubscribe = (
         mockStore.store.subscribe as ReturnType<typeof vi.fn>
       ).mock.results[0].value;
 
@@ -951,7 +952,9 @@ describe("CommBridgeManager", () => {
 
       const commMsg = mockFrame.sendCalls
         .slice(callsAfterReady)
-        .find((msg: unknown) => (msg as { type: string }).type === "comm_msg") as
+        .find(
+          (msg: unknown) => (msg as { type: string }).type === "comm_msg",
+        ) as
         | {
             payload: { data: Record<string, unknown> };
           }
@@ -986,7 +989,9 @@ describe("CommBridgeManager", () => {
 
       const commMsg = mockFrame.sendCalls
         .slice(callsAfterReady)
-        .find((msg: unknown) => (msg as { type: string }).type === "comm_msg") as
+        .find(
+          (msg: unknown) => (msg as { type: string }).type === "comm_msg",
+        ) as
         | {
             payload: { data: Record<string, unknown> };
           }
@@ -1022,7 +1027,9 @@ describe("CommBridgeManager", () => {
 
       const commMsg = mockFrame.sendCalls
         .slice(callsAfterReady)
-        .find((msg: unknown) => (msg as { type: string }).type === "comm_msg") as
+        .find(
+          (msg: unknown) => (msg as { type: string }).type === "comm_msg",
+        ) as
         | {
             payload: { data: Record<string, unknown> };
           }
@@ -1059,7 +1066,9 @@ describe("CommBridgeManager", () => {
 
       const commMsg = mockFrame.sendCalls
         .slice(callsAfterReady)
-        .find((msg: unknown) => (msg as { type: string }).type === "comm_msg") as
+        .find(
+          (msg: unknown) => (msg as { type: string }).type === "comm_msg",
+        ) as
         | {
             payload: { data: Record<string, unknown> };
           }
@@ -1128,7 +1137,9 @@ describe("CommBridgeManager", () => {
 
       const commMsg = mockFrame.sendCalls
         .slice(callsAfterReady)
-        .find((msg: unknown) => (msg as { type: string }).type === "comm_msg") as
+        .find(
+          (msg: unknown) => (msg as { type: string }).type === "comm_msg",
+        ) as
         | {
             type: string;
             payload: {

@@ -9,11 +9,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  documentHasDarkMode,
-  isDarkMode,
-  prefersDarkMode,
-} from "../dark-mode";
+import { documentHasDarkMode, isDarkMode, prefersDarkMode } from "../dark-mode";
 
 // Mock matchMedia globally since jsdom doesn't implement it
 function mockMatchMedia(matches: boolean) {

@@ -29,12 +29,11 @@ describe("isIframeMessage", () => {
     "widget_comm_close",
   ] as const;
 
-  it.each(validMessageTypes)(
-    'returns true for valid message type "%s"',
-    (type) => {
-      expect(isIframeMessage({ type })).toBe(true);
-    },
-  );
+  it.each(
+    validMessageTypes,
+  )('returns true for valid message type "%s"', (type) => {
+    expect(isIframeMessage({ type })).toBe(true);
+  });
 
   it("returns false for null", () => {
     expect(isIframeMessage(null)).toBe(false);
@@ -81,12 +80,11 @@ describe("isIframeMessage", () => {
     "comm_sync",
   ];
 
-  it.each(parentMessageTypes)(
-    'returns false for parent message type "%s"',
-    (type) => {
-      expect(isIframeMessage({ type })).toBe(false);
-    },
-  );
+  it.each(
+    parentMessageTypes,
+  )('returns false for parent message type "%s"', (type) => {
+    expect(isIframeMessage({ type })).toBe(false);
+  });
 });
 
 describe("isMessageType", () => {

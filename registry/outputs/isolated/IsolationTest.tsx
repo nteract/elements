@@ -527,9 +527,7 @@ function ProductionFrameDemo() {
       <div className="flex items-center gap-2 text-sm">
         <span>
           Ready:{" "}
-          <span
-            className={isReady ? "text-green-500" : "text-yellow-500"}
-          >
+          <span className={isReady ? "text-green-500" : "text-yellow-500"}>
             {isReady ? "Yes" : "Waiting..."}
           </span>
         </span>
