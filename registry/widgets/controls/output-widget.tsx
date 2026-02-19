@@ -16,8 +16,8 @@
  * Python's `out.outputs` in sync with what's displayed.
  */
 
-import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
@@ -48,9 +48,8 @@ export function OutputWidget({ modelId, className }: WidgetComponentProps) {
     useWidgetModelValue<JupyterOutput[]>(modelId, "outputs") ?? [];
   const stateOutputsRef = useRef(stateOutputs);
   const shouldClearOnNextOutputRef = useRef(false);
-  const [renderedOutputs, setRenderedOutputs] = useState<JupyterOutput[]>(
-    stateOutputs
-  );
+  const [renderedOutputs, setRenderedOutputs] =
+    useState<JupyterOutput[]>(stateOutputs);
   const renderedOutputsRef = useRef(renderedOutputs);
 
   useEffect(() => {
