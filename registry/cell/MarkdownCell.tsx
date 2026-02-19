@@ -1,0 +1,343 @@
+"use client";
+
+import type { KeyBinding } from "@codemirror/view";
+import { Pencil, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
+import {
+  CodeMirrorEditor,
+  type CodeMirrorEditorRef,
+} from "@/registry/editor/codemirror-editor";
+import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
+import {
+  IsolatedFrame,
+  type IsolatedFrameHandle,
+} from "@/registry/outputs/isolated";
+
+import { CellContainer } from "./CellContainer";
+import { useCellKeyboardNavigation } from "./useCellKeyboardNavigation";
+import { useEditorRegistryOptional } from "./useEditorRegistry";
+
+/**
+ * Markdown cell data shape
+ */
+export interface MarkdownCellData {
+  id: string;
+  source: string;
+}
+
+interface MarkdownCellProps {
+  /**
+   * The cell data containing id and source
+   */
+  cell: MarkdownCellData;
+  /**
+   * Whether this cell is focused
+   */
+  isFocused?: boolean;
+  /**
+   * Callback when cell is focused
+   */
+  onFocus?: () => void;
+  /**
+   * Callback when source content changes
+   */
+  onUpdateSource: (source: string) => void;
+  /**
+   * Callback to delete the cell
+   */
+  onDelete?: () => void;
+  /**
+   * Callback to focus previous cell (for keyboard navigation)
+   */
+  onFocusPrevious?: (cursorPosition: "start" | "end") => void;
+  /**
+   * Callback to focus next cell (for keyboard navigation)
+   */
+  onFocusNext?: (cursorPosition: "start" | "end") => void;
+  /**
+   * Callback to insert a new cell after this one
+   */
+  onInsertCellAfter?: () => void;
+  /**
+   * Whether this is the last cell (affects Enter behavior)
+   */
+  isLastCell?: boolean;
+  /**
+   * Whether to use the React renderer bundle inside the iframe.
+   * @default true
+   */
+  useReactRenderer?: boolean;
+  /**
+   * Inline renderer JavaScript bundle for the iframe.
+   */
+  rendererCode?: string;
+  /**
+   * Inline renderer CSS for the iframe.
+   */
+  rendererCss?: string;
+  /**
+   * Additional class name for the container
+   */
+  className?: string;
+}
+
+/**
+ * MarkdownCell renders a markdown cell with edit/view mode toggle.
+ *
+ * Features:
+ * - Edit mode: CodeMirror editor with markdown language support
+ * - View mode: Rendered markdown in isolated iframe
+ * - Double-click to edit
+ * - Escape to exit edit mode
+ * - Keyboard navigation between cells (when callbacks provided)
+ *
+ * @example
+ * ```tsx
+ * // Standalone usage
+ * <MarkdownCell
+ *   cell={{ id: "1", source: "# Hello" }}
+ *   onUpdateSource={(source) => setSource(source)}
+ * />
+ *
+ * // With navigation (in a notebook)
+ * <EditorRegistryProvider>
+ *   {cells.map((cell, i) => (
+ *     <MarkdownCell
+ *       key={cell.id}
+ *       cell={cell}
+ *       isFocused={focusedId === cell.id}
+ *       onFocus={() => setFocusedId(cell.id)}
+ *       onUpdateSource={(source) => updateCell(cell.id, source)}
+ *       onDelete={() => deleteCell(cell.id)}
+ *       onFocusPrevious={(pos) => focusPrev(i, pos)}
+ *       onFocusNext={(pos) => focusNext(i, pos)}
+ *     />
+ *   ))}
+ * </EditorRegistryProvider>
+ * ```
+ */
+export function MarkdownCell({
+  cell,
+  isFocused = false,
+  onFocus,
+  onUpdateSource,
+  onDelete,
+  onFocusPrevious,
+  onFocusNext,
+  onInsertCellAfter,
+  isLastCell = false,
+  useReactRenderer = true,
+  rendererCode,
+  rendererCss,
+  className,
+}: MarkdownCellProps) {
+  // Start in edit mode if cell is empty
+  const [editing, setEditing] = useState(cell.source === "");
+  const editorRef = useRef<CodeMirrorEditorRef>(null);
+  const frameRef = useRef<IsolatedFrameHandle>(null);
+
+  // Optional editor registry for cross-cell navigation
+  const registry = useEditorRegistryOptional();
+
+  // Track dark mode state for iframe theme sync
+  const [darkMode, setDarkMode] = useState(() => detectDarkMode());
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDarkMode(detectDarkMode());
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-mode"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  // Register editor with the registry for cross-cell navigation
+  useEffect(() => {
+    if (editing && editorRef.current && registry) {
+      registry.registerEditor(cell.id, {
+        focus: () => editorRef.current?.focus(),
+        setCursorPosition: (position) =>
+          editorRef.current?.setCursorPosition(position),
+      });
+    }
+    return () => registry?.unregisterEditor(cell.id);
+  }, [cell.id, editing, registry]);
+
+  const handleDoubleClick = useCallback(() => {
+    setEditing(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    if (cell.source.trim()) {
+      setEditing(false);
+    }
+  }, [cell.source]);
+
+  // Render markdown content when iframe is ready
+  const handleFrameReady = useCallback(() => {
+    if (!frameRef.current || !cell.source) return;
+    frameRef.current.render({
+      mimeType: "text/markdown",
+      data: cell.source,
+      cellId: cell.id,
+      replace: true,
+    });
+  }, [cell.source, cell.id]);
+
+  // Sync markdown to iframe whenever source changes (supports RTC updates)
+  useEffect(() => {
+    if (frameRef.current?.isReady && cell.source) {
+      frameRef.current.render({
+        mimeType: "text/markdown",
+        data: cell.source,
+        cellId: cell.id,
+        replace: true,
+      });
+    }
+  }, [cell.source, cell.id]);
+
+  // Handle link clicks from iframe
+  const handleLinkClick = useCallback((url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }, []);
+
+  // Handle focus next, creating a new cell if at the end
+  const handleFocusNextOrCreate = useCallback(
+    (cursorPosition: "start" | "end") => {
+      // For markdown, close edit mode first
+      if (cell.source.trim()) {
+        setEditing(false);
+      }
+      if (isLastCell && onInsertCellAfter) {
+        onInsertCellAfter();
+      } else if (onFocusNext) {
+        onFocusNext(cursorPosition);
+      }
+    },
+    [cell.source, isLastCell, onFocusNext, onInsertCellAfter],
+  );
+
+  // Get keyboard navigation bindings (only if callbacks provided)
+  const navigationKeyMap = useCellKeyboardNavigation({
+    onFocusPrevious: onFocusPrevious ?? (() => {}),
+    onFocusNext: handleFocusNextOrCreate,
+    onExecute: () => {}, // No-op for markdown, enables Shift+Enter navigation
+    onDelete,
+  });
+
+  // Combine navigation with markdown-specific keys
+  const keyMap: KeyBinding[] = useMemo(
+    () => [
+      ...navigationKeyMap,
+      {
+        key: "Escape",
+        run: () => {
+          if (cell.source.trim()) {
+            setEditing(false);
+          }
+          return true;
+        },
+      },
+    ],
+    [navigationKeyMap, cell.source],
+  );
+
+  // Focus editor when entering edit mode (after initial mount)
+  const initialMountRef = useRef(true);
+  useEffect(() => {
+    if (initialMountRef.current) {
+      initialMountRef.current = false;
+      return;
+    }
+    if (editing) {
+      requestAnimationFrame(() => {
+        editorRef.current?.focus();
+      });
+    }
+  }, [editing]);
+
+  return (
+    <CellContainer
+      id={cell.id}
+      cellType="markdown"
+      isFocused={isFocused}
+      onFocus={onFocus}
+      className={className}
+    >
+      {/* Editor section - hidden when not editing */}
+      <div className={editing ? "block" : "hidden"}>
+        <div className="flex items-center gap-1 py-1">
+          <span className="text-xs text-muted-foreground font-mono">md</span>
+          <div className="flex-1" />
+          {onDelete && (
+            <div className="cell-controls opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                type="button"
+                onClick={onDelete}
+                className="flex items-center justify-center rounded p-1 text-muted-foreground/40 transition-colors hover:text-destructive"
+                title="Delete cell"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+        <div>
+          <CodeMirrorEditor
+            ref={editorRef}
+            value={cell.source}
+            language="markdown"
+            onValueChange={onUpdateSource}
+            onBlur={handleBlur}
+            keyMap={keyMap}
+            placeholder="Enter markdown..."
+            className="min-h-[2rem]"
+            autoFocus={editing}
+          />
+        </div>
+      </div>
+
+      {/* View section - hidden when editing */}
+      <div
+        className={cn(
+          "py-2 cursor-text relative group/md",
+          editing && "hidden",
+        )}
+        onDoubleClick={handleDoubleClick}
+      >
+        {cell.source ? (
+          <IsolatedFrame
+            ref={frameRef}
+            darkMode={darkMode}
+            useReactRenderer={useReactRenderer}
+            rendererCode={rendererCode}
+            rendererCss={rendererCss}
+            minHeight={24}
+            maxHeight={2000}
+            onReady={handleFrameReady}
+            onLinkClick={handleLinkClick}
+            onDoubleClick={handleDoubleClick}
+            onError={(err) =>
+              console.error("[MarkdownCell] iframe error:", err)
+            }
+            className="w-full"
+          />
+        ) : (
+          <p className="text-muted-foreground italic">Double-click to edit</p>
+        )}
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="absolute top-2 right-2 opacity-0 group-hover/md:opacity-100 rounded p-1 text-muted-foreground transition-opacity hover:text-foreground"
+          title="Edit"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </CellContainer>
+  );
+}
