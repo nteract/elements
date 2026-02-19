@@ -49,17 +49,17 @@ export const defaultGutterColors: Record<string, GutterColorConfig> = {
   },
   sql: {
     ribbon: {
-      default: "bg-blue-200 dark:bg-blue-800",
-      focused: "bg-blue-400 dark:bg-blue-600",
+      default: "bg-amber-200 dark:bg-amber-800",
+      focused: "bg-amber-400 dark:bg-amber-600",
     },
     outputRibbon: {
       default:
-        "bg-gradient-to-b from-blue-200/60 to-blue-200 dark:from-blue-800/60 dark:to-blue-800",
+        "bg-gradient-to-b from-amber-200/60 to-amber-200 dark:from-amber-800/60 dark:to-amber-800",
       focused:
-        "bg-gradient-to-b from-blue-400/60 to-blue-400 dark:from-blue-600/60 dark:to-blue-600",
+        "bg-gradient-to-b from-amber-400/60 to-amber-400 dark:from-amber-600/60 dark:to-amber-600",
     },
     background: {
-      focused: "bg-blue-50/50 dark:bg-blue-900/30",
+      focused: "bg-amber-50/20 dark:bg-amber-900/10",
     },
   },
   ai: {
@@ -74,7 +74,7 @@ export const defaultGutterColors: Record<string, GutterColorConfig> = {
         "bg-gradient-to-b from-purple-400/60 to-purple-400 dark:from-purple-600/60 dark:to-purple-600",
     },
     background: {
-      focused: "bg-purple-50/50 dark:bg-purple-900/30",
+      focused: "bg-purple-50/20 dark:bg-purple-900/10",
     },
   },
   raw: {
@@ -89,7 +89,7 @@ export const defaultGutterColors: Record<string, GutterColorConfig> = {
         "bg-gradient-to-b from-rose-400/60 to-rose-400 dark:from-rose-600/60 dark:to-rose-600",
     },
     background: {
-      focused: "bg-rose-50/50 dark:bg-rose-900/30",
+      focused: "bg-rose-50/20 dark:bg-rose-900/10",
     },
   },
 };
