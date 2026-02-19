@@ -14,6 +14,7 @@ import { OutputAreaDemo } from '@/app/components/OutputAreaDemo';
 
 OutputArea handles rendering multiple Jupyter outputs with:
 - **Output type routing** - Automatically routes to the right renderer for each output type
+- **Secure isolation** - HTML, Markdown, SVG, and widgets render in sandboxed iframes
 - **Collapsible state** - Toggle output visibility with a collapse button
 - **Scroll behavior** - Set `maxHeight` to enable scrolling for large outputs
 - **Empty state** - Renders nothing when there are no outputs
@@ -143,6 +144,59 @@ OutputArea handles all Jupyter output types:
 | `stream` | stdout/stderr text | AnsiStreamOutput |
 | `error` | Exception traceback | AnsiErrorOutput |
 
+## Isolated Rendering
+
+Certain output types can contain executable JavaScript and must be rendered in a secure iframe:
+
+| MIME Type | Why Isolation |
+| --- | --- |
+| `text/html` | Can contain `<script>` tags |
+| `text/markdown` | Rendered HTML may include scripts |
+| `image/svg+xml` | SVG can contain embedded scripts |
+| `application/vnd.jupyter.widget-view+json` | Widgets run JavaScript |
+| `application/vnd.plotly.v1+json` | Plotly runs JavaScript |
+| `application/vnd.vegalite.*` | Vega-Lite runs JavaScript |
+
+By default (`isolated="auto"`), OutputArea automatically detects when isolation is needed and renders those outputs in an [IsolatedFrame](/docs/outputs/isolated-frame).
+
+### Force Isolation Mode
+
+```tsx
+// Always use iframe (most secure)
+<OutputArea outputs={outputs} isolated={true} />
+
+// Auto-detect (default) - uses iframe only when needed
+<OutputArea outputs={outputs} isolated="auto" />
+
+// Never use iframe (fastest, but less secure)
+<OutputArea outputs={outputs} isolated={false} />
+```
+
+### Preload Iframe
+
+For instant output rendering, preload the iframe before outputs arrive:
+
+```tsx
+<OutputArea
+  outputs={[]}
+  preloadIframe={true}  // Bootstrap iframe ahead of time
+/>
+```
+
+### Link Handling
+
+Links clicked inside isolated outputs fire the `onLinkClick` callback:
+
+```tsx
+<OutputArea
+  outputs={htmlOutputs}
+  onLinkClick={(url, newTab) => {
+    // Handle link click (e.g., open in browser)
+    window.open(url, newTab ? "_blank" : "_self")
+  }}
+/>
+```
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -155,6 +209,10 @@ OutputArea handles all Jupyter output types:
 | `renderers` | `Record<string, CustomRenderer>` | — | Custom renderers for MediaRouter |
 | `priority` | `readonly string[]` | — | MIME type priority for MediaRouter |
 | `unsafe` | `boolean` | `false` | Allow unsafe HTML rendering |
+| `isolated` | `boolean \| "auto"` | `"auto"` | Force isolation mode (`true`), auto-detect (`"auto"`), or disable (`false`) |
+| `preloadIframe` | `boolean` | `false` | Pre-create iframe for instant rendering |
+| `onLinkClick` | `(url: string, newTab: boolean) => void` | — | Callback when link is clicked in isolated output |
+| `onWidgetUpdate` | `(commId: string, state: object) => void` | — | Widget state update callback (deprecated) |
 
 ## JupyterOutput Type
 

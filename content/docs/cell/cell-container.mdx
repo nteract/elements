@@ -115,6 +115,54 @@ Click different cells to see focus behavior:
 
 Custom colors can be provided via `customGutterColors` prop.
 
+## Segmented Ribbon Layout
+
+For cells with separate code and output sections, use `codeContent` and `outputContent` props instead of `children`. This creates a **segmented ribbon** with distinct colors for each section:
+
+```
+┌─────────────────────────────────────────┐
+│ [gutter] │ code ribbon   │ codeContent  │
+│          │───────────────│──────────────│
+│          │ output ribbon │ outputContent│
+└─────────────────────────────────────────┘
+```
+
+- **Code ribbon**: Cell type color (e.g., sky blue for code)
+- **Output ribbon**: Gradient variation of cell type color
+- **Output opacity**: 70% when cell is unfocused
+
+<div className="my-4 space-y-2">
+  <CellContainerDemo
+    id="segmented"
+    cellType="code"
+    isFocused={true}
+    codeContent={<div className="p-4 text-sm font-mono">print("Hello, world!")</div>}
+    outputContent={<div className="p-4 text-sm font-mono text-muted-foreground">Hello, world!</div>}
+  />
+</div>
+
+```tsx
+<CellContainer
+  cellType="code"
+  isFocused={isFocused}
+  codeContent={<CodeEditor value={source} />}
+  outputContent={<OutputArea outputs={outputs} />}
+/>
+```
+
+### Hide Output
+
+Use `hideOutput` to invisibly hide the output section (useful for preloading iframes):
+
+```tsx
+<CellContainer
+  cellType="code"
+  codeContent={<CodeEditor value={source} />}
+  outputContent={<OutputArea outputs={outputs} preloadIframe />}
+  hideOutput={outputs.length === 0}  // Hide until outputs arrive
+/>
+```
+
 ## Installation
 
 <Tabs items={['CLI', 'Manual']}>

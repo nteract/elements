@@ -1,0 +1,266 @@
+---
+title: Isolated Frame
+description: Secure iframe sandbox for rendering untrusted HTML, Markdown, and widget outputs
+icon: Shield
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { IsolatedFrameDemo } from '@/app/components/IsolatedFrameDemo';
+
+<div className="my-8">
+  <IsolatedFrameDemo variant="table" />
+</div>
+
+IsolatedFrame renders untrusted content in a secure `blob:` URL iframe with strict sandbox restrictions. This prevents:
+- **XSS attacks** from malicious notebook outputs
+- **DOM access** to the parent application
+- **Tauri API access** in desktop environments
+
+## Why Isolation?
+
+Jupyter outputs can contain arbitrary HTML and JavaScript from:
+- `text/html` outputs (pandas DataFrames, custom visualizations)
+- `text/markdown` outputs (rendered markdown with embedded scripts)
+- Widget outputs (ipywidgets, anywidget)
+
+Without isolation, malicious code could:
+1. Access the parent DOM and steal data
+2. Call Tauri APIs (in desktop apps) to access the filesystem
+3. Perform XSS attacks against the user
+
+IsolatedFrame uses a `blob:` URL with sandbox restrictions (no `allow-same-origin`) to create a completely isolated origin.
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/isolated-frame
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/tree/main/registry/outputs/isolated).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { useRef } from "react"
+import { IsolatedFrame, type IsolatedFrameHandle } from "@/components/outputs/isolated"
+
+function HtmlOutput({ html }) {
+  const frameRef = useRef<IsolatedFrameHandle>(null)
+
+  return (
+    <IsolatedFrame
+      ref={frameRef}
+      darkMode={true}
+      initialContent={{
+        mimeType: "text/html",
+        data: html,
+      }}
+      onReady={() => console.log("Frame ready")}
+      onResize={(height) => console.log("New height:", height)}
+    />
+  )
+}
+```
+
+## Examples
+
+### HTML Table
+
+<div className="my-4 rounded border p-4">
+  <IsolatedFrameDemo variant="table" />
+</div>
+
+```tsx
+<IsolatedFrame
+  initialContent={{
+    mimeType: "text/html",
+    data: `<table>...</table>`,
+  }}
+/>
+```
+
+### Styled Content
+
+<div className="my-4 rounded border p-4">
+  <IsolatedFrameDemo variant="styled" />
+</div>
+
+```tsx
+<IsolatedFrame
+  initialContent={{
+    mimeType: "text/html",
+    data: `<style>.card { ... }</style><div class="card">...</div>`,
+  }}
+/>
+```
+
+### Interactive Content
+
+Scripts execute safely inside the iframe without access to the parent:
+
+<div className="my-4 rounded border p-4">
+  <IsolatedFrameDemo variant="interactive" />
+</div>
+
+```tsx
+<IsolatedFrame
+  initialContent={{
+    mimeType: "text/html",
+    data: `
+      <button onclick="count++">Increment</button>
+      <script>let count = 0;</script>
+    `,
+  }}
+/>
+```
+
+### Theme Synchronization
+
+Dark mode can be toggled at runtime via `setTheme()`:
+
+<div className="my-4 rounded border p-4">
+  <IsolatedFrameDemo variant="theme" />
+</div>
+
+```tsx
+const frameRef = useRef<IsolatedFrameHandle>(null)
+
+// Toggle theme
+frameRef.current?.setTheme(isDark)
+
+<IsolatedFrame
+  ref={frameRef}
+  darkMode={initialDarkMode}
+  initialContent={content}
+/>
+```
+
+## Architecture
+
+Communication between parent and iframe uses `postMessage`:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Parent Window                                               │
+│                                                             │
+│  ┌─────────────────┐      postMessage       ┌────────────┐  │
+│  │ IsolatedFrame   │ ──────────────────────▶│            │  │
+│  │ Component       │    render, theme,      │  Iframe    │  │
+│  │                 │    eval, clear         │  (blob:)   │  │
+│  │                 │ ◀──────────────────────│            │  │
+│  └─────────────────┘    ready, resize,      └────────────┘  │
+│                         link_click, error                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Message Types
+
+**Parent → Iframe:**
+- `render` - Render content (HTML, Markdown, etc.)
+- `theme` - Update dark/light mode
+- `eval` - Execute JavaScript (for bootstrapping)
+- `clear` - Clear all content
+- `comm_*` - Widget communication
+
+**Iframe → Parent:**
+- `ready` - Iframe loaded
+- `resize` - Content height changed
+- `link_click` - User clicked a link
+- `error` - JavaScript error occurred
+- `widget_*` - Widget state updates
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | — | Unique ID for message routing |
+| `initialContent` | `RenderPayload` | — | Content to render on ready |
+| `darkMode` | `boolean` | `true` | Initial dark mode state |
+| `useReactRenderer` | `boolean` | `false` | Load React renderer bundle |
+| `minHeight` | `number` | `24` | Minimum iframe height |
+| `maxHeight` | `number` | `2000` | Maximum iframe height |
+| `className` | `string` | — | Additional CSS classes |
+| `onReady` | `() => void` | — | Called when iframe is ready |
+| `onResize` | `(height: number) => void` | — | Called on content resize |
+| `onLinkClick` | `(url: string, newTab: boolean) => void` | — | Called on link click |
+| `onDoubleClick` | `() => void` | — | Called on double-click |
+| `onWidgetUpdate` | `(commId: string, state: object) => void` | — | Widget state update |
+| `onError` | `(error: { message: string }) => void` | — | JavaScript error handler |
+| `onMessage` | `(message: IframeToParentMessage) => void` | — | All messages |
+
+## Handle Methods
+
+The ref exposes imperative methods:
+
+```tsx
+interface IsolatedFrameHandle {
+  send: (message: ParentToIframeMessage) => void;
+  render: (payload: RenderPayload) => void;
+  eval: (code: string) => void;
+  setTheme: (isDark: boolean) => void;
+  clear: () => void;
+  isReady: boolean;
+  isIframeReady: boolean;
+}
+```
+
+## RenderPayload Type
+
+```tsx
+interface RenderPayload {
+  mimeType: string;           // e.g., "text/html", "text/markdown"
+  data: unknown;              // Content (string for most types)
+  metadata?: Record<string, unknown>;
+  cellId?: string;            // For output routing
+  outputIndex?: number;
+  append?: boolean;           // Append instead of replace
+  replace?: boolean;          // Replace all outputs
+}
+```
+
+## Security Model
+
+<Callout type="warn">
+  **Critical:** The iframe sandbox does NOT include `allow-same-origin`. This is intentional - adding it would give the iframe access to the parent's origin and any Tauri APIs.
+</Callout>
+
+Sandbox attributes:
+- `allow-scripts` - Required for interactive content
+- `allow-downloads` - File downloads from widgets
+- `allow-forms` - Form submissions
+- `allow-pointer-lock` - Interactive visualizations
+- `allow-popups` - Links opening new windows
+- `allow-popups-to-escape-sandbox` - Popups are unrestricted
+- `allow-modals` - alert/confirm/prompt
+
+## Widget Integration
+
+For Jupyter widgets, use `CommBridgeManager` to proxy widget communication:
+
+```tsx
+import { CommBridgeManager } from "@/components/outputs/isolated"
+
+// In your widget container
+const bridge = new CommBridgeManager({
+  frame: frameRef.current,
+  store: widgetStore,
+  sendUpdate: (commId, state) => kernel.sendCommMsg(commId, state),
+  sendCustom: (commId, content) => kernel.sendCustomMsg(commId, content),
+  closeComm: (commId) => kernel.closeComm(commId),
+})
+
+// Forward iframe messages to bridge
+<IsolatedFrame
+  onMessage={(msg) => bridge.handleIframeMessage(msg)}
+/>
+```
+
+See the [Widgets documentation](/docs/widgets) for more details on widget integration.
