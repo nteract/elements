@@ -3,6 +3,8 @@
  * Checks document state and system preference to determine current mode.
  */
 
+import { useEffect, useState } from "react";
+
 /**
  * Check if the current environment prefers dark mode via system preference
  */
@@ -82,4 +84,43 @@ export function isDarkMode(): boolean {
 
   // Fall back to system preference
   return prefersDarkMode();
+}
+
+/**
+ * React hook to detect dark mode from document state or system preference.
+ * Watches for theme changes via MutationObserver and media query.
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const isDark = useDarkMode();
+ *   return <div className={isDark ? "bg-gray-900" : "bg-white"}>...</div>;
+ * }
+ * ```
+ */
+export function useDarkMode(): boolean {
+  const [isDark, setIsDark] = useState(() =>
+    typeof window !== "undefined" ? isDarkMode() : false,
+  );
+
+  useEffect(() => {
+    setIsDark(isDarkMode());
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => setIsDark(isDarkMode());
+    mediaQuery.addEventListener("change", handleChange);
+
+    const observer = new MutationObserver(() => setIsDark(isDarkMode()));
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "style", "data-theme", "data-mode"],
+    });
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+      observer.disconnect();
+    };
+  }, []);
+
+  return isDark;
 }

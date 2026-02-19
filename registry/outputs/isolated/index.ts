@@ -36,3 +36,5 @@ export type { FrameHtmlOptions } from "./frame-html";
 export { createFrameBlobUrl, generateFrameHtml } from "./frame-html";
 export type { IsolatedFrameHandle, IsolatedFrameProps } from "./isolated-frame";
 export { IsolatedFrame } from "./isolated-frame";
+// Security testing component
+export { IsolationTest } from "./IsolationTest";
