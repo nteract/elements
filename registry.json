@@ -844,6 +844,40 @@
       ]
     },
     {
+      "name": "isolated-frame",
+      "type": "registry:component",
+      "title": "Isolated Frame",
+      "description": "Secure iframe component for rendering untrusted output content. Uses blob URLs with sandbox restrictions to isolate JavaScript execution. Includes message bridge for parent-child communication and widget comm protocol support.",
+      "registryDependencies": ["@nteract/widget-store"],
+      "files": [
+        {
+          "path": "registry/outputs/isolated/index.ts",
+          "type": "registry:lib",
+          "target": "components/outputs/isolated/index.ts"
+        },
+        {
+          "path": "registry/outputs/isolated/isolated-frame.tsx",
+          "type": "registry:component",
+          "target": "components/outputs/isolated/isolated-frame.tsx"
+        },
+        {
+          "path": "registry/outputs/isolated/frame-bridge.ts",
+          "type": "registry:lib",
+          "target": "components/outputs/isolated/frame-bridge.ts"
+        },
+        {
+          "path": "registry/outputs/isolated/frame-html.ts",
+          "type": "registry:lib",
+          "target": "components/outputs/isolated/frame-html.ts"
+        },
+        {
+          "path": "registry/outputs/isolated/comm-bridge-manager.ts",
+          "type": "registry:lib",
+          "target": "components/outputs/isolated/comm-bridge-manager.ts"
+        }
+      ]
+    },
+    {
       "name": "cell-type-selector",
       "type": "registry:component",
       "title": "CellTypeSelector",
