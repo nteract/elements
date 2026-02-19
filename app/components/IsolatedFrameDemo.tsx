@@ -6,13 +6,10 @@ import {
   type IsolatedFrameHandle,
 } from "@/registry/outputs/isolated";
 
+// Note: Tables without custom styles inherit from frame-html.ts defaults:
+// - Uses CSS variables: --bg-secondary, --border-color, --text-primary
+// - Automatically responds to theme changes via postMessage
 const htmlTableContent = `
-<style>
-  table { border-collapse: collapse; width: 100%; font-family: system-ui; }
-  th, td { border: 1px solid var(--border-color, #e0e0e0); padding: 8px 12px; text-align: left; }
-  th { background: var(--bg-secondary, #f5f5f5); font-weight: 600; }
-  tr:nth-child(even) { background: var(--bg-secondary, #f9f9f9); }
-</style>
 <table>
   <thead>
     <tr><th>Model</th><th>Accuracy</th><th>F1 Score</th></tr>
@@ -28,16 +25,15 @@ const htmlTableContent = `
 const styledContent = `
 <style>
   .card {
-    background: var(--bg-secondary, #f5f5f5);
+    background: var(--bg-secondary);
     border-radius: 8px;
     padding: 16px;
-    font-family: system-ui;
   }
-  .card h3 { margin: 0 0 8px 0; color: var(--text-primary, #1a1a1a); }
-  .card p { margin: 0; color: var(--text-secondary, #666); }
+  .card h3 { margin: 0 0 8px 0; color: var(--text-primary); }
+  .card p { margin: 0; color: var(--text-secondary); }
   .badge {
     display: inline-block;
-    background: #3b82f6;
+    background: var(--accent-color);
     color: white;
     padding: 2px 8px;
     border-radius: 4px;
@@ -55,21 +51,20 @@ const styledContent = `
 const interactiveContent = `
 <style>
   button {
-    background: #3b82f6;
+    background: var(--accent-color);
     color: white;
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
-    font-family: system-ui;
     margin-right: 8px;
   }
-  button:hover { background: #2563eb; }
+  button:hover { opacity: 0.9; }
   #counter {
     font-size: 24px;
     font-weight: bold;
     margin: 16px 0;
-    font-family: system-ui;
+    color: var(--text-primary);
   }
 </style>
 <div id="counter">Count: 0</div>
