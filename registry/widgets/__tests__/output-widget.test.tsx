@@ -1,8 +1,8 @@
 import { act, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it } from "vitest";
 import { OutputWidget } from "@/registry/widgets/controls/output-widget";
-import { WidgetStoreContext } from "@/registry/widgets/widget-store-context";
 import { createWidgetStore } from "@/registry/widgets/widget-store";
+import { WidgetStoreContext } from "@/registry/widgets/widget-store-context";
 
 describe("OutputWidget", () => {
   beforeAll(() => {
