@@ -14,7 +14,8 @@
       "!dist",
       "!build",
       "!.source",
-      "!**/*.css"
+      "!**/*.css",
+      "!public/isolated"
     ]
   },
   "css": {
