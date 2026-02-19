@@ -1,0 +1,207 @@
+---
+title: Markdown Cell
+description: Editable markdown cell with edit/render mode toggle
+icon: FileText
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { MarkdownCellBasicDemo, MarkdownCellEmptyDemo, MarkdownCellMultiDemo } from '@/app/components/MarkdownCellDemo';
+
+<div className="my-8">
+  <MarkdownCellBasicDemo />
+</div>
+
+The `MarkdownCell` component provides a complete edit/render toggle experience for markdown cells in notebooks. Double-click to edit, press Escape to exit.
+
+## Features
+
+- **Edit mode**: CodeMirror editor with markdown syntax highlighting
+- **Render mode**: Secure iframe rendering via `IsolatedFrame`
+- **Double-click to edit**: Click rendered content to switch to editor
+- **Keyboard shortcuts**: Escape to exit, Shift+Enter to move next
+- **Dark mode sync**: Automatically matches parent theme
+- **Optional navigation**: Works standalone or with cross-cell navigation
+
+## Installation
+
+<RegistrySetup name="markdown-cell" />
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { MarkdownCell } from "@/registry/cell/MarkdownCell";
+
+function MyComponent() {
+  const [source, setSource] = useState("# Hello World");
+
+  return (
+    <MarkdownCell
+      cell={{ id: "cell-1", source }}
+      onUpdateSource={setSource}
+    />
+  );
+}
+```
+
+### Empty Cell (Edit Mode)
+
+Empty cells start in edit mode automatically:
+
+<MarkdownCellEmptyDemo />
+
+```tsx
+<MarkdownCell
+  cell={{ id: "new-cell", source: "" }}
+  onUpdateSource={setSource}
+/>
+```
+
+### With Navigation (Notebook)
+
+For multi-cell notebooks, wrap cells in `EditorRegistryProvider` and provide navigation callbacks:
+
+<MarkdownCellMultiDemo />
+
+```tsx
+import { MarkdownCell } from "@/registry/cell/MarkdownCell";
+import {
+  EditorRegistryProvider,
+  useEditorRegistry,
+} from "@/registry/cell/useEditorRegistry";
+
+function Notebook() {
+  const [cells, setCells] = useState([...]);
+  const [focusedId, setFocusedId] = useState(cells[0].id);
+
+  return (
+    <EditorRegistryProvider>
+      {cells.map((cell, idx) => (
+        <MarkdownCell
+          key={cell.id}
+          cell={cell}
+          isFocused={focusedId === cell.id}
+          onFocus={() => setFocusedId(cell.id)}
+          onUpdateSource={(source) => updateCell(cell.id, source)}
+          onDelete={() => deleteCell(cell.id)}
+          onFocusPrevious={(pos) => focusPrev(idx, pos)}
+          onFocusNext={(pos) => focusNext(idx, pos)}
+          onInsertCellAfter={() => insertAfter(idx)}
+          isLastCell={idx === cells.length - 1}
+        />
+      ))}
+    </EditorRegistryProvider>
+  );
+}
+```
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Escape` | Exit edit mode (if cell has content) |
+| `Shift+Enter` | Exit edit mode and focus next cell |
+| `ArrowUp` (at start) | Focus previous cell |
+| `ArrowDown` (at end) | Focus next cell |
+| `Backspace` (empty cell) | Delete cell and focus previous |
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `cell` | `{ id: string; source: string }` | required | Cell data |
+| `onUpdateSource` | `(source: string) => void` | required | Source change callback |
+| `isFocused` | `boolean` | `false` | Whether cell is focused |
+| `onFocus` | `() => void` | - | Focus callback |
+| `onDelete` | `() => void` | - | Delete callback |
+| `onFocusPrevious` | `(pos: "start" \| "end") => void` | - | Focus previous cell |
+| `onFocusNext` | `(pos: "start" \| "end") => void` | - | Focus next cell |
+| `onInsertCellAfter` | `() => void` | - | Insert cell after this one |
+| `isLastCell` | `boolean` | `false` | Affects Shift+Enter behavior |
+| `useReactRenderer` | `boolean` | `true` | Use React renderer in iframe |
+| `rendererCode` | `string` | - | Inline renderer bundle |
+| `rendererCss` | `string` | - | Inline renderer CSS |
+| `className` | `string` | - | Additional CSS classes |
+
+## Hooks
+
+### useCellKeyboardNavigation
+
+Returns CodeMirror keybindings for cell navigation:
+
+```tsx
+import { useCellKeyboardNavigation } from "@/registry/cell/useCellKeyboardNavigation";
+
+const keyMap = useCellKeyboardNavigation({
+  onFocusPrevious: (pos) => focusCell(prevId, pos),
+  onFocusNext: (pos) => focusCell(nextId, pos),
+  onExecute: () => executeCell(cellId),
+  onDelete: () => deleteCell(cellId),
+});
+
+<CodeMirrorEditor keyMap={keyMap} ... />
+```
+
+### useEditorRegistry
+
+Context for cross-cell navigation:
+
+```tsx
+import {
+  EditorRegistryProvider,
+  useEditorRegistry,
+} from "@/registry/cell/useEditorRegistry";
+
+// In provider
+<EditorRegistryProvider>
+  {children}
+</EditorRegistryProvider>
+
+// In cell
+const { registerEditor, unregisterEditor, focusCell } = useEditorRegistry();
+
+// Register when editor mounts
+useEffect(() => {
+  registerEditor(cellId, {
+    focus: () => editorRef.current?.focus(),
+    setCursorPosition: (pos) => editorRef.current?.setCursorPosition(pos),
+  });
+  return () => unregisterEditor(cellId);
+}, [cellId]);
+
+// Focus any cell programmatically
+focusCell(targetCellId, "start");
+```
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ MarkdownCell                                            │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ CellContainer (cellType="markdown")                 │ │
+│ │ ┌─────────────────────────────────────────────────┐ │ │
+│ │ │ Editor Section (visible when editing)           │ │ │
+│ │ │ └── CodeMirrorEditor (language="markdown")      │ │ │
+│ │ └─────────────────────────────────────────────────┘ │ │
+│ │ ┌─────────────────────────────────────────────────┐ │ │
+│ │ │ View Section (visible when !editing)            │ │ │
+│ │ │ └── IsolatedFrame (renders text/markdown)       │ │ │
+│ │ │     └── onDoubleClick → setEditing(true)        │ │ │
+│ │ └─────────────────────────────────────────────────┘ │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Security
+
+Rendered markdown is displayed inside an `IsolatedFrame` with:
+
+- Sandboxed iframe (no `allow-same-origin`)
+- Opaque origin (cannot access parent DOM)
+- CSP restrictions on scripts
+- Theme sync via postMessage
+
+This ensures user-provided markdown cannot execute arbitrary code or access the parent application.
