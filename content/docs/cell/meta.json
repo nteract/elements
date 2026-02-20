@@ -3,6 +3,7 @@
   "pages": [
     "cell-container",
     "markdown-cell",
+    "code-cell",
     "cell-controls",
     "cell-header",
     "collaborator-avatars",

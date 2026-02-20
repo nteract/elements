@@ -30,7 +30,7 @@ export function MarkdownCellBasicDemo() {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div>
       <MarkdownCell
         cell={{ id: "demo-1", source }}
         isFocused={isFocused}
@@ -50,7 +50,7 @@ export function MarkdownCellEmptyDemo() {
   const [isFocused, setIsFocused] = useState(true);
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div>
       <MarkdownCell
         cell={{ id: "demo-empty", source }}
         isFocused={isFocused}
@@ -126,21 +126,20 @@ function MultiCellContent() {
   };
 
   return (
-    <div className="space-y-2">
+    <div>
       {cells.map((cell, idx) => (
-        <div key={cell.id} className="border rounded-lg overflow-hidden">
-          <MarkdownCell
-            cell={cell}
-            isFocused={focusedId === cell.id}
-            onFocus={() => setFocusedId(cell.id)}
-            onUpdateSource={(source) => updateSource(cell.id, source)}
-            onDelete={() => deleteCell(cell.id)}
-            onFocusPrevious={(pos) => handleFocusPrevious(idx, pos)}
-            onFocusNext={(pos) => handleFocusNext(idx, pos)}
-            onInsertCellAfter={() => insertCellAfter(idx)}
-            isLastCell={idx === cells.length - 1}
-          />
-        </div>
+        <MarkdownCell
+          key={cell.id}
+          cell={cell}
+          isFocused={focusedId === cell.id}
+          onFocus={() => setFocusedId(cell.id)}
+          onUpdateSource={(source) => updateSource(cell.id, source)}
+          onDelete={() => deleteCell(cell.id)}
+          onFocusPrevious={(pos) => handleFocusPrevious(idx, pos)}
+          onFocusNext={(pos) => handleFocusNext(idx, pos)}
+          onInsertCellAfter={() => insertCellAfter(idx)}
+          isLastCell={idx === cells.length - 1}
+        />
       ))}
     </div>
   );

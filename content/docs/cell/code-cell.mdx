@@ -1,0 +1,188 @@
+---
+title: Code Cell
+description: Executable code cell with editor and output area
+icon: Code
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { CodeCellBasicDemo, CodeCellWithOutputDemo, CodeCellMultiDemo } from '@/app/components/CodeCellDemo';
+
+<div className="my-8">
+  <CodeCellBasicDemo />
+</div>
+
+The `CodeCell` component provides a complete code cell experience with editor, execution button, and output rendering. Click the play button or press Shift+Enter to "execute".
+
+## Features
+
+- **CodeMirror editor** with language syntax highlighting
+- **Execution button** with count display (`[n]:` style)
+- **Output rendering** via isolated iframe
+- **Keyboard shortcuts** for execute, navigate, delete
+- **Optional navigation** for multi-cell notebooks
+
+## Installation
+
+<RegistrySetup name="code-cell" />
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { CodeCell } from "@/registry/cell/CodeCell";
+
+function MyComponent() {
+  const [cell, setCell] = useState({
+    id: "cell-1",
+    source: "print('hello')",
+    outputs: [],
+    execution_count: null,
+  });
+
+  return (
+    <CodeCell
+      cell={cell}
+      language="python"
+      onUpdateSource={(source) => setCell({ ...cell, source })}
+      onExecute={() => runCell(cell.id)}
+    />
+  );
+}
+```
+
+### With Outputs
+
+<CodeCellWithOutputDemo />
+
+```tsx
+<CodeCell
+  cell={{
+    id: "cell-1",
+    source: 'print("Hello!")',
+    outputs: [
+      { output_type: "stream", name: "stdout", text: "Hello!\n" }
+    ],
+    execution_count: 1,
+  }}
+  onUpdateSource={setSource}
+  onExecute={execute}
+/>
+```
+
+### Multi-Cell Notebook
+
+<CodeCellMultiDemo />
+
+```tsx
+import { CodeCell } from "@/registry/cell/CodeCell";
+import {
+  EditorRegistryProvider,
+  useEditorRegistry,
+} from "@/registry/cell/useEditorRegistry";
+
+function Notebook() {
+  const [cells, setCells] = useState([...]);
+  const [focusedId, setFocusedId] = useState(cells[0].id);
+  const [executingId, setExecutingId] = useState(null);
+
+  return (
+    <EditorRegistryProvider>
+      {cells.map((cell, idx) => (
+        <CodeCell
+          key={cell.id}
+          cell={cell}
+          language="python"
+          isFocused={focusedId === cell.id}
+          isExecuting={executingId === cell.id}
+          onFocus={() => setFocusedId(cell.id)}
+          onUpdateSource={(source) => updateCell(cell.id, source)}
+          onExecute={() => executeCell(cell.id)}
+          onInterrupt={() => interruptCell(cell.id)}
+          onDelete={() => deleteCell(cell.id)}
+          onFocusPrevious={(pos) => focusPrev(idx, pos)}
+          onFocusNext={(pos) => focusNext(idx, pos)}
+          onInsertCellAfter={() => insertAfter(idx)}
+          isLastCell={idx === cells.length - 1}
+        />
+      ))}
+    </EditorRegistryProvider>
+  );
+}
+```
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Shift+Enter` | Execute and focus next cell |
+| `Mod+Enter` | Execute in place |
+| `Alt+Enter` | Execute and insert new cell |
+| `ArrowUp` (at start) | Focus previous cell |
+| `ArrowDown` (at end) | Focus next cell |
+| `Backspace` (empty cell) | Delete cell and focus previous |
+| `Mod+Shift+F` | Format code (if `onFormat` provided) |
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `cell` | `CodeCellData` | required | Cell data (id, source, outputs, execution_count) |
+| `language` | `SupportedLanguage` | `"python"` | Language for syntax highlighting |
+| `isFocused` | `boolean` | `false` | Whether cell is focused |
+| `isExecuting` | `boolean` | `false` | Whether cell is executing |
+| `onUpdateSource` | `(source: string) => void` | required | Source change callback |
+| `onFocus` | `() => void` | - | Focus callback |
+| `onExecute` | `() => void` | - | Execute callback |
+| `onInterrupt` | `() => void` | - | Interrupt callback |
+| `onDelete` | `() => void` | - | Delete callback |
+| `onFocusPrevious` | `(pos: "start" \| "end") => void` | - | Focus previous cell |
+| `onFocusNext` | `(pos: "start" \| "end") => void` | - | Focus next cell |
+| `onInsertCellAfter` | `() => void` | - | Insert cell after |
+| `onFormat` | `() => void` | - | Format code callback |
+| `isLastCell` | `boolean` | `false` | Affects navigation behavior |
+| `extensions` | `Extension[]` | - | Additional CodeMirror extensions |
+| `useReactRenderer` | `boolean` | `true` | Use React renderer in output iframe |
+| `rendererCode` | `string` | - | Inline renderer bundle |
+| `rendererCss` | `string` | - | Inline renderer CSS |
+| `className` | `string` | - | Additional CSS classes |
+
+## Cell Data Shape
+
+```typescript
+interface CodeCellData {
+  id: string;
+  source: string;
+  outputs: JupyterOutput[];
+  execution_count: number | null;
+}
+```
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ CodeCell                                                │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ CellContainer (cellType="code")                     │ │
+│ │ ┌───────┬───────────────────────────────┬─────────┐ │ │
+│ │ │ [n]:▶ │ CodeMirrorEditor              │   [🗑]  │ │ │
+│ │ │       │ └── keyMap (navigation)       │         │ │ │
+│ │ │   ▮   │ └── extensions (custom)       │         │ │ │
+│ │ ├───────┴───────────────────────────────┴─────────┤ │ │
+│ │ │ OutputArea                                      │ │ │
+│ │ │ └── IsolatedFrame (for rich outputs)            │ │ │
+│ │ └─────────────────────────────────────────────────┘ │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Differences from MarkdownCell
+
+| Feature | CodeCell | MarkdownCell |
+|---------|----------|--------------|
+| Editor | Always visible | Toggle edit/view |
+| Output | Separate area below | Rendered in-place |
+| Execute | Calls `onExecute` | No execution |
+| Gutter | `[n]:` with play button | Just `md` label |
