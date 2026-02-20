@@ -150,6 +150,7 @@
         "rehype-katex",
         "rehype-raw",
         "react-syntax-highlighter",
+        "@types/react-syntax-highlighter",
         "katex"
       ],
       "files": [
@@ -338,7 +339,13 @@
       "title": "OutputArea",
       "description": "Wrapper component for rendering multiple Jupyter outputs with collapsible state and scroll behavior.",
       "dependencies": ["lucide-react"],
-      "registryDependencies": ["@nteract/media-router", "@nteract/ansi-output"],
+      "registryDependencies": [
+        "@nteract/media-router",
+        "@nteract/ansi-output",
+        "@nteract/isolated-frame",
+        "@nteract/widget-store",
+        "@nteract/markdown-output"
+      ],
       "files": [
         {
           "path": "registry/cell/OutputArea.tsx",
@@ -541,6 +548,16 @@
           "path": "registry/widgets/controls/index.ts",
           "type": "registry:lib",
           "target": "components/widgets/controls/index.ts"
+        },
+        {
+          "path": "registry/widgets/use-layout-styles.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/use-layout-styles.ts"
+        },
+        {
+          "path": "registry/widgets/layout-utils.ts",
+          "type": "registry:lib",
+          "target": "components/widgets/layout-utils.ts"
         },
         {
           "path": "registry/widgets/controls/int-slider.tsx",
@@ -853,27 +870,32 @@
         {
           "path": "registry/outputs/isolated/index.ts",
           "type": "registry:lib",
-          "target": "components/outputs/isolated/index.ts"
+          "target": "components/isolated/index.ts"
         },
         {
           "path": "registry/outputs/isolated/isolated-frame.tsx",
           "type": "registry:component",
-          "target": "components/outputs/isolated/isolated-frame.tsx"
+          "target": "components/isolated/isolated-frame.tsx"
         },
         {
           "path": "registry/outputs/isolated/frame-bridge.ts",
           "type": "registry:lib",
-          "target": "components/outputs/isolated/frame-bridge.ts"
+          "target": "components/isolated/frame-bridge.ts"
         },
         {
           "path": "registry/outputs/isolated/frame-html.ts",
           "type": "registry:lib",
-          "target": "components/outputs/isolated/frame-html.ts"
+          "target": "components/isolated/frame-html.ts"
         },
         {
           "path": "registry/outputs/isolated/comm-bridge-manager.ts",
           "type": "registry:lib",
-          "target": "components/outputs/isolated/comm-bridge-manager.ts"
+          "target": "components/isolated/comm-bridge-manager.ts"
+        },
+        {
+          "path": "registry/outputs/isolated/IsolationTest.tsx",
+          "type": "registry:component",
+          "target": "components/isolated/IsolationTest.tsx"
         }
       ]
     },
