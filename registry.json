@@ -339,7 +339,13 @@
       "title": "OutputArea",
       "description": "Wrapper component for rendering multiple Jupyter outputs with collapsible state and scroll behavior.",
       "dependencies": ["lucide-react"],
-      "registryDependencies": ["@nteract/media-router", "@nteract/ansi-output", "@nteract/isolated-frame", "@nteract/widget-store", "@nteract/markdown-output"],
+      "registryDependencies": [
+        "@nteract/media-router",
+        "@nteract/ansi-output",
+        "@nteract/isolated-frame",
+        "@nteract/widget-store",
+        "@nteract/markdown-output"
+      ],
       "files": [
         {
           "path": "registry/cell/OutputArea.tsx",

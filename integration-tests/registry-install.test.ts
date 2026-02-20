@@ -41,7 +41,10 @@ function logStep(step: number, message: string) {
   console.log(`\n[Step ${step}] ${message}`);
 }
 
-async function startRegistryServer(): Promise<{ server: Server; port: number }> {
+async function startRegistryServer(): Promise<{
+  server: Server;
+  port: number;
+}> {
   return new Promise((resolve, reject) => {
     const publicDir = join(PROJECT_ROOT, "public");
     const server = createServer((req, res) => {
@@ -77,13 +80,15 @@ function configureRegistry(appDir: string, port: number) {
   };
 
   writeFileSync(componentsJsonPath, JSON.stringify(config, null, 2));
-  console.log(`  Updated components.json with local registry URL (port ${port})`);
+  console.log(
+    `  Updated components.json with local registry URL (port ${port})`,
+  );
 }
 
 function runCommand(
   command: string,
   cwd: string,
-  _description: string
+  _description: string,
 ): { success: boolean; duration: number; error?: string } {
   const start = Date.now();
   try {
@@ -122,7 +127,7 @@ async function main() {
     const buildResult = runCommand(
       "pnpm run registry:build",
       PROJECT_ROOT,
-      "Build registry"
+      "Build registry",
     );
     results.push({ step: "build-registry", ...buildResult });
     if (!buildResult.success) {
@@ -160,11 +165,13 @@ async function main() {
     const createResult = runCommand(
       `npx --yes create-next-app@latest test-app --typescript --tailwind --eslint --app --no-src-dir --import-alias "@/*" --yes`,
       tempDir,
-      "Create Next.js project"
+      "Create Next.js project",
     );
     results.push({ step: "create-nextjs", ...createResult });
     if (!createResult.success) {
-      throw new Error(`Failed to create Next.js project: ${createResult.error}`);
+      throw new Error(
+        `Failed to create Next.js project: ${createResult.error}`,
+      );
     }
 
     const appDir = join(tempDir, "test-app");
@@ -174,7 +181,7 @@ async function main() {
     const initResult = runCommand(
       "pnpm dlx shadcn@latest init -y -d",
       appDir,
-      "Initialize shadcn"
+      "Initialize shadcn",
     );
     results.push({ step: "init-shadcn", ...initResult });
     if (!initResult.success) {
@@ -189,17 +196,17 @@ async function main() {
     // Step 8: Install all nteract components
     logStep(
       8,
-      "Installing @nteract/all components (this may take a few minutes)..."
+      "Installing @nteract/all components (this may take a few minutes)...",
     );
     const installResult = runCommand(
       "pnpm dlx shadcn@latest add @nteract/all -yo --verbose",
       appDir,
-      "Install nteract components"
+      "Install nteract components",
     );
     results.push({ step: "install-components", ...installResult });
     if (!installResult.success) {
       throw new Error(
-        `Failed to install nteract components: ${installResult.error}`
+        `Failed to install nteract components: ${installResult.error}`,
       );
     }
 
@@ -208,7 +215,7 @@ async function main() {
     const nextBuildResult = runCommand(
       "npm run build",
       appDir,
-      "Next.js build"
+      "Next.js build",
     );
     results.push({ step: "next-build", ...nextBuildResult });
     if (!nextBuildResult.success) {
