@@ -7,17 +7,17 @@
  * Run: pnpm test:integration
  */
 
-import { execSync, spawn, type ChildProcess } from "node:child_process";
+import { execSync } from "node:child_process";
 import {
+  existsSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
   writeFileSync,
-  readFileSync,
-  existsSync,
 } from "node:fs";
 import { createServer, type Server } from "node:http";
 import { tmpdir } from "node:os";
-import { join, dirname } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import handler from "serve-handler";
 
@@ -245,7 +245,7 @@ async function main() {
 }
 
 function printResults(results: TestResult[]) {
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
   console.log("Test Results Summary");
   console.log("=".repeat(60));
 
