@@ -138,20 +138,37 @@ export function IsolatedRendererProvider({
   );
 }
 
+// Default state when no provider is present (e.g., during SSR)
+const NO_PROVIDER_STATE: IsolatedRendererContextValue = {
+  rendererCode: undefined,
+  rendererCss: undefined,
+  isLoading: true,
+  error: null,
+};
+
 /**
  * Hook to access the isolated renderer bundle.
  *
- * Must be used within an IsolatedRendererProvider.
- *
- * @throws Error if used outside of IsolatedRendererProvider
+ * Returns a "loading" state if used outside IsolatedRendererProvider,
+ * which allows components to render safely during SSR.
+ * In development, logs a warning when no provider is present.
  */
 export function useIsolatedRenderer(): IsolatedRendererContextValue {
   const context = useContext(IsolatedRendererContext);
   if (!context) {
-    throw new Error(
-      "useIsolatedRenderer must be used within <IsolatedRendererProvider>. " +
-        "See: https://elements.nteract.io/docs/outputs/isolated-frame#setup",
-    );
+    // During SSR or when provider is missing, return a "not ready" state
+    // This allows components to render without crashing
+    if (
+      process.env.NODE_ENV === "development" &&
+      typeof window !== "undefined"
+    ) {
+      console.warn(
+        "useIsolatedRenderer: No IsolatedRendererProvider found. " +
+          "Wrap your app with <IsolatedRendererProvider>. " +
+          "See: https://elements.nteract.io/docs/outputs/isolated-frame#setup",
+      );
+    }
+    return NO_PROVIDER_STATE;
   }
   return context;
 }
