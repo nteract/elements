@@ -87,6 +87,7 @@ export function HTMLEditorDemo({
       frameRef.current?.render({
         mimeType: "text/html",
         data: code,
+        replace: true,
       });
     }, debounceMs);
 
@@ -133,6 +134,7 @@ export function HTMLEditorDemo({
           initialContent={{
             mimeType: "text/html",
             data: code,
+            replace: true,
           }}
           minHeight={100}
           maxHeight={400}
