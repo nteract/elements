@@ -610,8 +610,10 @@ export function IsolationTest() {
         <p className="border-l-2 border-yellow-600 bg-yellow-950/30 p-2">
           <strong>⚠️ Web Security Note:</strong> On the web, blob URLs inherit
           the creator&apos;s origin. The sandbox attribute creates isolation,
-          but for maximum security in production web apps, consider serving
-          untrusted content from a separate origin/subdomain.
+          but for maximum security in production web apps, serve untrusted
+          content from a <strong>separate domain</strong> (e.g.,{" "}
+          <code>runtusercontent.com</code>) rather than a subdomain, as
+          subdomains can share cookies in some configurations.
         </p>
       </div>
 
