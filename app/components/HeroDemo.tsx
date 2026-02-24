@@ -55,26 +55,29 @@ function SimpleMarkdown({ source }: { source: string }) {
       elements.push(
         <h1 key={i} className="text-xl font-bold mb-2">
           {line.slice(2)}
-        </h1>
+        </h1>,
       );
     } else if (line.startsWith("## ")) {
       elements.push(
         <h2 key={i} className="text-lg font-semibold mb-2">
           {line.slice(3)}
-        </h2>
+        </h2>,
       );
     } else if (line.trim() === "") {
       elements.push(<div key={i} className="h-2" />);
     } else {
       // Handle **bold** and basic text
-      const parts = line.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/g);
+      const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
       const rendered = parts.map((part, j) => {
         if (part.startsWith("**") && part.endsWith("**")) {
           return <strong key={j}>{part.slice(2, -2)}</strong>;
         }
         if (part.startsWith("`") && part.endsWith("`")) {
           return (
-            <code key={j} className="bg-muted px-1 py-0.5 rounded text-sm font-mono">
+            <code
+              key={j}
+              className="bg-muted px-1 py-0.5 rounded text-sm font-mono"
+            >
               {part.slice(1, -1)}
             </code>
           );
@@ -84,7 +87,7 @@ function SimpleMarkdown({ source }: { source: string }) {
       elements.push(
         <p key={i} className="text-muted-foreground">
           {rendered}
-        </p>
+        </p>,
       );
     }
   }
@@ -101,12 +104,10 @@ export function HeroDemo() {
   const [executionCounts, setExecutionCounts] = useState<
     Record<string, number | null>
   >({});
-  const [globalCounter, setGlobalCounter] = useState(0);
+  const [, setGlobalCounter] = useState(0);
 
   const updateSource = (id: string, source: string) => {
-    setCells((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, source } : c))
-    );
+    setCells((prev) => prev.map((c) => (c.id === id ? { ...c, source } : c)));
   };
 
   const handleExecute = (cellId: string) => {

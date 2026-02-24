@@ -131,10 +131,7 @@ function MiniGalleryContent() {
   return (
     <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
       {PREVIEW_WIDGETS.map((widget) => (
-        <div
-          key={widget.id}
-          className="border rounded-lg p-3 bg-background"
-        >
+        <div key={widget.id} className="border rounded-lg p-3 bg-background">
           <div className="text-xs font-mono text-muted-foreground mb-2">
             {widget.label}
           </div>
