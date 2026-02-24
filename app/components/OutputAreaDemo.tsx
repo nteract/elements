@@ -137,7 +137,9 @@ function WidgetOutputDemoContent() {
   }, [handleMessage, initialized]);
 
   if (!initialized) {
-    return <div className="text-muted-foreground text-sm">Loading widget...</div>;
+    return (
+      <div className="text-muted-foreground text-sm">Loading widget...</div>
+    );
   }
 
   // Render widget output through OutputArea (isolated="auto" will detect widget MIME type)
