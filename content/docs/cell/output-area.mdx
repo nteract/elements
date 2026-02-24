@@ -165,6 +165,14 @@ Certain output types can contain executable JavaScript and must be rendered in a
 
 By default (`isolated="auto"`), OutputArea automatically detects when isolation is needed and renders those outputs in an [IsolatedFrame](/docs/outputs/isolated-frame).
 
+### Widget Output in Iframe
+
+Widgets are rendered inside the isolated iframe. The widget state syncs between parent and iframe via the CommBridge:
+
+<div className="my-4 rounded border p-4" data-testid="widget-output-demo">
+  <OutputAreaDemo variant="widget" />
+</div>
+
 ### Force Isolation Mode
 
 ```tsx

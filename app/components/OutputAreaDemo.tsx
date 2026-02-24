@@ -1,8 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
 import { IsolatedRendererProvider } from "@/registry/outputs/isolated";
+import {
+  type JupyterCommMessage,
+  useWidgetStoreRequired,
+  WidgetStoreProvider,
+} from "@/registry/widgets/widget-store-context";
+
+// Import to register built-in widgets
+import "@/registry/widgets/controls";
 
 const sampleOutputs: JupyterOutput[] = [
   {
@@ -70,6 +78,89 @@ const htmlOutput: JupyterOutput[] = [
   },
 ];
 
+// Widget output - renders an IntSlider widget through OutputArea's isolation pipeline
+const WIDGET_MODEL_ID = "demo-slider-widget";
+
+const widgetOutput: JupyterOutput[] = [
+  {
+    output_type: "display_data",
+    data: {
+      "application/vnd.jupyter.widget-view+json": {
+        model_id: WIDGET_MODEL_ID,
+        version_major: 2,
+        version_minor: 0,
+      },
+      "text/plain": "IntSlider(value=50, description='Value:')",
+    },
+    metadata: {},
+  },
+];
+
+// Widget comm messages to create the slider model
+const createSliderWidget = (): JupyterCommMessage => ({
+  header: { msg_id: crypto.randomUUID(), msg_type: "comm_open" },
+  content: {
+    comm_id: WIDGET_MODEL_ID,
+    target_name: "jupyter.widget",
+    data: {
+      state: {
+        _model_name: "IntSliderModel",
+        _model_module: "@jupyter-widgets/controls",
+        _model_module_version: "2.0.0",
+        _view_name: "IntSliderView",
+        _view_module: "@jupyter-widgets/controls",
+        _view_module_version: "2.0.0",
+        value: 50,
+        min: 0,
+        max: 100,
+        step: 1,
+        description: "Value:",
+        readout: true,
+        orientation: "horizontal",
+      },
+    },
+  },
+});
+
+/**
+ * Widget demo content - creates widget model and renders through OutputArea
+ */
+function WidgetOutputDemoContent() {
+  const { handleMessage } = useWidgetStoreRequired();
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (initialized) return;
+    // Create the widget model in the store
+    handleMessage(createSliderWidget());
+    setInitialized(true);
+  }, [handleMessage, initialized]);
+
+  if (!initialized) {
+    return <div className="text-muted-foreground text-sm">Loading widget...</div>;
+  }
+
+  // Render widget output through OutputArea (isolated="auto" will detect widget MIME type)
+  return <OutputArea outputs={widgetOutput} isolated="auto" />;
+}
+
+/**
+ * Widget demo with providers - shows widget rendered through OutputArea isolation
+ */
+function WidgetOutputDemo() {
+  const sendMessage = useCallback((msg: JupyterCommMessage) => {
+    console.log("Widget → Kernel:", msg);
+  }, []);
+
+  return (
+    <IsolatedRendererProvider basePath="/isolated">
+      <WidgetStoreProvider sendMessage={sendMessage}>
+        <WidgetOutputDemoContent />
+      </WidgetStoreProvider>
+    </IsolatedRendererProvider>
+  );
+}
+
 interface OutputAreaDemoProps {
   variant?:
     | "simple"
@@ -77,7 +168,8 @@ interface OutputAreaDemoProps {
     | "error"
     | "collapsible"
     | "scrollable"
-    | "html";
+    | "html"
+    | "widget";
 }
 
 export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
@@ -116,6 +208,9 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
           <OutputArea outputs={htmlOutput} isolated={true} />
         </IsolatedRendererProvider>
       );
+
+    case "widget":
+      return <WidgetOutputDemo />;
 
     default:
       return <OutputArea outputs={sampleOutputs} />;
