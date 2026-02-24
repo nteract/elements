@@ -12,8 +12,8 @@ import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
-import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/lib/dark-mode";
+import { cn } from "@/lib/utils";
 
 import "katex/dist/katex.min.css";
 
