@@ -20,7 +20,7 @@ let loadingPromise: Promise<{ js: string; css: string }> | null = null;
  * @param basePath - Base path to fetch bundle from (default: "/isolated")
  */
 export function useIsolatedRendererBundle(
-  basePath = "/isolated"
+  basePath = "/isolated",
 ): IsolatedRendererBundle {
   const [state, setState] = useState<IsolatedRendererBundle>(() => ({
     rendererCode: bundleCache?.js,
