@@ -5,6 +5,7 @@ import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
+  useIsolatedRendererBundle,
 } from "@/registry/outputs/isolated";
 
 // Note: Tables without custom styles inherit from frame-html.ts defaults:
@@ -88,6 +89,8 @@ export function IsolatedFrameDemo({
   // Detect page theme and track changes
   const [darkMode, setDarkMode] = useState(() => detectDarkMode());
   const [ready, setReady] = useState(false);
+  // Load the renderer bundle
+  const { rendererCode, rendererCss, isLoading } = useIsolatedRendererBundle();
 
   // Observe page theme changes (fumadocs adds/removes 'dark' class on html)
   useEffect(() => {
@@ -141,6 +144,8 @@ export function IsolatedFrameDemo({
         <IsolatedFrame
           ref={frameRef}
           darkMode={darkMode}
+          rendererCode={rendererCode}
+          rendererCss={rendererCss}
           initialContent={{
             mimeType: "text/html",
             data: getContent(),
@@ -155,8 +160,8 @@ export function IsolatedFrameDemo({
           }}
         />
       </div>
-      {!ready && (
-        <p className="text-sm text-muted-foreground">Loading iframe...</p>
+      {(isLoading || !ready) && (
+        <p className="text-sm text-muted-foreground">Loading...</p>
       )}
     </div>
   );

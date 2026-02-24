@@ -195,7 +195,8 @@ Communication between parent and iframe uses `postMessage`:
 | `id` | `string` | — | Unique ID for message routing |
 | `initialContent` | `RenderPayload` | — | Content to render on ready |
 | `darkMode` | `boolean` | `true` | Initial dark mode state |
-| `useReactRenderer` | `boolean` | `false` | Load React renderer bundle |
+| `rendererCode` | `string` | — | React renderer JavaScript bundle |
+| `rendererCss` | `string` | — | React renderer CSS |
 | `minHeight` | `number` | `24` | Minimum iframe height |
 | `maxHeight` | `number` | `2000` | Maximum iframe height |
 | `className` | `string` | — | Additional CSS classes |
@@ -252,31 +253,38 @@ Sandbox attributes:
 - `allow-popups-to-escape-sandbox` - Popups are unrestricted
 - `allow-modals` - alert/confirm/prompt
 
-## Rendering Modes
+## Renderer Bundle
 
-IsolatedFrame supports two rendering modes:
-
-### Basic Mode (No Build Required)
-
-For HTML, SVG, images, and plain text, the inline JavaScript in the generated HTML template handles rendering. No additional build step is required.
-
-```tsx
-// Works out of the box
-<IsolatedFrame
-  initialContent={{
-    mimeType: "text/html",
-    data: "<h1>Hello</h1>",
-  }}
-/>
-```
-
-### Widget Mode (Requires Vite Build)
-
-For Jupyter widgets (ipywidgets, anywidget), you need to build a separate **isolated renderer bundle** that runs inside the iframe. This bundle includes React, all output components, and the widget system.
+IsolatedFrame requires a React renderer bundle to render content. The bundle includes React, all output components, and the widget system.
 
 <Callout type="info">
-  The widget renderer is a separate Vite project that builds an IIFE bundle. This bundle is eval'd into the iframe via postMessage, taking over rendering from the inline JavaScript.
+  The renderer is a separate Vite project that builds an IIFE bundle. This bundle is eval'd into the iframe via postMessage.
 </Callout>
+
+### Using the Hook
+
+The easiest way to load the bundle is via the `useIsolatedRendererBundle` hook:
+
+```tsx
+import { IsolatedFrame, useIsolatedRendererBundle } from "@/registry/outputs/isolated"
+
+function MyComponent() {
+  const { rendererCode, rendererCss, isLoading } = useIsolatedRendererBundle();
+
+  if (isLoading) return <div>Loading...</div>;
+
+  return (
+    <IsolatedFrame
+      rendererCode={rendererCode}
+      rendererCss={rendererCss}
+      initialContent={{
+        mimeType: "text/html",
+        data: "<h1>Hello</h1>",
+      }}
+    />
+  );
+}
+```
 
 ## Building the Isolated Renderer
 
@@ -353,17 +361,20 @@ Build with: `vite build --config isolated-renderer/vite.config.ts`
 
 ### Loading the Bundle
 
-Use `useReactRenderer={true}` and provide the bundle URL:
+Use the `useIsolatedRendererBundle` hook to load the bundle, or import it directly via Vite's `?raw` import:
 
 ```tsx
+// Option 1: Use the hook (recommended for apps serving the bundle)
+const { rendererCode, rendererCss } = useIsolatedRendererBundle();
+
+// Option 2: Import directly (for bundling into your app)
+import rendererCode from "@/public/isolated/isolated-renderer.js?raw";
+import rendererCss from "@/public/isolated/isolated-renderer.css?raw";
+
 <IsolatedFrame
-  useReactRenderer={true}
-  // Bundle is loaded via eval message after iframe is ready
-  onReady={() => {
-    fetch("/isolated/isolated-renderer.js")
-      .then((r) => r.text())
-      .then((code) => frameRef.current?.eval(code));
-  }}
+  rendererCode={rendererCode}
+  rendererCss={rendererCss}
+  initialContent={content}
 />
 ```
 

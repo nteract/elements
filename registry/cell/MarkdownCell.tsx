@@ -64,16 +64,11 @@ interface MarkdownCellProps {
    */
   isLastCell?: boolean;
   /**
-   * Whether to use the React renderer bundle inside the iframe.
-   * @default true
-   */
-  useReactRenderer?: boolean;
-  /**
-   * Inline renderer JavaScript bundle for the iframe.
+   * Renderer JavaScript bundle for the iframe.
    */
   rendererCode?: string;
   /**
-   * Inline renderer CSS for the iframe.
+   * Renderer CSS for the iframe.
    */
   rendererCss?: string;
   /**
@@ -127,7 +122,6 @@ export function MarkdownCell({
   onFocusNext,
   onInsertCellAfter,
   isLastCell = false,
-  useReactRenderer = true,
   rendererCode,
   rendererCss,
   className,
@@ -350,7 +344,6 @@ export function MarkdownCell({
           <IsolatedFrame
             ref={frameRef}
             darkMode={darkMode}
-            useReactRenderer={useReactRenderer}
             rendererCode={rendererCode}
             rendererCss={rendererCss}
             minHeight={24}

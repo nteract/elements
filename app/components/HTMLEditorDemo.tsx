@@ -6,6 +6,7 @@ import { CodeMirrorEditor } from "@/registry/editor";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
+  useIsolatedRendererBundle,
 } from "@/registry/outputs/isolated";
 
 const DEFAULT_HTML = `<style>
@@ -62,6 +63,8 @@ export function HTMLEditorDemo({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
   );
+  // Load the renderer bundle
+  const { rendererCode, rendererCss } = useIsolatedRendererBundle();
 
   // Observe page theme changes
   useEffect(() => {
@@ -125,6 +128,8 @@ export function HTMLEditorDemo({
         <IsolatedFrame
           ref={frameRef}
           darkMode={darkMode}
+          rendererCode={rendererCode}
+          rendererCss={rendererCss}
           initialContent={{
             mimeType: "text/html",
             data: code,
@@ -135,7 +140,6 @@ export function HTMLEditorDemo({
           onLinkClick={(url, newTab) => {
             window.open(url, newTab ? "_blank" : "_self");
           }}
-          useReactRenderer={false}
         />
       </div>
     </div>

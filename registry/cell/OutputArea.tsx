@@ -108,22 +108,13 @@ interface OutputAreaProps {
    */
   onWidgetUpdate?: (commId: string, state: Record<string, unknown>) => void;
   /**
-   * Whether to use the React renderer bundle inside the iframe.
-   * When true, fetches and loads isolated-renderer.js for full React rendering.
-   * When false, uses the inline JavaScript renderer (simpler, no build required).
-   * @default true
-   */
-  useReactRenderer?: boolean;
-  /**
-   * Inline React renderer JavaScript bundle for the iframe.
-   * When provided with rendererCss, uses this code directly instead of fetching.
-   * Use with Vite's `?raw` import: `import code from "./renderer.js?raw"`
+   * Renderer JavaScript bundle for the iframe.
+   * Use with Vite's `?raw` import or the useIsolatedRendererBundle hook.
    */
   rendererCode?: string;
   /**
-   * Inline React renderer CSS for the iframe.
-   * When provided with rendererCode, uses this CSS directly instead of fetching.
-   * Use with Vite's `?raw` import: `import css from "./renderer.css?raw"`
+   * Renderer CSS for the iframe.
+   * Use with Vite's `?raw` import or the useIsolatedRendererBundle hook.
    */
   rendererCss?: string;
 }
@@ -298,7 +289,6 @@ export function OutputArea({
   preloadIframe = false,
   onLinkClick,
   onWidgetUpdate,
-  useReactRenderer = true,
   rendererCode,
   rendererCss,
 }: OutputAreaProps) {
@@ -488,7 +478,6 @@ export function OutputArea({
               <IsolatedFrame
                 ref={frameRef}
                 darkMode={darkMode}
-                useReactRenderer={useReactRenderer}
                 rendererCode={rendererCode}
                 rendererCss={rendererCss}
                 minHeight={24}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { IsolatedFrame, type IsolatedFrameHandle } from "./isolated-frame";
+import { useIsolatedRendererBundle } from "./use-isolated-renderer-bundle";
 
 /**
  * Test results from the isolated iframe
@@ -491,6 +492,8 @@ function ProductionFrameDemo() {
   const frameRef = useRef<IsolatedFrameHandle>(null);
   const [isReady, setIsReady] = useState(false);
   const [height, setHeight] = useState(0);
+  // Load the renderer bundle
+  const { rendererCode, rendererCss } = useIsolatedRendererBundle();
 
   const handleRenderHtml = () => {
     frameRef.current?.render({
@@ -561,6 +564,8 @@ function ProductionFrameDemo() {
         <IsolatedFrame
           ref={frameRef}
           darkMode={true}
+          rendererCode={rendererCode}
+          rendererCss={rendererCss}
           minHeight={48}
           maxHeight={400}
           onReady={() => setIsReady(true)}
