@@ -373,9 +373,11 @@ export const IsolatedFrame = forwardRef<
     ) {
       bootstrappingRef.current = true;
 
-      // Inject CSS first
+      // Inject CSS first (idempotent - checks if already loaded)
       const cssCode = `
         (function() {
+          if (window.__ISOLATED_CSS_LOADED__) return;
+          window.__ISOLATED_CSS_LOADED__ = true;
           var style = document.createElement('style');
           style.textContent = ${JSON.stringify(rendererCss)};
           document.head.appendChild(style);
@@ -385,9 +387,16 @@ export const IsolatedFrame = forwardRef<
         { type: "eval", payload: { code: cssCode } },
         "*",
       );
-      // Then inject JS bundle
+      // Then inject JS bundle (idempotent - checks if already loaded)
+      const jsWrapper = `
+        (function() {
+          if (window.__ISOLATED_RENDERER_LOADED__) return;
+          window.__ISOLATED_RENDERER_LOADED__ = true;
+          ${rendererCode}
+        })();
+      `;
       iframeRef.current.contentWindow.postMessage(
-        { type: "eval", payload: { code: rendererCode } },
+        { type: "eval", payload: { code: jsWrapper } },
         "*",
       );
     }

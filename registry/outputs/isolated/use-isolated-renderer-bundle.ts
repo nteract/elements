@@ -32,6 +32,8 @@ export function useIsolatedRendererBundle(
   useEffect(() => {
     if (bundleCache) return;
 
+    let cancelled = false;
+
     if (!loadingPromise) {
       loadingPromise = Promise.all([
         fetch(`${basePath}/isolated-renderer.js`).then((r) => {
@@ -52,16 +54,24 @@ export function useIsolatedRendererBundle(
 
     loadingPromise
       .then(({ js, css }) => {
-        setState({
-          rendererCode: js,
-          rendererCss: css,
-          isLoading: false,
-          error: null,
-        });
+        if (!cancelled) {
+          setState({
+            rendererCode: js,
+            rendererCss: css,
+            isLoading: false,
+            error: null,
+          });
+        }
       })
       .catch((error) => {
-        setState((s) => ({ ...s, isLoading: false, error }));
+        if (!cancelled) {
+          setState((s) => ({ ...s, isLoading: false, error }));
+        }
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [basePath]);
 
   return state;
