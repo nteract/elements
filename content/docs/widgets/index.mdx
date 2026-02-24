@@ -6,6 +6,7 @@ icon: Puzzle
 
 import { Callout } from 'fumadocs-ui/components/callout';
 import { RegistrySetup } from '@/components/docs/registry-setup';
+import { WidgetsDemo } from '@/app/components/WidgetsDemo';
 
 ## Why nteract-elements widgets?
 
@@ -142,6 +143,19 @@ function KernelBridge({ kernel }) {
 <Callout type="info">
   For a complete integration example, see the [runtimed sidecar](https://github.com/runtimed/runtimed) which uses nteract-elements for full Jupyter widget support.
 </Callout>
+
+## Live Demo
+
+These widgets render through `OutputArea` with `isolated="auto"`, demonstrating the full isolation pipeline:
+
+<div className="my-8 rounded border p-4" data-testid="widgets-demo">
+  <WidgetsDemo />
+</div>
+
+The demo models raw Jupyter messages:
+- `comm_open` creates widget models in the store
+- Widget MIME type triggers iframe isolation
+- `comm_msg` updates propagate through CommBridge to the iframe
 
 ## Customization
 
