@@ -1,5 +1,5 @@
 /**
- * Dark mode detection utilities for output components.
+ * Dark mode detection utilities for components.
  * Checks document state and system preference to determine current mode.
  */
 

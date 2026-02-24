@@ -3,13 +3,12 @@
 import type { KeyBinding } from "@codemirror/view";
 import { Pencil, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
+import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import { cn } from "@/lib/utils";
 import {
   CodeMirrorEditor,
   type CodeMirrorEditorRef,
 } from "@/registry/editor/codemirror-editor";
-import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,

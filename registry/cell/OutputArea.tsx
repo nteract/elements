@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import { cn } from "@/lib/utils";
 import { ErrorBoundary } from "@/registry/lib/error-boundary";
 import { OutputErrorFallback } from "@/registry/lib/output-error-fallback";
@@ -16,7 +17,6 @@ import {
   AnsiErrorOutput,
   AnsiStreamOutput,
 } from "@/registry/outputs/ansi-output";
-import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
 import {
   CommBridgeManager,
   type IframeToParentMessage,

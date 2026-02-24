@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
+import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
