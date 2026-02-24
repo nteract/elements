@@ -492,6 +492,7 @@ export const IsolatedFrame = forwardRef<
       src={blobUrl}
       sandbox={SANDBOX_ATTRS}
       className={className}
+      data-slot="isolated-frame"
       style={{
         width: "100%",
         height: `${height}px`,
