@@ -5,8 +5,8 @@
  *
  * Maps to ipywidgets OutputModel (@jupyter-widgets/output).
  * Renders an array of Jupyter outputs using the OutputArea component.
- * Media rendering configuration (custom renderers, priority, unsafe)
- * is inherited from MediaProvider context if present.
+ * Media rendering configuration (custom renderers, priority) is
+ * inherited from MediaProvider context if present.
  *
  * Note: The Output widget protocol is particularly complex. Rather than
  * simply setting outputs on the model from Python, Jupyter sends outputs
