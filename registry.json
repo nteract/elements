@@ -116,7 +116,7 @@
       "name": "html-output",
       "type": "registry:component",
       "title": "HTML Output",
-      "description": "Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and basic interactives. Includes unsafe mode for script execution in sandboxed iframes.",
+      "description": "Component for rendering HTML content in notebook outputs. Handles pandas DataFrames, rich HTML displays, and interactive visualizations. Requires iframe isolation for security.",
       "files": [
         {
           "path": "registry/outputs/html-output.tsx",
@@ -185,7 +185,7 @@
       "name": "media-provider",
       "type": "registry:component",
       "title": "Media Provider",
-      "description": "React context provider for shared media rendering configuration. Provides renderers, priority, and unsafe settings to all nested MediaRouter instances.",
+      "description": "React context provider for shared media rendering configuration. Provides renderers and priority settings to all nested MediaRouter instances.",
       "files": [
         {
           "path": "registry/outputs/media-provider.tsx",
