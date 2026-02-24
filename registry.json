@@ -344,7 +344,8 @@
         "@nteract/ansi-output",
         "@nteract/isolated-frame",
         "@nteract/widget-store",
-        "@nteract/markdown-output"
+        "@nteract/markdown-output",
+        "@nteract/error-boundary"
       ],
       "files": [
         {
@@ -503,7 +504,8 @@
       "description": "Universal widget router that renders Jupyter widgets. Routes anywidgets to ESM loader and standard ipywidgets to built-in shadcn-backed components.",
       "registryDependencies": [
         "@nteract/widget-store",
-        "@nteract/anywidget-view"
+        "@nteract/anywidget-view",
+        "@nteract/error-boundary"
       ],
       "files": [
         {
@@ -915,6 +917,29 @@
           "path": "registry/cell/CellTypeSelector.tsx",
           "type": "registry:component",
           "target": "components/cell/CellTypeSelector.tsx"
+        }
+      ]
+    },
+    {
+      "name": "error-boundary",
+      "type": "registry:lib",
+      "title": "Error Boundary",
+      "description": "React error boundary with resetKeys support for automatic recovery. Includes OutputErrorFallback and WidgetErrorFallback components for graceful error display in outputs and widgets.",
+      "files": [
+        {
+          "path": "registry/lib/error-boundary.tsx",
+          "type": "registry:lib",
+          "target": "lib/error-boundary.tsx"
+        },
+        {
+          "path": "registry/lib/output-error-fallback.tsx",
+          "type": "registry:lib",
+          "target": "lib/output-error-fallback.tsx"
+        },
+        {
+          "path": "registry/lib/widget-error-fallback.tsx",
+          "type": "registry:lib",
+          "target": "lib/widget-error-fallback.tsx"
         }
       ]
     },
