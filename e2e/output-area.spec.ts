@@ -242,6 +242,55 @@ test.describe("OutputArea Documentation Page", () => {
   });
 });
 
+test.describe("OutputArea Widget Isolation", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/docs/cell/output-area");
+    await page.waitForLoadState("domcontentloaded");
+    await expect(page.locator("h1")).toContainText("OutputArea");
+  });
+
+  test("widget output renders inside isolated iframe", async ({ page }) => {
+    // Find the widget demo section by its data-testid
+    const widgetDemo = page.locator('[data-testid="widget-output-demo"]');
+    await expect(widgetDemo).toBeVisible();
+
+    // The widget demo should have an isolated frame
+    const isolatedFrame = widgetDemo.locator("[data-slot='isolated-frame']");
+    await expect(isolatedFrame).toBeVisible({ timeout: 10000 });
+
+    // Wait for the slider widget to render inside the iframe
+    await waitForIframeContent(
+      page,
+      "document.querySelector('[data-widget-type]')?.getAttribute('data-widget-type') || 'not found'",
+      "IntSlider",
+      isolatedFrame,
+      15000,
+    );
+
+    // Verify the slider component is rendered
+    const result = await evalInIframeLocator(
+      page,
+      "document.querySelector('[data-widget-type=\"IntSlider\"]') ? 'found' : 'not found'",
+      isolatedFrame,
+    );
+    expect(result.success).toBe(true);
+    expect(result.result).toBe("found");
+  });
+
+  test("widget iframe has proper sandbox restrictions", async ({ page }) => {
+    const widgetDemo = page.locator('[data-testid="widget-output-demo"]');
+    await expect(widgetDemo).toBeVisible();
+
+    const isolatedFrame = widgetDemo.locator("[data-slot='isolated-frame']");
+    await expect(isolatedFrame).toBeVisible({ timeout: 10000 });
+
+    // Verify sandbox attribute
+    const sandbox = await isolatedFrame.getAttribute("sandbox");
+    expect(sandbox).toContain("allow-scripts");
+    expect(sandbox).not.toContain("allow-same-origin");
+  });
+});
+
 test.describe("OutputArea Security", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/docs/cell/output-area");
