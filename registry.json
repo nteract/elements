@@ -160,9 +160,9 @@
           "target": "components/outputs/markdown-output.tsx"
         },
         {
-          "path": "registry/outputs/dark-mode.ts",
+          "path": "lib/dark-mode.ts",
           "type": "registry:lib",
-          "target": "components/outputs/dark-mode.ts"
+          "target": "lib/dark-mode.ts"
         }
       ]
     },

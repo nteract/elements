@@ -9,7 +9,7 @@ import {
   CodeMirrorEditor,
   type CodeMirrorEditorRef,
 } from "@/registry/editor/codemirror-editor";
-import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
+import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,

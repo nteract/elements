@@ -14,7 +14,7 @@ import {
   AnsiErrorOutput,
   AnsiStreamOutput,
 } from "@/registry/outputs/ansi-output";
-import { isDarkMode as detectDarkMode } from "@/registry/outputs/dark-mode";
+import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import {
   CommBridgeManager,
   type IframeToParentMessage,
