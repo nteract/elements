@@ -8,6 +8,7 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { IsolatedFrameDemo } from '@/app/components/IsolatedFrameDemo';
+import { HTMLEditorDemo } from '@/app/components/HTMLEditorDemo';
 
 <div className="my-8">
   <IsolatedFrameDemo variant="table" />
@@ -142,6 +143,16 @@ frameRef.current?.setTheme(isDark)
   initialContent={content}
 />
 ```
+
+### Interactive HTML Editor
+
+Try editing the HTML below to see live updates via the `render()` method:
+
+<div className="my-4">
+  <HTMLEditorDemo />
+</div>
+
+This demo combines `CodeMirrorEditor` with `IsolatedFrame` to create a live HTML playground. Changes are debounced (300ms) and sent to the iframe via `frameRef.current.render()`.
 
 ## Architecture
 
