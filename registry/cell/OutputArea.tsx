@@ -84,10 +84,6 @@ interface OutputAreaProps {
    */
   priority?: readonly string[];
   /**
-   * Whether to allow unsafe HTML rendering.
-   */
-  unsafe?: boolean;
-  /**
    * Force isolation mode. When true, all outputs render in an isolated iframe.
    * When "auto" (default), isolation is used when any output needs it.
    * When false, outputs render in-DOM (less secure but faster for simple outputs).
@@ -227,7 +223,6 @@ function renderOutput(
   index: number,
   renderers?: OutputAreaProps["renderers"],
   priority?: readonly string[],
-  unsafe?: boolean,
 ) {
   const key = `output-${index}`;
 
@@ -246,7 +241,6 @@ function renderOutput(
           }
           renderers={renderers}
           priority={priority}
-          unsafe={unsafe}
         />
       );
 
@@ -298,7 +292,6 @@ export function OutputArea({
   className,
   renderers,
   priority = DEFAULT_PRIORITY,
-  unsafe = false,
   isolated = "auto",
   preloadIframe = false,
   onLinkClick,
@@ -512,7 +505,7 @@ export function OutputArea({
           {/* In-DOM outputs (when not using isolation) */}
           {!shouldIsolate &&
             outputs.map((output, index) =>
-              renderOutput(output, index, renderers, priority, unsafe),
+              renderOutput(output, index, renderers, priority),
             )}
         </div>
       )}

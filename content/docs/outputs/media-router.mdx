@@ -25,7 +25,7 @@ Automatically selects the best renderer for Jupyter outputs based on MIME type p
 </Tabs>
 
 <Callout type="info">
-  MediaRouter depends on all built-in output components. Installing it will also install AnsiOutput, MarkdownOutput, HtmlOutput, ImageOutput, SvgOutput, and JsonOutput.
+  MediaRouter depends on safe-to-render output components: AnsiOutput, ImageOutput, and JsonOutput. For HTML, Markdown, and SVG outputs (which require iframe isolation), use OutputArea or IsolatedFrame.
 </Callout>
 
 ## Usage
@@ -91,7 +91,6 @@ import { VegaLiteChart } from "./vega-lite-chart"
 | `metadata` | `Record<string, object>` | `{}` | Metadata mapping MIME types to their settings |
 | `priority` | `readonly string[]` | `DEFAULT_PRIORITY` | MIME type priority order |
 | `renderers` | `Record<string, CustomRenderer>` | `{}` | Custom renderer functions |
-| `unsafe` | `boolean` | `false` | Allow unsafe HTML rendering (requires iframe) |
 | `fallback` | `ReactNode` | — | Custom fallback when no MIME type is supported |
 | `loading` | `ReactNode` | — | Custom loading component while lazy-loading |
 | `className` | `string` | `""` | Additional CSS classes |
@@ -169,13 +168,17 @@ function CellOutput({ output }) {
 }
 ```
 
-## Unsafe Mode
+## Isolated MIME Types
 
-For HTML and Markdown outputs that contain scripts, use `unsafe={true}`. This requires rendering inside an iframe:
+HTML, Markdown, and SVG outputs require iframe isolation for security (CSS attacks, forms, embedded content). MediaRouter returns `null` for these types and logs a warning in development.
+
+For these MIME types, use OutputArea (recommended) or IsolatedFrame directly:
 
 ```tsx
-// Inside a sandboxed iframe only
-<MediaRouter data={outputData} unsafe={true} />
+import { OutputArea } from "@/components/cell/OutputArea"
+
+// OutputArea automatically handles isolation
+<OutputArea outputs={cell.outputs} />
 ```
 
 ## Helper Function

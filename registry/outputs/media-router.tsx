@@ -4,20 +4,13 @@ import { lazy, type ReactNode, Suspense } from "react";
 import { useMediaContext } from "./media-provider";
 
 // Lazy load built-in output components for better bundle splitting
+// Note: HtmlOutput, MarkdownOutput, and SvgOutput are NOT included here.
+// These MIME types require iframe isolation and are handled by IsolatedFrame.
 const AnsiOutput = lazy(() =>
   import("./ansi-output").then((m) => ({ default: m.AnsiOutput })),
 );
-const MarkdownOutput = lazy(() =>
-  import("./markdown-output").then((m) => ({ default: m.MarkdownOutput })),
-);
-const HtmlOutput = lazy(() =>
-  import("./html-output").then((m) => ({ default: m.HtmlOutput })),
-);
 const ImageOutput = lazy(() =>
   import("./image-output").then((m) => ({ default: m.ImageOutput })),
-);
-const SvgOutput = lazy(() =>
-  import("./svg-output").then((m) => ({ default: m.SvgOutput })),
 );
 const JsonOutput = lazy(() =>
   import("./json-output").then((m) => ({ default: m.JsonOutput })),
@@ -120,11 +113,6 @@ interface MediaRouterProps {
    */
   renderers?: Record<string, CustomRenderer>;
   /**
-   * Whether to allow unsafe HTML rendering (requires iframe).
-   * Applies to text/html and text/markdown MIME types.
-   */
-  unsafe?: boolean;
-  /**
    * Custom fallback component when no supported MIME type is found.
    */
   fallback?: ReactNode;
@@ -222,7 +210,6 @@ export function MediaRouter({
   metadata = {},
   priority: priorityProp,
   renderers: renderersProp,
-  unsafe: unsafeProp,
   fallback,
   loading,
   className = "",
@@ -232,7 +219,6 @@ export function MediaRouter({
   // Props override context, context overrides built-in defaults
   const priority = priorityProp ?? ctx?.priority ?? DEFAULT_PRIORITY;
   const renderers = renderersProp ?? ctx?.renderers ?? {};
-  const unsafe = unsafeProp ?? ctx?.unsafe ?? false;
 
   const mimeType = selectMimeType(data, priority);
 
@@ -264,30 +250,24 @@ export function MediaRouter({
   }
 
   const renderBuiltIn = () => {
-    // Text/Markdown
-    if (mimeType === "text/markdown") {
-      return (
-        <MarkdownOutput
-          content={String(content)}
-          unsafe={unsafe}
-          className={className}
-        />
-      );
+    // ISOLATION GUARD: These MIME types must be rendered via IsolatedFrame.
+    // They are not safe to render in the main DOM due to CSS attacks, forms, etc.
+    if (
+      mimeType === "text/markdown" ||
+      mimeType === "text/html" ||
+      mimeType === "image/svg+xml"
+    ) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          `MediaRouter: "${mimeType}" requires iframe isolation. ` +
+            `Use OutputArea with isolated="auto" or IsolatedFrame directly.`,
+        );
+      }
+      return null;
     }
 
-    // HTML
-    if (mimeType === "text/html") {
-      return (
-        <HtmlOutput
-          content={String(content)}
-          unsafe={unsafe}
-          className={className}
-        />
-      );
-    }
-
-    // Images (not SVG)
-    if (mimeType.startsWith("image/") && mimeType !== "image/svg+xml") {
+    // Images (not SVG - SVG is handled by isolation guard above)
+    if (mimeType.startsWith("image/")) {
       const imageType = mimeType as
         | "image/png"
         | "image/jpeg"
@@ -302,11 +282,6 @@ export function MediaRouter({
           className={className}
         />
       );
-    }
-
-    // SVG
-    if (mimeType === "image/svg+xml") {
-      return <SvgOutput data={String(content)} className={className} />;
     }
 
     // JSON and structured data (but not custom +json types without a renderer)

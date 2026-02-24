@@ -245,12 +245,12 @@ function OutputRenderer({ payload }: { payload: RenderPayload }) {
 
   // Markdown
   if (mimeType === "text/markdown") {
-    return <MarkdownOutput content={String(content)} unsafe={true} />;
+    return <MarkdownOutput content={String(content)} />;
   }
 
   // HTML
   if (mimeType === "text/html") {
-    return <HtmlOutput content={String(content)} unsafe={true} />;
+    return <HtmlOutput content={String(content)} />;
   }
 
   // SVG

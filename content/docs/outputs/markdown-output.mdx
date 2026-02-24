@@ -27,7 +27,11 @@ def greet(name):
 `} />
 </div>
 
-Component for rendering Markdown content in notebook outputs. Based on the [intheloop](https://github.com/runtimed/intheloop) MarkdownRenderer.
+Low-level component for rendering Markdown content in notebook outputs. Based on the [intheloop](https://github.com/runtimed/intheloop) MarkdownRenderer.
+
+<Callout type="warn">
+  This component must be rendered inside a sandboxed iframe. Use OutputArea (recommended) or IsolatedFrame for markdown outputs. The component will throw an error if rendered in the main DOM.
+</Callout>
 
 ## Installation
 
@@ -72,7 +76,6 @@ Math: $\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}$
 | `content` | `string` | — | The Markdown content to render |
 | `className` | `string` | `""` | Additional CSS classes |
 | `enableCopyCode` | `boolean` | `true` | Show copy button on code blocks |
-| `unsafe` | `boolean` | `false` | Allow raw HTML (requires iframe) |
 
 ## Features
 
@@ -124,7 +127,7 @@ plt.show()
   <MarkdownOutput content={`| Name | Type | Description |
 | --- | --- | --- |
 | content | string | Markdown to render |
-| unsafe | boolean | Allow raw HTML |
+| className | string | Additional CSS classes |
 `} />
 </div>
 
@@ -176,23 +179,18 @@ Inline code like `variable_name` adapts its background and text colors:
 `} />
 </div>
 
-## Raw HTML (unsafe mode)
+## Raw HTML Support
 
-<Callout type="warn">
-  Raw HTML in markdown can contain scripts. Set `unsafe={true}` only when rendering inside a sandboxed iframe.
-</Callout>
+The component supports raw HTML in markdown via the `rehype-raw` plugin. Since the component requires iframe isolation, raw HTML is always enabled and renders safely inside the sandboxed iframe.
 
-By default, raw HTML in markdown is stripped. To allow it:
+For most use cases, use OutputArea which handles iframe isolation automatically:
 
 ```tsx
-// Inside a sandboxed iframe only
-<MarkdownOutput 
-  content={markdownWithHtml} 
-  unsafe={true} 
-/>
-```
+import { OutputArea } from "@/components/cell/OutputArea"
 
-The component will throw an error if `unsafe={true}` is used outside an iframe.
+// OutputArea automatically isolates markdown in an iframe
+<OutputArea outputs={cell.outputs} />
+```
 
 ## Jupyter Integration
 
