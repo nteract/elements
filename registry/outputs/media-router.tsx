@@ -249,7 +249,9 @@ export function MediaRouter({
         {fallback ? (
           fallback
         ) : (
-          <div className="py-2 text-sm text-gray-500">No displayable output</div>
+          <div className="py-2 text-sm text-gray-500">
+            No displayable output
+          </div>
         )}
       </div>
     );

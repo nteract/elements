@@ -67,7 +67,7 @@ test.describe("Output Components", () => {
     // Verify it's an iframe with the expected title
     await expect(isolatedFrame.first()).toHaveAttribute(
       "title",
-      "Isolated output frame"
+      "Isolated output frame",
     );
   });
 });
