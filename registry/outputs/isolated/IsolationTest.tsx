@@ -13,6 +13,10 @@ interface IsolationTestResult {
   hasInvoke: boolean;
   canAccessParentDocument: boolean;
   canAccessParentLocalStorage: boolean;
+  canUseOwnLocalStorage: boolean;
+  canUseOwnCookies: boolean;
+  canUseIndexedDB: boolean;
+  canFetchParentOrigin: boolean;
   windowOrigin: string;
   error?: string;
 }
@@ -57,6 +61,10 @@ const ISOLATION_TEST_HTML = `<!DOCTYPE html>
       hasInvoke: false,
       canAccessParentDocument: false,
       canAccessParentLocalStorage: false,
+      canUseOwnLocalStorage: false,
+      canUseOwnCookies: false,
+      canUseIndexedDB: false,
+      canFetchParentOrigin: false,
       windowOrigin: window.origin || 'null',
       error: null
     };
@@ -92,6 +100,43 @@ const ISOLATION_TEST_HTML = `<!DOCTYPE html>
       results.canAccessParentLocalStorage = false;
     }
 
+    // Test 5: Try to use iframe's own localStorage (should fail with opaque origin)
+    try {
+      localStorage.setItem('isolation_test', 'test');
+      localStorage.removeItem('isolation_test');
+      results.canUseOwnLocalStorage = true;
+    } catch (e) {
+      results.canUseOwnLocalStorage = false;
+    }
+
+    // Test 6: Try to use cookies
+    try {
+      document.cookie = 'isolation_test=1';
+      results.canUseOwnCookies = document.cookie.includes('isolation_test');
+    } catch (e) {
+      results.canUseOwnCookies = false;
+    }
+
+    // Test 7: Try to use IndexedDB (should fail with opaque origin)
+    try {
+      const request = indexedDB.open('isolation_test', 1);
+      request.onsuccess = () => {
+        results.canUseIndexedDB = true;
+        request.result.close();
+        indexedDB.deleteDatabase('isolation_test');
+        updateResults();
+      };
+      request.onerror = () => {
+        results.canUseIndexedDB = false;
+        updateResults();
+      };
+    } catch (e) {
+      results.canUseIndexedDB = false;
+    }
+
+    // Test 8: Try to fetch parent origin (will test after display)
+    // This is async, so we'll update results later
+
     // Display results in iframe
     const container = document.getElementById('results');
     const tests = [
@@ -99,7 +144,36 @@ const ISOLATION_TEST_HTML = `<!DOCTYPE html>
       { name: 'invoke() accessible', value: results.hasInvoke, expectFalse: true },
       { name: 'Can access parent document', value: results.canAccessParentDocument, expectFalse: true },
       { name: 'Can access parent localStorage', value: results.canAccessParentLocalStorage, expectFalse: true },
+      { name: 'Can use own localStorage', value: results.canUseOwnLocalStorage, expectFalse: true, info: 'Opaque origin blocks storage' },
+      { name: 'Can use cookies', value: results.canUseOwnCookies, expectFalse: true, info: 'Opaque origin blocks cookies' },
+      { name: 'Can use IndexedDB', value: results.canUseIndexedDB, expectFalse: true, info: 'Opaque origin blocks IndexedDB' },
     ];
+
+    function updateResults() {
+      container.innerHTML = '';
+      const currentTests = [
+        { name: 'window.__TAURI__ exists', value: results.hasTauri, expectFalse: true },
+        { name: 'invoke() accessible', value: results.hasInvoke, expectFalse: true },
+        { name: 'Can access parent document', value: results.canAccessParentDocument, expectFalse: true },
+        { name: 'Can access parent localStorage', value: results.canAccessParentLocalStorage, expectFalse: true },
+        { name: 'Can use own localStorage', value: results.canUseOwnLocalStorage, expectFalse: true },
+        { name: 'Can use cookies', value: results.canUseOwnCookies, expectFalse: true },
+        { name: 'Can use IndexedDB', value: results.canUseIndexedDB, expectFalse: true },
+        { name: 'Can fetch parent origin', value: results.canFetchParentOrigin, expectFalse: true },
+      ];
+      currentTests.forEach(test => {
+        const pass = test.expectFalse ? !test.value : test.value;
+        const div = document.createElement('div');
+        div.className = 'test-item ' + (pass ? 'pass' : 'fail');
+        div.textContent = (pass ? '✓ ' : '✗ ') + test.name + ': ' + test.value;
+        container.appendChild(div);
+      });
+      const originDiv = document.createElement('div');
+      originDiv.className = 'test-item info';
+      originDiv.innerHTML = '<pre>Window origin: ' + results.windowOrigin + '</pre>';
+      container.appendChild(originDiv);
+      window.parent.postMessage({ type: 'isolation_test_result', results }, '*');
+    }
 
     tests.forEach(test => {
       const pass = test.expectFalse ? !test.value : test.value;
@@ -110,11 +184,24 @@ const ISOLATION_TEST_HTML = `<!DOCTYPE html>
     });
 
     const originDiv = document.createElement('div');
-    originDiv.className = 'test-item';
+    originDiv.className = 'test-item info';
     originDiv.innerHTML = '<pre>Window origin: ' + results.windowOrigin + '</pre>';
     container.appendChild(originDiv);
 
-    // Send results to parent
+    // Test fetch to parent origin (async)
+    if (window.parent !== window) {
+      fetch(window.parent.location?.origin || '/', { mode: 'cors' })
+        .then(() => {
+          results.canFetchParentOrigin = true;
+          updateResults();
+        })
+        .catch(() => {
+          results.canFetchParentOrigin = false;
+          updateResults();
+        });
+    }
+
+    // Send initial results to parent
     window.parent.postMessage({ type: 'isolation_test_result', results }, '*');
 
     // --- Bidirectional Communication ---
@@ -316,7 +403,10 @@ export function IsolationTest() {
     !testResult.hasTauri &&
     !testResult.hasInvoke &&
     !testResult.canAccessParentDocument &&
-    !testResult.canAccessParentLocalStorage;
+    !testResult.canAccessParentLocalStorage &&
+    !testResult.canUseOwnLocalStorage &&
+    !testResult.canUseOwnCookies &&
+    !testResult.canUseIndexedDB;
 
   return (
     <div
@@ -399,6 +489,42 @@ export function IsolationTest() {
               </span>
             </li>
             <li>
+              Own localStorage blocked (opaque origin):{" "}
+              <span
+                className={
+                  !testResult.canUseOwnLocalStorage
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
+              >
+                {!testResult.canUseOwnLocalStorage ? "Yes" : "No"}
+              </span>
+            </li>
+            <li>
+              Cookies blocked (opaque origin):{" "}
+              <span
+                className={
+                  !testResult.canUseOwnCookies
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
+              >
+                {!testResult.canUseOwnCookies ? "Yes" : "No"}
+              </span>
+            </li>
+            <li>
+              IndexedDB blocked (opaque origin):{" "}
+              <span
+                className={
+                  !testResult.canUseIndexedDB
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
+              >
+                {!testResult.canUseIndexedDB ? "Yes" : "No"}
+              </span>
+            </li>
+            <li>
               Iframe origin:{" "}
               <code className="text-xs">{testResult.windowOrigin}</code>
             </li>
@@ -467,15 +593,25 @@ export function IsolationTest() {
       )}
 
       {/* Sandbox attribute explanation */}
-      <div className="text-muted-foreground text-xs">
+      <div className="text-muted-foreground space-y-2 text-xs">
         <p>
           <strong>Sandbox attributes:</strong> allow-scripts (no
           allow-same-origin)
         </p>
         <p>
-          This prevents the iframe from accessing the parent&apos;s origin,
-          which should block Tauri&apos;s IPC injection since Tauri only injects
-          into content at the app&apos;s origin.
+          Without <code>allow-same-origin</code>, the iframe gets an{" "}
+          <strong>opaque origin</strong> which:
+        </p>
+        <ul className="ml-4 list-disc space-y-1">
+          <li>Cannot access parent document, localStorage, or cookies</li>
+          <li>Cannot use its own localStorage, cookies, or IndexedDB</li>
+          <li>Blocks Tauri IPC injection (Tauri only injects at app origin)</li>
+        </ul>
+        <p className="border-l-2 border-yellow-600 bg-yellow-950/30 p-2">
+          <strong>⚠️ Web Security Note:</strong> On the web, blob URLs inherit
+          the creator&apos;s origin. The sandbox attribute creates isolation,
+          but for maximum security in production web apps, consider serving
+          untrusted content from a separate origin/subdomain.
         </p>
       </div>
 
