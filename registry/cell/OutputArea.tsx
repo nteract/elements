@@ -507,26 +507,31 @@ export function OutputArea({
           {/* In-DOM outputs (when not using isolation) */}
           {!shouldIsolate &&
             outputs.map((output, index) => (
-              <ErrorBoundary
+              <div
                 key={`output-${index}`}
-                resetKeys={[JSON.stringify(output)]}
-                fallback={(error, reset) => (
-                  <OutputErrorFallback
-                    error={error}
-                    outputIndex={index}
-                    onRetry={reset}
-                  />
-                )}
-                onError={(error, errorInfo) => {
-                  console.error(
-                    `[OutputArea] Error rendering output ${index}:`,
-                    error,
-                    errorInfo.componentStack,
-                  );
-                }}
+                data-slot="output-item"
+                data-output-index={index}
               >
-                {renderOutput(output, index, renderers, priority)}
-              </ErrorBoundary>
+                <ErrorBoundary
+                  resetKeys={[JSON.stringify(output)]}
+                  fallback={(error, reset) => (
+                    <OutputErrorFallback
+                      error={error}
+                      outputIndex={index}
+                      onRetry={reset}
+                    />
+                  )}
+                  onError={(error, errorInfo) => {
+                    console.error(
+                      `[OutputArea] Error rendering output ${index}:`,
+                      error,
+                      errorInfo.componentStack,
+                    );
+                  }}
+                >
+                  {renderOutput(output, index, renderers, priority)}
+                </ErrorBoundary>
+              </div>
             ))}
         </div>
       )}
