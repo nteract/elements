@@ -291,9 +291,7 @@ export function MediaRouter({
 
     // Text/Markdown (only renders when in iframe)
     if (mimeType === "text/markdown") {
-      return (
-        <MarkdownOutput content={String(content)} className={className} />
-      );
+      return <MarkdownOutput content={String(content)} className={className} />;
     }
 
     // HTML (only renders when in iframe)

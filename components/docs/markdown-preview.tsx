@@ -1,6 +1,6 @@
 "use client";
 
-import { OutputArea, type JupyterOutput } from "@/registry/cell/OutputArea";
+import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
 
 interface MarkdownPreviewProps {
   /** Markdown content to render */
