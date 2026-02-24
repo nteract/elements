@@ -4,17 +4,38 @@ import { lazy, type ReactNode, Suspense } from "react";
 import { useMediaContext } from "./media-provider";
 
 // Lazy load built-in output components for better bundle splitting
-// Note: HtmlOutput, MarkdownOutput, and SvgOutput are NOT included here.
-// These MIME types require iframe isolation and are handled by IsolatedFrame.
 const AnsiOutput = lazy(() =>
   import("./ansi-output").then((m) => ({ default: m.AnsiOutput })),
+);
+const MarkdownOutput = lazy(() =>
+  import("./markdown-output").then((m) => ({ default: m.MarkdownOutput })),
+);
+const HtmlOutput = lazy(() =>
+  import("./html-output").then((m) => ({ default: m.HtmlOutput })),
 );
 const ImageOutput = lazy(() =>
   import("./image-output").then((m) => ({ default: m.ImageOutput })),
 );
+const SvgOutput = lazy(() =>
+  import("./svg-output").then((m) => ({ default: m.SvgOutput })),
+);
 const JsonOutput = lazy(() =>
   import("./json-output").then((m) => ({ default: m.JsonOutput })),
 );
+
+/**
+ * Check if the current window is inside an iframe
+ */
+function isInIframe(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.self !== window.top;
+  } catch {
+    // If we can't access window.top due to cross-origin restrictions,
+    // we're definitely in an iframe
+    return true;
+  }
+}
 
 /**
  * Default MIME type priority order for rendering.
@@ -250,13 +271,15 @@ export function MediaRouter({
   }
 
   const renderBuiltIn = () => {
-    // ISOLATION GUARD: These MIME types must be rendered via IsolatedFrame.
-    // They are not safe to render in the main DOM due to CSS attacks, forms, etc.
-    if (
+    // ISOLATION GUARD: These MIME types require iframe isolation for security.
+    // If we're already in an iframe, we can render them safely.
+    // If we're in the main DOM, block rendering and warn in development.
+    const needsIsolation =
       mimeType === "text/markdown" ||
       mimeType === "text/html" ||
-      mimeType === "image/svg+xml"
-    ) {
+      mimeType === "image/svg+xml";
+
+    if (needsIsolation && !isInIframe()) {
       if (process.env.NODE_ENV === "development") {
         console.warn(
           `MediaRouter: "${mimeType}" requires iframe isolation. ` +
@@ -266,7 +289,24 @@ export function MediaRouter({
       return null;
     }
 
-    // Images (not SVG - SVG is handled by isolation guard above)
+    // Text/Markdown (only renders when in iframe)
+    if (mimeType === "text/markdown") {
+      return (
+        <MarkdownOutput content={String(content)} className={className} />
+      );
+    }
+
+    // HTML (only renders when in iframe)
+    if (mimeType === "text/html") {
+      return <HtmlOutput content={String(content)} className={className} />;
+    }
+
+    // SVG (only renders when in iframe)
+    if (mimeType === "image/svg+xml") {
+      return <SvgOutput data={String(content)} className={className} />;
+    }
+
+    // Images (not SVG)
     if (mimeType.startsWith("image/")) {
       const imageType = mimeType as
         | "image/png"

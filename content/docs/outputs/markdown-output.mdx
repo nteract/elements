@@ -7,10 +7,10 @@ icon: FileText
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { RegistrySetup } from '@/components/docs/registry-setup';
 import { Callout } from 'fumadocs-ui/components/callout';
-import { MarkdownOutput } from '@/registry/outputs/markdown-output';
+import { MarkdownPreview } from '@/components/docs/markdown-preview';
 
 <div className="my-8 rounded-xl border bg-fd-card p-6">
-  <MarkdownOutput content={`# Hello from Markdown
+  <MarkdownPreview content={`# Hello from Markdown
 
 This is **bold** and this is *italic*.
 
@@ -65,7 +65,7 @@ Some **bold** and *italic* text.
 Math: $\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}$
 `
   
-  return <MarkdownOutput content={markdown} />
+  return <MarkdownPreview content={markdown} />
 }
 ```
 
@@ -95,7 +95,7 @@ Supports GFM extensions:
 Inline math with `$...$` and block math with `$$...$$`:
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
-  <MarkdownOutput content={`The quadratic formula: $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
+  <MarkdownPreview content={`The quadratic formula: $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
 
 Block equation:
 
@@ -110,7 +110,7 @@ $$
 Code blocks are syntax highlighted with a copy button:
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
-  <MarkdownOutput content={`\`\`\`python
+  <MarkdownPreview content={`\`\`\`python
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -124,7 +124,7 @@ plt.show()
 ### Tables
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
-  <MarkdownOutput content={`| Name | Type | Description |
+  <MarkdownPreview content={`| Name | Type | Description |
 | --- | --- | --- |
 | content | string | Markdown to render |
 | className | string | Additional CSS classes |
@@ -145,7 +145,7 @@ Code blocks switch between light and dark syntax highlighting themes:
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
   <div className="mb-2 text-xs text-fd-muted-foreground">Toggle theme to see code block adapt</div>
-  <MarkdownOutput content={`\`\`\`python
+  <MarkdownPreview content={`\`\`\`python
 def fibonacci(n):
     """Generate first n Fibonacci numbers."""
     a, b = 0, 1
@@ -165,13 +165,13 @@ for num in fibonacci(10):
 Inline code like `variable_name` adapts its background and text colors:
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
-  <MarkdownOutput content={`Use the \`DataFrame.describe()\` method to get statistical summaries. Import with \`import pandas as pd\`.`} />
+  <MarkdownPreview content={`Use the \`DataFrame.describe()\` method to get statistical summaries. Import with \`import pandas as pd\`.`} />
 </div>
 
 #### Tables in Dark Mode
 
 <div className="my-4 rounded-lg border bg-fd-secondary/30 p-4">
-  <MarkdownOutput content={`| Method | Description |
+  <MarkdownPreview content={`| Method | Description |
 | --- | --- |
 | \`head()\` | First n rows |
 | \`tail()\` | Last n rows |
@@ -201,7 +201,7 @@ function renderOutput(output: JupyterOutput) {
   const data = output.data;
   
   if (data["text/markdown"]) {
-    return <MarkdownOutput content={data["text/markdown"]} />
+    return <MarkdownPreview content={data["text/markdown"]} />
   }
   
   return null;
