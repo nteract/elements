@@ -173,6 +173,14 @@ Widgets are rendered inside the isolated iframe. The widget state syncs between 
   <OutputAreaDemo variant="widget" />
 </div>
 
+### OutputWidget (ipywidgets.Output) in Iframe
+
+The `OutputWidget` captures outputs like `ipywidgets.Output()`. When it contains HTML content, the whole widget renders in an iframe:
+
+<div className="my-4 rounded border p-4" data-testid="output-widget-demo">
+  <OutputAreaDemo variant="output-widget" />
+</div>
+
 ### Force Isolation Mode
 
 ```tsx

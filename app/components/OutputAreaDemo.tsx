@@ -122,6 +122,67 @@ const createSliderWidget = (): JupyterCommMessage => ({
   },
 });
 
+// OutputWidget demo - shows an OutputWidget (ipywidgets.Output) containing HTML
+// rendered through the isolation pipeline
+const OUTPUT_WIDGET_MODEL_ID = "demo-output-widget";
+
+const outputWidgetOutput: JupyterOutput[] = [
+  {
+    output_type: "display_data",
+    data: {
+      "application/vnd.jupyter.widget-view+json": {
+        model_id: OUTPUT_WIDGET_MODEL_ID,
+        version_major: 2,
+        version_minor: 0,
+      },
+      "text/plain": "Output()",
+    },
+    metadata: {},
+  },
+];
+
+// Create an OutputModel widget with HTML content inside
+const createOutputWidget = (): JupyterCommMessage => ({
+  header: { msg_id: crypto.randomUUID(), msg_type: "comm_open" },
+  content: {
+    comm_id: OUTPUT_WIDGET_MODEL_ID,
+    target_name: "jupyter.widget",
+    data: {
+      state: {
+        _model_name: "OutputModel",
+        _model_module: "@jupyter-widgets/output",
+        _model_module_version: "1.0.0",
+        _view_name: "OutputView",
+        _view_module: "@jupyter-widgets/output",
+        _view_module_version: "1.0.0",
+        msg_id: "",
+        outputs: [
+          {
+            output_type: "stream",
+            name: "stdout",
+            text: "Training model...\n",
+          },
+          {
+            output_type: "display_data",
+            data: {
+              "text/html": `<table style="width:100%">
+                <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+                <tbody>
+                  <tr><td>Accuracy</td><td>0.95</td></tr>
+                  <tr><td>Precision</td><td>0.93</td></tr>
+                  <tr><td>Recall</td><td>0.97</td></tr>
+                </tbody>
+              </table>`,
+              "text/plain": "Results table",
+            },
+            metadata: {},
+          },
+        ],
+      },
+    },
+  },
+});
+
 /**
  * Widget demo content - creates widget model and renders through OutputArea
  */
@@ -163,6 +224,47 @@ function WidgetOutputDemo() {
   );
 }
 
+/**
+ * OutputWidget demo content - creates OutputModel and renders through OutputArea
+ */
+function OutputWidgetDemoContent() {
+  const { handleMessage } = useWidgetStoreRequired();
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (initialized) return;
+    handleMessage(createOutputWidget());
+    setInitialized(true);
+  }, [handleMessage, initialized]);
+
+  if (!initialized) {
+    return (
+      <div className="text-muted-foreground text-sm">Loading widget...</div>
+    );
+  }
+
+  // Render OutputWidget through OutputArea isolation pipeline
+  return <OutputArea outputs={outputWidgetOutput} isolated="auto" />;
+}
+
+/**
+ * OutputWidget demo - shows OutputWidget (ipywidgets.Output) with HTML content
+ * rendered through the full isolation pipeline
+ */
+function OutputWidgetIsolatedDemo() {
+  const sendMessage = useCallback((msg: JupyterCommMessage) => {
+    console.log("Widget → Kernel:", msg);
+  }, []);
+
+  return (
+    <IsolatedRendererProvider basePath="/isolated">
+      <WidgetStoreProvider sendMessage={sendMessage}>
+        <OutputWidgetDemoContent />
+      </WidgetStoreProvider>
+    </IsolatedRendererProvider>
+  );
+}
+
 interface OutputAreaDemoProps {
   variant?:
     | "simple"
@@ -171,7 +273,8 @@ interface OutputAreaDemoProps {
     | "collapsible"
     | "scrollable"
     | "html"
-    | "widget";
+    | "widget"
+    | "output-widget";
 }
 
 export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
@@ -213,6 +316,9 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
 
     case "widget":
       return <WidgetOutputDemo />;
+
+    case "output-widget":
+      return <OutputWidgetIsolatedDemo />;
 
     default:
       return <OutputArea outputs={sampleOutputs} />;
