@@ -15,6 +15,7 @@ import type {
 } from "./frame-bridge";
 import { isIframeMessage } from "./frame-bridge";
 import { createFrameBlobUrl } from "./frame-html";
+import { useIsolatedRenderer } from "./isolated-renderer-context";
 
 export interface IsolatedFrameProps {
   /**
@@ -31,20 +32,6 @@ export interface IsolatedFrameProps {
    * Whether to use dark mode styling.
    */
   darkMode?: boolean;
-
-  /**
-   * React renderer JavaScript bundle.
-   * Required for rendering output content.
-   * Use with Vite's `?raw` import or the useIsolatedRendererBundle hook.
-   */
-  rendererCode?: string;
-
-  /**
-   * React renderer CSS.
-   * Required for rendering output content.
-   * Use with Vite's `?raw` import or the useIsolatedRendererBundle hook.
-   */
-  rendererCss?: string;
 
   /**
    * Minimum height of the iframe in pixels.
@@ -161,8 +148,16 @@ const SANDBOX_ATTRS = [
  * cannot access Tauri APIs or the parent DOM. Communication happens via
  * postMessage.
  *
+ * **Requires** `IsolatedRendererProvider` to be present in the component tree.
+ *
  * @example
  * ```tsx
+ * // In your app root or layout:
+ * <IsolatedRendererProvider basePath="/isolated">
+ *   <App />
+ * </IsolatedRendererProvider>
+ *
+ * // Then use IsolatedFrame anywhere:
  * const frameRef = useRef<IsolatedFrameHandle>(null);
  *
  * <IsolatedFrame
@@ -186,8 +181,6 @@ export const IsolatedFrame = forwardRef<
     id,
     initialContent,
     darkMode = true,
-    rendererCode,
-    rendererCss,
     minHeight = 24,
     maxHeight = 2000,
     className = "",
@@ -201,6 +194,8 @@ export const IsolatedFrame = forwardRef<
   },
   ref,
 ) {
+  // Get renderer bundle from context (provided by IsolatedRendererProvider)
+  const { rendererCode, rendererCss } = useIsolatedRenderer();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   // Track iframe ready (bootstrap HTML loaded)

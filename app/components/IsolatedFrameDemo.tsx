@@ -5,7 +5,7 @@ import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
-  useIsolatedRendererBundle,
+  IsolatedRendererProvider,
 } from "@/registry/outputs/isolated";
 
 // Note: Tables without custom styles inherit from frame-html.ts defaults:
@@ -89,8 +89,6 @@ export function IsolatedFrameDemo({
   // Detect page theme and track changes
   const [darkMode, setDarkMode] = useState(() => detectDarkMode());
   const [ready, setReady] = useState(false);
-  // Load the renderer bundle
-  const { rendererCode, rendererCss, isLoading } = useIsolatedRendererBundle();
 
   // Observe page theme changes (fumadocs adds/removes 'dark' class on html)
   useEffect(() => {
@@ -122,47 +120,45 @@ export function IsolatedFrameDemo({
   };
 
   return (
-    <div className="space-y-4">
-      {variant === "theme" && (
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setDarkMode(!darkMode);
-              frameRef.current?.setTheme(!darkMode);
+    <IsolatedRendererProvider basePath="/isolated">
+      <div className="space-y-4">
+        {variant === "theme" && (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDarkMode(!darkMode);
+                frameRef.current?.setTheme(!darkMode);
+              }}
+              className="rounded bg-gray-200 px-3 py-1.5 text-sm dark:bg-gray-700"
+            >
+              Toggle: {darkMode ? "Dark" : "Light"}
+            </button>
+            <span className="text-sm text-muted-foreground">
+              Theme syncs to iframe via postMessage
+            </span>
+          </div>
+        )}
+        <div className="overflow-hidden rounded-lg border">
+          <IsolatedFrame
+            ref={frameRef}
+            darkMode={darkMode}
+            initialContent={{
+              mimeType: "text/html",
+              data: getContent(),
             }}
-            className="rounded bg-gray-200 px-3 py-1.5 text-sm dark:bg-gray-700"
-          >
-            Toggle: {darkMode ? "Dark" : "Light"}
-          </button>
-          <span className="text-sm text-muted-foreground">
-            Theme syncs to iframe via postMessage
-          </span>
+            minHeight={60}
+            maxHeight={400}
+            onReady={() => setReady(true)}
+            onResize={(height) => console.log("Frame height:", height)}
+            onLinkClick={(url, newTab) => {
+              console.log("Link clicked:", url, newTab);
+              window.open(url, newTab ? "_blank" : "_self");
+            }}
+          />
         </div>
-      )}
-      <div className="overflow-hidden rounded-lg border">
-        <IsolatedFrame
-          ref={frameRef}
-          darkMode={darkMode}
-          rendererCode={rendererCode}
-          rendererCss={rendererCss}
-          initialContent={{
-            mimeType: "text/html",
-            data: getContent(),
-          }}
-          minHeight={60}
-          maxHeight={400}
-          onReady={() => setReady(true)}
-          onResize={(height) => console.log("Frame height:", height)}
-          onLinkClick={(url, newTab) => {
-            console.log("Link clicked:", url, newTab);
-            window.open(url, newTab ? "_blank" : "_self");
-          }}
-        />
+        {!ready && <p className="text-sm text-muted-foreground">Loading...</p>}
       </div>
-      {(isLoading || !ready) && (
-        <p className="text-sm text-muted-foreground">Loading...</p>
-      )}
-    </div>
+    </IsolatedRendererProvider>
   );
 }

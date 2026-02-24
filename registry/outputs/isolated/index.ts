@@ -38,5 +38,8 @@ export { createFrameBlobUrl, generateFrameHtml } from "./frame-html";
 export { IsolationTest } from "./IsolationTest";
 export type { IsolatedFrameHandle, IsolatedFrameProps } from "./isolated-frame";
 export { IsolatedFrame } from "./isolated-frame";
-// Hook to load the renderer bundle
-export { useIsolatedRendererBundle } from "./use-isolated-renderer-bundle";
+// Provider and hook for renderer bundle
+export {
+  IsolatedRendererProvider,
+  useIsolatedRenderer,
+} from "./isolated-renderer-context";

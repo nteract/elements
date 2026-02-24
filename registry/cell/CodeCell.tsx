@@ -89,14 +89,6 @@ interface CodeCellProps {
    */
   extensions?: Parameters<typeof CodeMirrorEditor>[0]["extensions"];
   /**
-   * Renderer JavaScript bundle for the iframe.
-   */
-  rendererCode?: string;
-  /**
-   * Renderer CSS for the iframe.
-   */
-  rendererCss?: string;
-  /**
    * Additional class name for the container
    */
   className?: string;
@@ -156,8 +148,6 @@ export function CodeCell({
   onFormat,
   isLastCell = false,
   extensions,
-  rendererCode,
-  rendererCss,
   className,
 }: CodeCellProps) {
   const editorRef = useRef<CodeMirrorEditorRef>(null);
@@ -257,14 +247,7 @@ export function CodeCell({
           />
         </div>
       }
-      outputContent={
-        <OutputArea
-          outputs={cell.outputs}
-          preloadIframe
-          rendererCode={rendererCode}
-          rendererCss={rendererCss}
-        />
-      }
+      outputContent={<OutputArea outputs={cell.outputs} preloadIframe />}
       hideOutput={cell.outputs.length === 0}
     />
   );

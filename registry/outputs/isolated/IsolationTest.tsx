@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { IsolatedFrame, type IsolatedFrameHandle } from "./isolated-frame";
-import { useIsolatedRendererBundle } from "./use-isolated-renderer-bundle";
+import { IsolatedRendererProvider } from "./isolated-renderer-context";
 
 /**
  * Test results from the isolated iframe
@@ -630,8 +630,6 @@ function ProductionFrameDemo() {
   const frameRef = useRef<IsolatedFrameHandle>(null);
   const [isReady, setIsReady] = useState(false);
   const [height, setHeight] = useState(0);
-  // Load the renderer bundle
-  const { rendererCode, rendererCss } = useIsolatedRendererBundle();
 
   const handleRenderHtml = () => {
     frameRef.current?.render({
@@ -663,58 +661,58 @@ function ProductionFrameDemo() {
   };
 
   return (
-    <div className="bg-muted border-border mt-4 space-y-3 rounded border-t p-3">
-      <h3 className="font-medium">Production IsolatedFrame Component:</h3>
-      <div className="flex items-center gap-2 text-sm">
-        <span>
-          Ready:{" "}
-          <span className={isReady ? "text-green-500" : "text-yellow-500"}>
-            {isReady ? "Yes" : "Waiting..."}
+    <IsolatedRendererProvider basePath="/isolated">
+      <div className="bg-muted border-border mt-4 space-y-3 rounded border-t p-3">
+        <h3 className="font-medium">Production IsolatedFrame Component:</h3>
+        <div className="flex items-center gap-2 text-sm">
+          <span>
+            Ready:{" "}
+            <span className={isReady ? "text-green-500" : "text-yellow-500"}>
+              {isReady ? "Yes" : "Waiting..."}
+            </span>
           </span>
-        </span>
-        <span className="text-muted-foreground">|</span>
-        <span>Height: {height}px</span>
+          <span className="text-muted-foreground">|</span>
+          <span>Height: {height}px</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={handleRenderHtml}
+            disabled={!isReady}
+            className="rounded bg-blue-600 px-3 py-1.5 text-sm hover:bg-blue-700 disabled:bg-gray-600"
+          >
+            Render HTML
+          </button>
+          <button
+            onClick={handleRenderImage}
+            disabled={!isReady}
+            className="rounded bg-purple-600 px-3 py-1.5 text-sm hover:bg-purple-700 disabled:bg-gray-600"
+          >
+            Render Image
+          </button>
+          <button
+            onClick={handleClear}
+            disabled={!isReady}
+            className="rounded bg-red-600 px-3 py-1.5 text-sm hover:bg-red-700 disabled:bg-gray-600"
+          >
+            Clear
+          </button>
+        </div>
+        <div className="overflow-hidden rounded border">
+          <IsolatedFrame
+            ref={frameRef}
+            darkMode={true}
+            minHeight={48}
+            maxHeight={400}
+            onReady={() => setIsReady(true)}
+            onResize={setHeight}
+            onLinkClick={(url, newTab) => {
+              console.log("Link clicked:", url, newTab);
+              window.open(url, newTab ? "_blank" : "_self");
+            }}
+            onError={(err) => console.error("Frame error:", err)}
+          />
+        </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={handleRenderHtml}
-          disabled={!isReady}
-          className="rounded bg-blue-600 px-3 py-1.5 text-sm hover:bg-blue-700 disabled:bg-gray-600"
-        >
-          Render HTML
-        </button>
-        <button
-          onClick={handleRenderImage}
-          disabled={!isReady}
-          className="rounded bg-purple-600 px-3 py-1.5 text-sm hover:bg-purple-700 disabled:bg-gray-600"
-        >
-          Render Image
-        </button>
-        <button
-          onClick={handleClear}
-          disabled={!isReady}
-          className="rounded bg-red-600 px-3 py-1.5 text-sm hover:bg-red-700 disabled:bg-gray-600"
-        >
-          Clear
-        </button>
-      </div>
-      <div className="overflow-hidden rounded border">
-        <IsolatedFrame
-          ref={frameRef}
-          darkMode={true}
-          rendererCode={rendererCode}
-          rendererCss={rendererCss}
-          minHeight={48}
-          maxHeight={400}
-          onReady={() => setIsReady(true)}
-          onResize={setHeight}
-          onLinkClick={(url, newTab) => {
-            console.log("Link clicked:", url, newTab);
-            window.open(url, newTab ? "_blank" : "_self");
-          }}
-          onError={(err) => console.error("Frame error:", err)}
-        />
-      </div>
-    </div>
+    </IsolatedRendererProvider>
   );
 }

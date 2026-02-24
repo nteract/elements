@@ -900,9 +900,9 @@
           "target": "components/isolated/IsolationTest.tsx"
         },
         {
-          "path": "registry/outputs/isolated/use-isolated-renderer-bundle.ts",
+          "path": "registry/outputs/isolated/isolated-renderer-context.tsx",
           "type": "registry:component",
-          "target": "components/isolated/use-isolated-renderer-bundle.ts"
+          "target": "components/isolated/isolated-renderer-context.tsx"
         }
       ]
     },

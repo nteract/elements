@@ -47,11 +47,52 @@ IsolatedFrame uses a `blob:` URL with sandbox restrictions (no `allow-same-origi
   </Tab>
 </Tabs>
 
+## Setup
+
+IsolatedFrame requires `IsolatedRendererProvider` to be present in your component tree. The provider loads the renderer bundle and makes it available to all `IsolatedFrame` components.
+
+### Option A: Fetch from URL (Web Apps)
+
+Host the renderer bundle files and configure the provider with `basePath`:
+
+```tsx
+import { IsolatedRendererProvider } from "@/components/isolated"
+
+function App() {
+  return (
+    <IsolatedRendererProvider basePath="/isolated">
+      {/* All IsolatedFrame components will use this bundle */}
+      <MyNotebook />
+    </IsolatedRendererProvider>
+  )
+}
+```
+
+### Option B: Vite Plugin (Tauri/Desktop)
+
+For desktop apps or when you want the bundle embedded in your app, use a custom loader:
+
+```tsx
+import { IsolatedRendererProvider } from "@/components/isolated"
+
+function App() {
+  return (
+    <IsolatedRendererProvider
+      loader={() => import("virtual:isolated-renderer")}
+    >
+      <MyNotebook />
+    </IsolatedRendererProvider>
+  )
+}
+```
+
 ## Usage
+
+Once the provider is set up, use `IsolatedFrame` anywhere in your app:
 
 ```tsx
 import { useRef } from "react"
-import { IsolatedFrame, type IsolatedFrameHandle } from "@/components/outputs/isolated"
+import { IsolatedFrame, type IsolatedFrameHandle } from "@/components/isolated"
 
 function HtmlOutput({ html }) {
   const frameRef = useRef<IsolatedFrameHandle>(null)
@@ -195,8 +236,6 @@ Communication between parent and iframe uses `postMessage`:
 | `id` | `string` | — | Unique ID for message routing |
 | `initialContent` | `RenderPayload` | — | Content to render on ready |
 | `darkMode` | `boolean` | `true` | Initial dark mode state |
-| `rendererCode` | `string` | — | React renderer JavaScript bundle |
-| `rendererCss` | `string` | — | React renderer CSS |
 | `minHeight` | `number` | `24` | Minimum iframe height |
 | `maxHeight` | `number` | `2000` | Maximum iframe height |
 | `className` | `string` | — | Additional CSS classes |
@@ -261,30 +300,23 @@ IsolatedFrame requires a React renderer bundle to render content. The bundle inc
   The renderer is a separate Vite project that builds an IIFE bundle. This bundle is eval'd into the iframe via postMessage.
 </Callout>
 
-### Using the Hook
+### Provider Configuration
 
-The easiest way to load the bundle is via the `useIsolatedRendererBundle` hook:
+The `IsolatedRendererProvider` handles loading the bundle. Configure it once at your app root:
 
 ```tsx
-import { IsolatedFrame, useIsolatedRendererBundle } from "@/registry/outputs/isolated"
+// For web apps: fetch from a URL
+<IsolatedRendererProvider basePath="/isolated">
+  <App />
+</IsolatedRendererProvider>
 
-function MyComponent() {
-  const { rendererCode, rendererCss, isLoading } = useIsolatedRendererBundle();
-
-  if (isLoading) return <div>Loading...</div>;
-
-  return (
-    <IsolatedFrame
-      rendererCode={rendererCode}
-      rendererCss={rendererCss}
-      initialContent={{
-        mimeType: "text/html",
-        data: "<h1>Hello</h1>",
-      }}
-    />
-  );
-}
+// For Tauri/desktop: use a Vite virtual module
+<IsolatedRendererProvider loader={() => import("virtual:isolated-renderer")}>
+  <App />
+</IsolatedRendererProvider>
 ```
+
+If the provider is missing, `IsolatedFrame` will throw a helpful error directing you to this documentation.
 
 ## Building the Isolated Renderer
 
@@ -359,23 +391,12 @@ root.render(<IsolatedRendererApp />);
 
 Build with: `vite build --config isolated-renderer/vite.config.ts`
 
-### Loading the Bundle
-
-Use the `useIsolatedRendererBundle` hook to load the bundle, or import it directly via Vite's `?raw` import:
+Then host the built files at a path accessible to your app (e.g., `/isolated/`) and configure the provider:
 
 ```tsx
-// Option 1: Use the hook (recommended for apps serving the bundle)
-const { rendererCode, rendererCss } = useIsolatedRendererBundle();
-
-// Option 2: Import directly (for bundling into your app)
-import rendererCode from "@/public/isolated/isolated-renderer.js?raw";
-import rendererCss from "@/public/isolated/isolated-renderer.css?raw";
-
-<IsolatedFrame
-  rendererCode={rendererCode}
-  rendererCss={rendererCss}
-  initialContent={content}
-/>
+<IsolatedRendererProvider basePath="/isolated">
+  <App />
+</IsolatedRendererProvider>
 ```
 
 ## Widget Integration

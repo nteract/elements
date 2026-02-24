@@ -64,14 +64,6 @@ interface MarkdownCellProps {
    */
   isLastCell?: boolean;
   /**
-   * Renderer JavaScript bundle for the iframe.
-   */
-  rendererCode?: string;
-  /**
-   * Renderer CSS for the iframe.
-   */
-  rendererCss?: string;
-  /**
    * Additional class name for the container
    */
   className?: string;
@@ -122,8 +114,6 @@ export function MarkdownCell({
   onFocusNext,
   onInsertCellAfter,
   isLastCell = false,
-  rendererCode,
-  rendererCss,
   className,
 }: MarkdownCellProps) {
   // Start in edit mode if cell is empty
@@ -344,8 +334,6 @@ export function MarkdownCell({
           <IsolatedFrame
             ref={frameRef}
             darkMode={darkMode}
-            rendererCode={rendererCode}
-            rendererCss={rendererCss}
             minHeight={24}
             maxHeight={2000}
             onReady={handleFrameReady}

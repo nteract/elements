@@ -107,16 +107,6 @@ interface OutputAreaProps {
    * @deprecated Use the comm bridge instead for full widget support
    */
   onWidgetUpdate?: (commId: string, state: Record<string, unknown>) => void;
-  /**
-   * Renderer JavaScript bundle for the iframe.
-   * Use with Vite's `?raw` import or the useIsolatedRendererBundle hook.
-   */
-  rendererCode?: string;
-  /**
-   * Renderer CSS for the iframe.
-   * Use with Vite's `?raw` import or the useIsolatedRendererBundle hook.
-   */
-  rendererCss?: string;
 }
 
 /**
@@ -289,8 +279,6 @@ export function OutputArea({
   preloadIframe = false,
   onLinkClick,
   onWidgetUpdate,
-  rendererCode,
-  rendererCss,
 }: OutputAreaProps) {
   const id = useId();
   const frameRef = useRef<IsolatedFrameHandle>(null);
@@ -478,8 +466,6 @@ export function OutputArea({
               <IsolatedFrame
                 ref={frameRef}
                 darkMode={darkMode}
-                rendererCode={rendererCode}
-                rendererCss={rendererCss}
                 minHeight={24}
                 maxHeight={maxHeight ?? 2000}
                 onReady={handleFrameReady}
