@@ -388,13 +388,14 @@ export const IsolatedFrame = forwardRef<
         "*",
       );
       // Then inject JS bundle (idempotent - checks if already loaded)
-      const jsWrapper = `
-        (function() {
-          if (window.__ISOLATED_RENDERER_LOADED__) return;
-          window.__ISOLATED_RENDERER_LOADED__ = true;
-          ${rendererCode}
-        })();
-      `;
+      // Use string concatenation instead of template literal to avoid issues
+      // with backticks or ${} in the bundled code
+      const jsWrapper =
+        "(function() {" +
+        "if (window.__ISOLATED_RENDERER_LOADED__) return;" +
+        "window.__ISOLATED_RENDERER_LOADED__ = true;" +
+        rendererCode +
+        "})();";
       iframeRef.current.contentWindow.postMessage(
         { type: "eval", payload: { code: jsWrapper } },
         "*",
