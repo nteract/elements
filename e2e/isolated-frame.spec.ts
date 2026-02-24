@@ -158,16 +158,19 @@ test.describe("HTML Editor Demo", () => {
     );
     await expect(editor).toBeVisible();
 
-    // Focus and select all content
+    // Wait for iframe to be fully ready before editing
+    await page.waitForTimeout(500);
+
+    // Focus and select all content (ControlOrMeta works on both Mac and Linux)
     await editor.click();
-    await page.keyboard.press("Meta+a");
+    await page.keyboard.press("ControlOrMeta+a");
     // Type new HTML
     await page.keyboard.type(
       '<div id="test-update">Updated via e2e test</div>',
     );
 
     // Wait for debounce + render (300ms debounce + buffer)
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(800);
 
     // Verify the iframe was updated
     const result = await evalInIframe(
@@ -181,6 +184,9 @@ test.describe("HTML Editor Demo", () => {
   });
 
   test("interactive button works inside iframe", async ({ page }) => {
+    // Wait for iframe to be fully ready
+    await page.waitForTimeout(500);
+
     // The default demo has a click counter button
     // Click the button via evalInIframe
     await evalInIframe(
@@ -190,7 +196,7 @@ test.describe("HTML Editor Demo", () => {
     );
 
     // Wait a moment for the click handler
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     // Check the button text was updated
     const result = await evalInIframe(
