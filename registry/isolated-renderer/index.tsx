@@ -15,6 +15,10 @@ import { createRoot, type Root } from "react-dom/client";
 // Import styles (Tailwind + theme variables)
 import "./styles.css";
 
+// Import error boundary for fault isolation
+import { ErrorBoundary } from "@/registry/lib/error-boundary";
+import { OutputErrorFallback } from "@/registry/lib/output-error-fallback";
+
 // Import output components directly (not through MediaRouter's lazy loading)
 // This ensures all components are bundled inline for the isolated iframe
 import {
@@ -194,8 +198,33 @@ function IsolatedRendererApp() {
       className="isolated-renderer"
       data-theme={state.isDark ? "dark" : "light"}
     >
-      {state.outputs.map((entry) => (
-        <OutputRenderer key={entry.id} payload={entry.payload} />
+      {state.outputs.map((entry, index) => (
+        <ErrorBoundary
+          key={entry.id}
+          resetKeys={[JSON.stringify(entry.payload)]}
+          fallback={(error, reset) => (
+            <OutputErrorFallback
+              error={error}
+              outputIndex={index}
+              onRetry={reset}
+            />
+          )}
+          onError={(error, errorInfo) => {
+            // Send error back to parent
+            window.parent.postMessage(
+              {
+                type: "error",
+                payload: {
+                  message: error.message,
+                  stack: errorInfo.componentStack,
+                },
+              },
+              "*",
+            );
+          }}
+        >
+          <OutputRenderer payload={entry.payload} />
+        </ErrorBoundary>
       ))}
     </div>
   );
