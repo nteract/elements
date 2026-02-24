@@ -1,20 +1,73 @@
 ---
 title: nteract elements
-description: A component registry for building notebook interfaces
+description: React components for building notebook interfaces
 ---
 
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import { Callout } from 'fumadocs-ui/components/callout';
+import { HeroDemo } from '@/app/components/HeroDemo';
+import { WidgetMiniGallery } from '@/app/components/WidgetMiniGallery';
 
-A collection of React components for building notebook interfaces. Designed for computational environments, Jupyter-compatible outputs, and interactive data exploration.
+<div className="my-8">
+  <HeroDemo />
+</div>
 
-<Callout type="info">
-  **Work in Progress** — We're bringing the nteract components out of hibernation and into the future with [shadcn](https://ui.shadcn.com). More components coming soon!
-</Callout>
+React components for notebook interfaces. Use [shadcn/ui](https://ui.shadcn.com) patterns — copy into your repo and customize freely.
+
+## What's Available
+
+<Cards>
+  <Card
+    title="Cells"
+    description="15 components for code cells, markdown, execution UI, and cell controls"
+    href="/docs/cell/cell-container"
+  />
+  <Card
+    title="Outputs"
+    description="9 renderers for ANSI, HTML, images, JSON, SVG, and media routing"
+    href="/docs/outputs/media-router"
+  />
+  <Card
+    title="Widgets"
+    description="50+ interactive controls with full Jupyter widget protocol support"
+    href="/docs/widgets"
+  />
+  <Card
+    title="Editor"
+    description="CodeMirror integration with Jupyter keybindings"
+    href="/docs/editor/codemirror-editor"
+  />
+</Cards>
+
+## Used By
+
+Powers [runt](https://github.com/runtimed/runt) — a desktop notebook editor built with Tauri.
+
+## Why nteract elements?
+
+### Pure React Architecture
+
+No Backbone.js, no JupyterLab dependencies. State management uses `useSyncExternalStore` for concurrent-safe React 18/19 support. Fine-grained subscriptions prevent unnecessary re-renders.
+
+### shadcn/ui Patterns
+
+Components copy into your repo. Override any component. Theme with Tailwind CSS variables. Works with your existing design system.
+
+### Full Widget Support
+
+50+ built-in controls covering sliders, buttons, dropdowns, progress bars, date pickers, file uploads, layout containers, and more. Plus full [anywidget](https://anywidget.dev) ESM support for custom widgets.
+
+<WidgetMiniGallery />
+
+| Traditional Jupyter | nteract elements |
+| --- | --- |
+| Backbone.js models | Pure React with `useSyncExternalStore` |
+| JupyterLab styling | shadcn/ui primitives (fully customizable) |
+| Monolithic manager | Modular: pick only what you need |
+
+[Explore all widgets →](/docs/widgets)
 
 ## Installation
-
-### Quick Setup (Recommended)
 
 Add nteract to your shadcn registry:
 
@@ -25,66 +78,58 @@ pnpm dlx shadcn@latest registry add @nteract
 This configures your `components.json` with the @nteract registry. Then install any component:
 
 ```bash
-npx shadcn@latest add @nteract/ansi-output
 npx shadcn@latest add @nteract/media-router
+npx shadcn@latest add @nteract/cell-container
 ```
 
-### Alternative: Direct URL
+### Direct URL
 
 Install directly without registry configuration:
 
 ```bash
-npx shadcn@latest add https://nteract-elements.vercel.app/r/ansi-output.json
+npx shadcn@latest add https://nteract-elements.vercel.app/r/media-router.json
 ```
 
-Or browse the component documentation to copy and adapt components for your project.
-
-## Outputs
-
-Components for rendering Jupyter notebook cell outputs.
+## Output Renderers
 
 <Cards>
-  <Card 
-    title="ANSI Output" 
+  <Card
+    title="ANSI Output"
     description="Render ANSI escape sequences as colored terminal output"
-    href="/docs/outputs/ansi-output" 
+    href="/docs/outputs/ansi-output"
   />
-  <Card 
-    title="Image Output" 
+  <Card
+    title="Image Output"
     description="Render images from base64 data or URLs"
-    href="/docs/outputs/image-output" 
+    href="/docs/outputs/image-output"
   />
-  <Card 
-    title="HTML Output" 
+  <Card
+    title="HTML Output"
     description="Render HTML content like pandas DataFrames"
-    href="/docs/outputs/html-output" 
+    href="/docs/outputs/html-output"
   />
-  <Card 
-    title="SVG Output" 
+  <Card
+    title="SVG Output"
     description="Render SVG graphics and vector images"
-    href="/docs/outputs/svg-output" 
+    href="/docs/outputs/svg-output"
   />
-  <Card 
-    title="Markdown Output" 
+  <Card
+    title="Markdown Output"
     description="Render Markdown with GFM and syntax highlighting"
-    href="/docs/outputs/markdown-output" 
+    href="/docs/outputs/markdown-output"
   />
-  <Card 
-    title="JSON Output" 
+  <Card
+    title="JSON Output"
     description="Render JSON in an interactive tree view"
-    href="/docs/outputs/json-output" 
+    href="/docs/outputs/json-output"
   />
-  <Card 
-    title="Media Router" 
+  <Card
+    title="Media Router"
     description="Auto-select renderer based on MIME type"
-    href="/docs/outputs/media-router" 
+    href="/docs/outputs/media-router"
   />
 </Cards>
 
-## Why nteract elements?
-
-- **Notebook-first**: Built specifically for computational notebook interfaces
-- **ANSI support**: Preserve colored terminal output that developers expect
-- **Composable**: Mix and match components for your notebook UI
-- **TypeScript**: Full type safety out of the box
-- **Tailwind**: Styled with Tailwind CSS, easy to customize
+<Callout type="info" className="mt-8">
+  **Work in Progress** — We're bringing the nteract components out of hibernation and into the future with [shadcn](https://ui.shadcn.com). More components coming soon!
+</Callout>
