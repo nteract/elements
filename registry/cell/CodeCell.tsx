@@ -89,19 +89,6 @@ interface CodeCellProps {
    */
   extensions?: Parameters<typeof CodeMirrorEditor>[0]["extensions"];
   /**
-   * Whether to use the React renderer bundle inside the iframe for outputs.
-   * @default true
-   */
-  useReactRenderer?: boolean;
-  /**
-   * Inline renderer JavaScript bundle for the iframe.
-   */
-  rendererCode?: string;
-  /**
-   * Inline renderer CSS for the iframe.
-   */
-  rendererCss?: string;
-  /**
    * Additional class name for the container
    */
   className?: string;
@@ -161,9 +148,6 @@ export function CodeCell({
   onFormat,
   isLastCell = false,
   extensions,
-  useReactRenderer = true,
-  rendererCode,
-  rendererCss,
   className,
 }: CodeCellProps) {
   const editorRef = useRef<CodeMirrorEditorRef>(null);
@@ -263,15 +247,7 @@ export function CodeCell({
           />
         </div>
       }
-      outputContent={
-        <OutputArea
-          outputs={cell.outputs}
-          preloadIframe
-          useReactRenderer={useReactRenderer}
-          rendererCode={rendererCode}
-          rendererCss={rendererCss}
-        />
-      }
+      outputContent={<OutputArea outputs={cell.outputs} preloadIframe />}
       hideOutput={cell.outputs.length === 0}
     />
   );

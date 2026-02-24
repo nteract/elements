@@ -80,6 +80,8 @@ jobs:
           node-version: 20
           cache: "pnpm"
       - run: pnpm install
+      - name: Build isolated renderer bundle
+        run: pnpm run build:isolated
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium --with-deps
       - name: Run e2e tests

@@ -5,6 +5,7 @@ import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
+  IsolatedRendererProvider,
 } from "@/registry/outputs/isolated";
 
 // Note: Tables without custom styles inherit from frame-html.ts defaults:
@@ -119,45 +120,45 @@ export function IsolatedFrameDemo({
   };
 
   return (
-    <div className="space-y-4">
-      {variant === "theme" && (
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setDarkMode(!darkMode);
-              frameRef.current?.setTheme(!darkMode);
+    <IsolatedRendererProvider basePath="/isolated">
+      <div className="space-y-4">
+        {variant === "theme" && (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDarkMode(!darkMode);
+                frameRef.current?.setTheme(!darkMode);
+              }}
+              className="rounded bg-gray-200 px-3 py-1.5 text-sm dark:bg-gray-700"
+            >
+              Toggle: {darkMode ? "Dark" : "Light"}
+            </button>
+            <span className="text-sm text-muted-foreground">
+              Theme syncs to iframe via postMessage
+            </span>
+          </div>
+        )}
+        <div className="overflow-hidden rounded-lg border">
+          <IsolatedFrame
+            ref={frameRef}
+            darkMode={darkMode}
+            initialContent={{
+              mimeType: "text/html",
+              data: getContent(),
             }}
-            className="rounded bg-gray-200 px-3 py-1.5 text-sm dark:bg-gray-700"
-          >
-            Toggle: {darkMode ? "Dark" : "Light"}
-          </button>
-          <span className="text-sm text-muted-foreground">
-            Theme syncs to iframe via postMessage
-          </span>
+            minHeight={60}
+            maxHeight={400}
+            onReady={() => setReady(true)}
+            onResize={(height) => console.log("Frame height:", height)}
+            onLinkClick={(url, newTab) => {
+              console.log("Link clicked:", url, newTab);
+              window.open(url, newTab ? "_blank" : "_self");
+            }}
+          />
         </div>
-      )}
-      <div className="overflow-hidden rounded-lg border">
-        <IsolatedFrame
-          ref={frameRef}
-          darkMode={darkMode}
-          initialContent={{
-            mimeType: "text/html",
-            data: getContent(),
-          }}
-          minHeight={60}
-          maxHeight={400}
-          onReady={() => setReady(true)}
-          onResize={(height) => console.log("Frame height:", height)}
-          onLinkClick={(url, newTab) => {
-            console.log("Link clicked:", url, newTab);
-            window.open(url, newTab ? "_blank" : "_self");
-          }}
-        />
+        {!ready && <p className="text-sm text-muted-foreground">Loading...</p>}
       </div>
-      {!ready && (
-        <p className="text-sm text-muted-foreground">Loading iframe...</p>
-      )}
-    </div>
+    </IsolatedRendererProvider>
   );
 }

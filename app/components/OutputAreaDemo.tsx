@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
+import { IsolatedRendererProvider } from "@/registry/outputs/isolated";
 
 const sampleOutputs: JupyterOutput[] = [
   {
@@ -110,7 +111,11 @@ export function OutputAreaDemo({ variant = "simple" }: OutputAreaDemoProps) {
       );
 
     case "html":
-      return <OutputArea outputs={htmlOutput} isolated={true} />;
+      return (
+        <IsolatedRendererProvider basePath="/isolated">
+          <OutputArea outputs={htmlOutput} isolated={true} />
+        </IsolatedRendererProvider>
+      );
 
     default:
       return <OutputArea outputs={sampleOutputs} />;

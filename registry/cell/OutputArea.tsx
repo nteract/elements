@@ -107,25 +107,6 @@ interface OutputAreaProps {
    * @deprecated Use the comm bridge instead for full widget support
    */
   onWidgetUpdate?: (commId: string, state: Record<string, unknown>) => void;
-  /**
-   * Whether to use the React renderer bundle inside the iframe.
-   * When true, fetches and loads isolated-renderer.js for full React rendering.
-   * When false, uses the inline JavaScript renderer (simpler, no build required).
-   * @default true
-   */
-  useReactRenderer?: boolean;
-  /**
-   * Inline React renderer JavaScript bundle for the iframe.
-   * When provided with rendererCss, uses this code directly instead of fetching.
-   * Use with Vite's `?raw` import: `import code from "./renderer.js?raw"`
-   */
-  rendererCode?: string;
-  /**
-   * Inline React renderer CSS for the iframe.
-   * When provided with rendererCode, uses this CSS directly instead of fetching.
-   * Use with Vite's `?raw` import: `import css from "./renderer.css?raw"`
-   */
-  rendererCss?: string;
 }
 
 /**
@@ -298,9 +279,6 @@ export function OutputArea({
   preloadIframe = false,
   onLinkClick,
   onWidgetUpdate,
-  useReactRenderer = true,
-  rendererCode,
-  rendererCss,
 }: OutputAreaProps) {
   const id = useId();
   const frameRef = useRef<IsolatedFrameHandle>(null);
@@ -488,9 +466,6 @@ export function OutputArea({
               <IsolatedFrame
                 ref={frameRef}
                 darkMode={darkMode}
-                useReactRenderer={useReactRenderer}
-                rendererCode={rendererCode}
-                rendererCss={rendererCss}
                 minHeight={24}
                 maxHeight={maxHeight ?? 2000}
                 onReady={handleFrameReady}

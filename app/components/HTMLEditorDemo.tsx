@@ -6,6 +6,7 @@ import { CodeMirrorEditor } from "@/registry/editor";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
+  IsolatedRendererProvider,
 } from "@/registry/outputs/isolated";
 
 const DEFAULT_HTML = `<style>
@@ -84,6 +85,7 @@ export function HTMLEditorDemo({
       frameRef.current?.render({
         mimeType: "text/html",
         data: code,
+        replace: true,
       });
     }, debounceMs);
 
@@ -91,53 +93,55 @@ export function HTMLEditorDemo({
   }, [code, ready, debounceMs]);
 
   return (
-    <div className="space-y-4" data-slot="html-editor-demo">
-      {/* Editor Section */}
-      <div
-        className="overflow-hidden rounded-lg border border-border"
-        data-slot="html-editor-input"
-      >
-        <div className="flex items-center border-b border-border bg-muted/50 px-3 py-2">
-          <span className="text-sm text-muted-foreground">HTML Editor</span>
+    <IsolatedRendererProvider basePath="/isolated">
+      <div className="space-y-4" data-slot="html-editor-demo">
+        {/* Editor Section */}
+        <div
+          className="overflow-hidden rounded-lg border border-border"
+          data-slot="html-editor-input"
+        >
+          <div className="flex items-center border-b border-border bg-muted/50 px-3 py-2">
+            <span className="text-sm text-muted-foreground">HTML Editor</span>
+          </div>
+          <div className="max-h-[300px] overflow-auto">
+            <CodeMirrorEditor
+              value={code}
+              language="html"
+              onValueChange={setCode}
+              placeholder="Enter HTML..."
+              lineWrapping
+            />
+          </div>
         </div>
-        <div className="max-h-[300px] overflow-auto">
-          <CodeMirrorEditor
-            value={code}
-            language="html"
-            onValueChange={setCode}
-            placeholder="Enter HTML..."
-            lineWrapping
+
+        {/* Preview Section */}
+        <div
+          className="overflow-hidden rounded-lg border border-border"
+          data-slot="html-editor-preview"
+        >
+          <div className="flex items-center justify-between border-b border-border bg-muted/50 px-3 py-2">
+            <span className="text-sm text-muted-foreground">Live Preview</span>
+            {!ready && (
+              <span className="text-xs text-muted-foreground">Loading...</span>
+            )}
+          </div>
+          <IsolatedFrame
+            ref={frameRef}
+            darkMode={darkMode}
+            initialContent={{
+              mimeType: "text/html",
+              data: code,
+              replace: true,
+            }}
+            minHeight={100}
+            maxHeight={400}
+            onReady={() => setReady(true)}
+            onLinkClick={(url, newTab) => {
+              window.open(url, newTab ? "_blank" : "_self");
+            }}
           />
         </div>
       </div>
-
-      {/* Preview Section */}
-      <div
-        className="overflow-hidden rounded-lg border border-border"
-        data-slot="html-editor-preview"
-      >
-        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-3 py-2">
-          <span className="text-sm text-muted-foreground">Live Preview</span>
-          {!ready && (
-            <span className="text-xs text-muted-foreground">Loading...</span>
-          )}
-        </div>
-        <IsolatedFrame
-          ref={frameRef}
-          darkMode={darkMode}
-          initialContent={{
-            mimeType: "text/html",
-            data: code,
-          }}
-          minHeight={100}
-          maxHeight={400}
-          onReady={() => setReady(true)}
-          onLinkClick={(url, newTab) => {
-            window.open(url, newTab ? "_blank" : "_self");
-          }}
-          useReactRenderer={false}
-        />
-      </div>
-    </div>
+    </IsolatedRendererProvider>
   );
 }
