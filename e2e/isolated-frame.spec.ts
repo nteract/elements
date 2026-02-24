@@ -8,6 +8,34 @@ import { expect, type Page, test } from "@playwright/test";
  * so we cannot access iframe.contentDocument directly. Instead, we use
  * the production postMessage eval channel (frame-html.ts handles { type: "eval" }).
  */
+/**
+ * Wait for content to appear inside the iframe by polling with evalInIframe.
+ * More reliable than waitForTimeout since it waits for actual content.
+ */
+async function waitForIframeContent(
+  page: Page,
+  checkCode: string,
+  expectedValue: string | RegExp,
+  selector = "[data-slot='isolated-frame']",
+  timeout = 10000,
+): Promise<void> {
+  const startTime = Date.now();
+  while (Date.now() - startTime < timeout) {
+    const result = await evalInIframe(page, checkCode, selector, 2000);
+    if (result.success && result.result) {
+      if (typeof expectedValue === "string") {
+        if (result.result.includes(expectedValue)) return;
+      } else {
+        if (expectedValue.test(result.result)) return;
+      }
+    }
+    await page.waitForTimeout(50); // Small poll interval
+  }
+  throw new Error(
+    `Timeout waiting for iframe content matching ${expectedValue}`,
+  );
+}
+
 async function evalInIframe(
   page: Page,
   code: string,
@@ -137,10 +165,15 @@ test.describe("HTML Editor Demo", () => {
       .first();
     await expect(previewIframe).toBeVisible();
 
-    // Wait for initial render
-    await page.waitForTimeout(500);
+    // Wait for content to appear in iframe (polls until h1 contains expected text)
+    await waitForIframeContent(
+      page,
+      "document.querySelector('h1')?.textContent || 'not found'",
+      "Hello from IsolatedFrame",
+      "[data-slot='html-editor-preview'] [data-slot='isolated-frame']",
+    );
 
-    // Check that the default content is rendered
+    // Verify the content
     const result = await evalInIframe(
       page,
       "document.querySelector('h1')?.textContent || 'not found'",
@@ -158,8 +191,13 @@ test.describe("HTML Editor Demo", () => {
     );
     await expect(editor).toBeVisible();
 
-    // Wait for iframe to be fully ready before editing
-    await page.waitForTimeout(500);
+    // Wait for initial content to render before editing
+    await waitForIframeContent(
+      page,
+      "document.querySelector('h1')?.textContent || 'not found'",
+      "Hello from IsolatedFrame",
+      "[data-slot='html-editor-preview'] [data-slot='isolated-frame']",
+    );
 
     // Focus and select all content (ControlOrMeta works on both Mac and Linux)
     await editor.click();
@@ -169,8 +207,13 @@ test.describe("HTML Editor Demo", () => {
       '<div id="test-update">Updated via e2e test</div>',
     );
 
-    // Wait for debounce + render (300ms debounce + buffer)
-    await page.waitForTimeout(800);
+    // Wait for iframe to update with new content (polls until element appears)
+    await waitForIframeContent(
+      page,
+      "document.querySelector('#test-update')?.textContent || 'not found'",
+      "Updated via e2e test",
+      "[data-slot='html-editor-preview'] [data-slot='isolated-frame']",
+    );
 
     // Verify the iframe was updated
     const result = await evalInIframe(
@@ -184,8 +227,13 @@ test.describe("HTML Editor Demo", () => {
   });
 
   test("interactive button works inside iframe", async ({ page }) => {
-    // Wait for iframe to be fully ready
-    await page.waitForTimeout(500);
+    // Wait for initial content to render (button should exist)
+    await waitForIframeContent(
+      page,
+      "document.querySelector('.counter')?.textContent || 'not found'",
+      "Click me",
+      "[data-slot='html-editor-preview'] [data-slot='isolated-frame']",
+    );
 
     // The default demo has a click counter button
     // Click the button via evalInIframe
@@ -195,10 +243,15 @@ test.describe("HTML Editor Demo", () => {
       "[data-slot='html-editor-preview'] [data-slot='isolated-frame']",
     );
 
-    // Wait a moment for the click handler
-    await page.waitForTimeout(200);
+    // Wait for button text to update (polls until "Clicked" appears)
+    await waitForIframeContent(
+      page,
+      "document.querySelector('.counter')?.textContent || 'not found'",
+      "Clicked",
+      "[data-slot='html-editor-preview'] [data-slot='isolated-frame']",
+    );
 
-    // Check the button text was updated
+    // Verify the button text was updated
     const result = await evalInIframe(
       page,
       "document.querySelector('.counter')?.textContent || 'not found'",
