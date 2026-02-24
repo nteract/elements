@@ -120,7 +120,7 @@ export function OutputWidget({ modelId, className }: WidgetComponentProps) {
       data-widget-id={modelId}
       data-widget-type="Output"
     >
-      <OutputArea outputs={renderedOutputs} isolated={false} />
+      <OutputArea outputs={renderedOutputs} isolated="auto" />
     </div>
   );
 }

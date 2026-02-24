@@ -9,6 +9,7 @@
 
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { IsolatedRendererProvider } from "@/registry/outputs/isolated";
 import { MediaProvider } from "@/registry/outputs/media-provider";
 import {
   type JupyterCommMessage,
@@ -355,11 +356,13 @@ export function OutputWidgetDemo() {
   }, []);
 
   return (
-    <WidgetStoreProvider sendMessage={sendMessage}>
-      <MediaProvider>
-        <OutputWidgetDemoContent />
-      </MediaProvider>
-    </WidgetStoreProvider>
+    <IsolatedRendererProvider basePath="/isolated">
+      <WidgetStoreProvider sendMessage={sendMessage}>
+        <MediaProvider>
+          <OutputWidgetDemoContent />
+        </MediaProvider>
+      </WidgetStoreProvider>
+    </IsolatedRendererProvider>
   );
 }
 
