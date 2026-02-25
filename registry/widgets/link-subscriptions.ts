@@ -36,6 +36,9 @@ function parseLinkTarget(tuple: unknown): [string, string] | null {
   return [modelId, tuple[1]];
 }
 
+/** Type for the sendUpdate function that syncs state to the kernel */
+type SendUpdate = (commId: string, state: Record<string, unknown>) => void;
+
 /**
  * Set up a one-way property subscription (source → target).
  * Returns a cleanup function to tear down the subscription.
@@ -43,6 +46,7 @@ function parseLinkTarget(tuple: unknown): [string, string] | null {
 function setupDirectionalLink(
   store: WidgetStore,
   linkModelId: string,
+  sendUpdate: SendUpdate,
 ): () => void {
   let keyUnsub: (() => void) | undefined;
   let globalUnsub: (() => void) | undefined;
@@ -71,13 +75,13 @@ function setupDirectionalLink(
     if (sourceModel) {
       const currentValue = sourceModel.state[sourceAttr];
       if (currentValue !== undefined) {
-        store.updateModel(targetModelId, { [targetAttr]: currentValue });
+        sendUpdate(targetModelId, { [targetAttr]: currentValue });
       }
     }
 
     // Subscribe to source changes, propagate to target
     keyUnsub = store.subscribeToKey(sourceModelId, sourceAttr, (newValue) => {
-      store.updateModel(targetModelId, { [targetAttr]: newValue });
+      sendUpdate(targetModelId, { [targetAttr]: newValue });
     });
 
     // Clean up global listener once setup is complete
@@ -109,6 +113,7 @@ function setupDirectionalLink(
 function setupBidirectionalLink(
   store: WidgetStore,
   linkModelId: string,
+  sendUpdate: SendUpdate,
 ): () => void {
   const keyUnsubs: (() => void)[] = [];
   let globalUnsub: (() => void) | undefined;
@@ -139,7 +144,7 @@ function setupBidirectionalLink(
       const currentValue = sourceModel.state[sourceAttr];
       if (currentValue !== undefined) {
         isSyncing = true;
-        store.updateModel(targetModelId, { [targetAttr]: currentValue });
+        sendUpdate(targetModelId, { [targetAttr]: currentValue });
         isSyncing = false;
       }
     }
@@ -149,7 +154,7 @@ function setupBidirectionalLink(
       store.subscribeToKey(sourceModelId, sourceAttr, (newValue) => {
         if (isSyncing) return;
         isSyncing = true;
-        store.updateModel(targetModelId, { [targetAttr]: newValue });
+        sendUpdate(targetModelId, { [targetAttr]: newValue });
         isSyncing = false;
       }),
     );
@@ -159,7 +164,7 @@ function setupBidirectionalLink(
       store.subscribeToKey(targetModelId, targetAttr, (newValue) => {
         if (isSyncing) return;
         isSyncing = true;
-        store.updateModel(sourceModelId, { [sourceAttr]: newValue });
+        sendUpdate(sourceModelId, { [sourceAttr]: newValue });
         isSyncing = false;
       }),
     );
@@ -192,8 +197,15 @@ function setupBidirectionalLink(
  *
  * Called automatically by WidgetStoreProvider. For non-React integrations
  * (e.g. iframe isolation), call this directly after creating the store.
+ *
+ * @param store - The widget store instance
+ * @param sendUpdate - Function to send state updates to the kernel. This ensures
+ *   linked widget values are synced back to Python, not just updated in the frontend.
  */
-export function createLinkManager(store: WidgetStore): () => void {
+export function createLinkManager(
+  store: WidgetStore,
+  sendUpdate: SendUpdate,
+): () => void {
   const activeLinks = new Map<string, () => void>();
   let lastSize = -1;
 
@@ -210,9 +222,9 @@ export function createLinkManager(store: WidgetStore): () => void {
       if (activeLinks.has(id)) return;
 
       if (model.modelName === "DirectionalLinkModel") {
-        activeLinks.set(id, setupDirectionalLink(store, id));
+        activeLinks.set(id, setupDirectionalLink(store, id, sendUpdate));
       } else if (model.modelName === "LinkModel") {
-        activeLinks.set(id, setupBidirectionalLink(store, id));
+        activeLinks.set(id, setupBidirectionalLink(store, id, sendUpdate));
       }
     });
 

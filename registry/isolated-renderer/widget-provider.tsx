@@ -92,7 +92,11 @@ export function IframeWidgetStoreProvider({
   }, [client]);
 
   // Set up link subscriptions (jslink/jsdlink)
-  useEffect(() => createLinkManager(client.store), [client.store]);
+  // Pass sendUpdate so linked values sync back to the kernel via the parent
+  useEffect(
+    () => createLinkManager(client.store, client.sendUpdate),
+    [client.store, client.sendUpdate],
+  );
 
   // Set up canvas manager router (ipycanvas)
   useEffect(() => createCanvasManagerRouter(client.store), [client.store]);
