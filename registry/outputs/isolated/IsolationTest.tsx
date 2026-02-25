@@ -190,7 +190,13 @@ const ISOLATION_TEST_HTML = `<!DOCTYPE html>
 
     // Test fetch to parent origin (async)
     if (window.parent !== window) {
-      fetch(window.parent.location?.origin || '/', { mode: 'cors' })
+      let parentOrigin = '/';
+      try {
+        parentOrigin = window.parent.location?.origin || '/';
+      } catch {
+        // Expected in sandboxed iframe - origin access blocked
+      }
+      fetch(parentOrigin, { mode: 'cors' })
         .then(() => {
           results.canFetchParentOrigin = true;
           updateResults();
@@ -406,7 +412,8 @@ export function IsolationTest() {
     !testResult.canAccessParentLocalStorage &&
     !testResult.canUseOwnLocalStorage &&
     !testResult.canUseOwnCookies &&
-    !testResult.canUseIndexedDB;
+    !testResult.canUseIndexedDB &&
+    !testResult.canFetchParentOrigin;
 
   return (
     <div
@@ -522,6 +529,18 @@ export function IsolationTest() {
                 }
               >
                 {!testResult.canUseIndexedDB ? "Yes" : "No"}
+              </span>
+            </li>
+            <li>
+              Parent origin fetch blocked:{" "}
+              <span
+                className={
+                  !testResult.canFetchParentOrigin
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
+              >
+                {!testResult.canFetchParentOrigin ? "Yes" : "No"}
               </span>
             </li>
             <li>

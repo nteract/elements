@@ -121,6 +121,8 @@ export function IsolatedRendererProvider({
         }
       })
       .catch((error) => {
+        console.error("[IsolatedRendererProvider] Bundle load failed:", error);
+        loadingPromise = null; // Allow retry on next mount
         if (!cancelled) {
           setState((s) => ({ ...s, isLoading: false, error }));
         }
