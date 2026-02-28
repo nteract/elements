@@ -953,11 +953,7 @@
       "type": "registry:component",
       "title": "Isolated Renderer",
       "description": "Complete isolated iframe renderer bundle for Jupyter outputs and widgets. Runs inside a sandboxed iframe with its own React app, receiving render commands via postMessage. Includes widget bridge client for two-way comm protocol support. This is a standalone entry point that can be built separately (includes vite.config.ts).",
-      "devDependencies": [
-        "@tailwindcss/vite",
-        "@vitejs/plugin-react",
-        "vite"
-      ],
+      "devDependencies": ["@tailwindcss/vite", "@vitejs/plugin-react", "vite"],
       "registryDependencies": [
         "@nteract/error-boundary",
         "@nteract/ansi-output",
