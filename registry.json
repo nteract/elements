@@ -949,6 +949,52 @@
       ]
     },
     {
+      "name": "isolated-renderer",
+      "type": "registry:component",
+      "title": "Isolated Renderer",
+      "description": "Complete isolated iframe renderer bundle for Jupyter outputs and widgets. Runs inside a sandboxed iframe with its own React app, receiving render commands via postMessage. Includes widget bridge client for two-way comm protocol support. This is a standalone entry point that can be built separately (includes vite.config.ts).",
+      "devDependencies": ["@tailwindcss/vite", "@vitejs/plugin-react", "vite"],
+      "registryDependencies": [
+        "@nteract/error-boundary",
+        "@nteract/ansi-output",
+        "@nteract/html-output",
+        "@nteract/image-output",
+        "@nteract/isolated-frame",
+        "@nteract/json-output",
+        "@nteract/markdown-output",
+        "@nteract/svg-output",
+        "@nteract/widget-view",
+        "@nteract/widget-controls"
+      ],
+      "files": [
+        {
+          "path": "registry/isolated-renderer/index.tsx",
+          "type": "registry:component",
+          "target": "isolated-renderer/index.tsx"
+        },
+        {
+          "path": "registry/isolated-renderer/widget-provider.tsx",
+          "type": "registry:component",
+          "target": "isolated-renderer/widget-provider.tsx"
+        },
+        {
+          "path": "registry/isolated-renderer/widget-bridge-client.ts",
+          "type": "registry:lib",
+          "target": "isolated-renderer/widget-bridge-client.ts"
+        },
+        {
+          "path": "registry/isolated-renderer/styles.css",
+          "type": "registry:file",
+          "target": "isolated-renderer/styles.css"
+        },
+        {
+          "path": "registry/isolated-renderer/vite.config.ts",
+          "type": "registry:file",
+          "target": "isolated-renderer/vite.config.ts"
+        }
+      ]
+    },
+    {
       "name": "all",
       "type": "registry:component",
       "title": "All nteract Components",
@@ -969,7 +1015,8 @@
         "@nteract/collaborator-avatars",
         "@nteract/presence-bookmarks",
         "@nteract/widget-controls",
-        "@nteract/codemirror-editor"
+        "@nteract/codemirror-editor",
+        "@nteract/isolated-renderer"
       ],
       "files": []
     }
