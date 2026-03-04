@@ -372,7 +372,9 @@ export class CommBridgeManager {
       commId,
       (content: Record<string, unknown>, buffers?: DataView[]) => {
         // Convert DataView[] to ArrayBuffer[] for postMessage
-        const arrayBuffers = buffers?.map((dv: DataView) => dv.buffer as ArrayBuffer);
+        const arrayBuffers = buffers?.map(
+          (dv: DataView) => dv.buffer as ArrayBuffer,
+        );
         // Forward custom message to iframe
         this.sendCommMsg(commId, "custom", content, arrayBuffers);
       },

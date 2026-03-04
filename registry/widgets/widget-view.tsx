@@ -7,8 +7,8 @@
  * - Unknown widgets → UnsupportedWidget fallback
  */
 
-import { ErrorBoundary } from "@/registry/lib/error-boundary";
 import { cn } from "@/lib/utils";
+import { ErrorBoundary } from "@/registry/lib/error-boundary";
 import { WidgetErrorFallback } from "@/registry/lib/widget-error-fallback";
 import { AnyWidgetView, isAnyWidget } from "./anywidget-view";
 import { useLayoutStyles } from "./use-layout-styles";

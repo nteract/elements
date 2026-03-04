@@ -17,8 +17,8 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
 import { cn } from "@/lib/utils";
+import { type JupyterOutput, OutputArea } from "@/registry/cell/OutputArea";
 import type { WidgetComponentProps } from "../widget-registry";
 import {
   useWidgetModelValue,

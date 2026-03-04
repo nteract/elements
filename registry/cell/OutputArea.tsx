@@ -9,26 +9,23 @@ import {
   useRef,
   useState,
 } from "react";
+import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
+import { cn } from "@/lib/utils";
+import { ErrorBoundary } from "@/registry/lib/error-boundary";
+import { highlightTextInDom } from "@/registry/lib/highlight-text";
+import { OutputErrorFallback } from "@/registry/lib/output-error-fallback";
+import {
+  AnsiErrorOutput,
+  AnsiStreamOutput,
+} from "@/registry/outputs/ansi-output";
 import {
   CommBridgeManager,
   type IframeToParentMessage,
   IsolatedFrame,
   type IsolatedFrameHandle,
 } from "@/registry/outputs/isolated";
-import {
-  AnsiErrorOutput,
-  AnsiStreamOutput,
-} from "@/registry/outputs/ansi-output";
-import {
-  DEFAULT_PRIORITY,
-  MediaRouter,
-} from "@/registry/outputs/media-router";
+import { DEFAULT_PRIORITY, MediaRouter } from "@/registry/outputs/media-router";
 import { useWidgetStore } from "@/registry/widgets/widget-store-context";
-import { isDarkMode as detectDarkMode } from "@/lib/dark-mode";
-import { ErrorBoundary } from "@/registry/lib/error-boundary";
-import { highlightTextInDom } from "@/registry/lib/highlight-text";
-import { OutputErrorFallback } from "@/registry/lib/output-error-fallback";
-import { cn } from "@/lib/utils";
 
 /**
  * Jupyter output types based on the nbformat spec.
