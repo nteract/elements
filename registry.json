@@ -1022,12 +1022,13 @@
       "name": "all",
       "type": "registry:component",
       "title": "All nteract Components",
-      "description": "Install all Jupyter frontend components: outputs, cell primitives, widgets, and editor.",
+      "description": "Install all Jupyter frontend components: outputs, cell primitives, widgets, editor, icons, and UI components.",
       "registryDependencies": [
         "@nteract/media-provider",
         "@nteract/media-router",
         "@nteract/output-area",
         "@nteract/cell-container",
+        "@nteract/cell-betweener",
         "@nteract/cell-header",
         "@nteract/cell-controls",
         "@nteract/cell-type-button",
@@ -1038,9 +1039,13 @@
         "@nteract/runtime-health-indicator",
         "@nteract/collaborator-avatars",
         "@nteract/presence-bookmarks",
+        "@nteract/global-find-bar",
         "@nteract/widget-controls",
+        "@nteract/ipycanvas",
         "@nteract/codemirror-editor",
-        "@nteract/isolated-renderer"
+        "@nteract/isolated-renderer",
+        "@nteract/runtime-icons",
+        "@nteract/selection-card"
       ],
       "files": []
     },
