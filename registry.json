@@ -401,7 +401,7 @@
       "name": "codemirror-editor",
       "type": "registry:component",
       "title": "CodeMirror Editor",
-      "description": "A CodeMirror 6 editor component for notebook cells with syntax highlighting, key bindings, and language support for Python, Markdown, SQL, HTML, JavaScript, TypeScript, and JSON.",
+      "description": "A CodeMirror 6 editor component for notebook cells with syntax highlighting, key bindings, and language support for Python, IPython (with magics and shell commands), Markdown, SQL, HTML, JavaScript, TypeScript, and JSON.",
       "dependencies": [
         "@codemirror/view",
         "@codemirror/state",
@@ -438,6 +438,11 @@
           "path": "registry/editor/themes.ts",
           "type": "registry:component",
           "target": "components/editor/themes.ts"
+        },
+        {
+          "path": "registry/editor/ipython.ts",
+          "type": "registry:component",
+          "target": "components/editor/ipython.ts"
         },
         {
           "path": "registry/editor/index.ts",
