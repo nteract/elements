@@ -1,0 +1,226 @@
+---
+title: Selection Card
+description: Stylized selection cards for wizard and onboarding UIs
+icon: LayoutGrid
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { SelectionCardDemo, PageDotsDemo } from '@/app/components/SelectionCardDemo';
+
+<div className="my-8">
+  <SelectionCardDemo />
+</div>
+
+A collection of components for building wizard and onboarding UIs with stylized selection cards and navigation indicators.
+
+## Components
+
+- **SelectionCard** - A stylized button with icon, title, description, and selected state
+- **PageDots** - Navigation dots for multi-step wizards
+- **BRAND_COLORS** - Pre-configured color schemes for common tools
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/selection-card
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/ui/selection-card.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+### SelectionCard
+
+```tsx
+import { SelectionCard, BRAND_COLORS } from "@/components/ui/selection-card"
+import { PythonIcon } from "@/components/icons/runtime-icons"
+
+function RuntimeSelector() {
+  const [selected, setSelected] = useState<string | null>(null)
+
+  return (
+    <SelectionCard
+      selected={selected === "python"}
+      onClick={() => setSelected("python")}
+      icon={PythonIcon}
+      title="Python"
+      description="Scientific computing & data science"
+      colorClass={BRAND_COLORS.python}
+    />
+  )
+}
+```
+
+### PageDots
+
+<div className="my-4">
+  <PageDotsDemo />
+</div>
+
+```tsx
+import { PageDots } from "@/components/ui/selection-card"
+
+function WizardNavigation() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = 4
+
+  return <PageDots current={currentPage} total={totalPages} />
+}
+```
+
+## BRAND_COLORS
+
+Pre-configured color schemes for common runtime and package manager icons:
+
+```tsx
+import { BRAND_COLORS } from "@/components/ui/selection-card"
+
+// Available colors:
+BRAND_COLORS.python  // Blue theme
+BRAND_COLORS.deno    // Emerald theme
+BRAND_COLORS.uv      // Fuchsia theme
+BRAND_COLORS.conda   // Green theme
+BRAND_COLORS.pixi    // Yellow theme
+```
+
+Each color scheme includes:
+
+```typescript
+interface SelectionCardColorClass {
+  bg: string;      // Background when selected (e.g., "bg-blue-500/10")
+  text: string;    // Text color when selected
+  ring: string;    // Ring color when selected
+  iconBg: string;  // Icon background when selected
+}
+```
+
+## Custom Colors
+
+You can create custom color schemes:
+
+```tsx
+const customColor = {
+  bg: "bg-purple-500/10",
+  text: "text-purple-600 dark:text-purple-400",
+  ring: "ring-purple-500",
+  iconBg: "bg-purple-500/20",
+}
+
+<SelectionCard
+  selected={isSelected}
+  onClick={handleClick}
+  icon={CustomIcon}
+  title="Custom Option"
+  description="With custom colors"
+  colorClass={customColor}
+/>
+```
+
+## SelectionCard Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `selected` | `boolean` | — | Whether this card is currently selected |
+| `onClick` | `() => void` | — | Click handler |
+| `icon` | `ComponentType<{ className?: string }>` | — | Icon component to render |
+| `title` | `string` | — | Card title |
+| `subtitle` | `string` | — | Optional subtitle below title |
+| `description` | `string` | — | Description text |
+| `colorClass` | `SelectionCardColorClass` | — | Color classes for theming |
+| `className` | `string` | — | Additional CSS classes |
+
+## PageDots Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `current` | `number` | — | Current page (1-indexed) |
+| `total` | `number` | — | Total number of pages |
+| `className` | `string` | — | Additional CSS classes |
+
+## Complete Example
+
+Here's a full onboarding wizard example:
+
+```tsx
+import { useState } from "react"
+import { SelectionCard, PageDots, BRAND_COLORS } from "@/components/ui/selection-card"
+import { PythonIcon, DenoIcon, UvIcon, CondaIcon } from "@/components/icons/runtime-icons"
+import { Button } from "@/components/ui/button"
+
+function OnboardingWizard() {
+  const [page, setPage] = useState(1)
+  const [runtime, setRuntime] = useState<"python" | "deno" | null>(null)
+  const [pythonEnv, setPythonEnv] = useState<"uv" | "conda" | null>(null)
+
+  return (
+    <div className="space-y-8">
+      {page === 1 && (
+        <>
+          <h1>Choose your runtime</h1>
+          <div className="flex gap-6">
+            <SelectionCard
+              selected={runtime === "python"}
+              onClick={() => setRuntime("python")}
+              icon={PythonIcon}
+              title="Python"
+              description="Scientific computing"
+              colorClass={BRAND_COLORS.python}
+            />
+            <SelectionCard
+              selected={runtime === "deno"}
+              onClick={() => setRuntime("deno")}
+              icon={DenoIcon}
+              title="Deno"
+              description="TypeScript/JS"
+              colorClass={BRAND_COLORS.deno}
+            />
+          </div>
+        </>
+      )}
+
+      {page === 2 && (
+        <>
+          <h1>Choose your package manager</h1>
+          <div className="flex gap-6">
+            <SelectionCard
+              selected={pythonEnv === "uv"}
+              onClick={() => setPythonEnv("uv")}
+              icon={UvIcon}
+              title="UV"
+              description="PyPI compatible"
+              colorClass={BRAND_COLORS.uv}
+            />
+            <SelectionCard
+              selected={pythonEnv === "conda"}
+              onClick={() => setPythonEnv("conda")}
+              icon={CondaIcon}
+              title="Conda"
+              description="Scientific stack"
+              colorClass={BRAND_COLORS.conda}
+            />
+          </div>
+        </>
+      )}
+
+      <div className="flex items-center justify-between">
+        {page > 1 && (
+          <Button variant="ghost" onClick={() => setPage(page - 1)}>
+            Back
+          </Button>
+        )}
+        <PageDots current={page} total={2} />
+        {page < 2 && runtime && (
+          <Button onClick={() => setPage(2)}>Next</Button>
+        )}
+      </div>
+    </div>
+  )
+}
+```

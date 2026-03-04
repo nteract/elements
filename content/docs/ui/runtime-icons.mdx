@@ -1,0 +1,123 @@
+---
+title: Runtime Icons
+description: SVG icons for runtime environments and package managers
+icon: Cpu
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { RuntimeIconsDemo } from '@/app/components/RuntimeIconsDemo';
+
+<div className="my-8">
+  <RuntimeIconsDemo size="lg" />
+</div>
+
+A collection of SVG icons for common runtime environments and package managers used in notebook applications.
+
+## Icons Included
+
+- **PythonIcon** - Python programming language
+- **DenoIcon** - Deno JavaScript/TypeScript runtime
+- **UvIcon** - UV Python package manager
+- **CondaIcon** - Conda package and environment manager
+- **PixiIcon** - Pixi package manager (from prefix.dev)
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/runtime-icons
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/icons/runtime-icons.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import {
+  PythonIcon,
+  DenoIcon,
+  UvIcon,
+  CondaIcon,
+  PixiIcon,
+} from "@/components/icons/runtime-icons"
+
+function RuntimeSelector() {
+  return (
+    <div className="flex gap-4">
+      <PythonIcon className="h-8 w-8 text-blue-500" />
+      <DenoIcon className="h-8 w-8 text-emerald-500" />
+      <UvIcon className="h-8 w-8 text-fuchsia-500" />
+      <CondaIcon className="h-8 w-8 text-green-500" />
+      <PixiIcon className="h-8 w-8 text-yellow-500" />
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Small Size
+
+<div className="my-4">
+  <RuntimeIconsDemo size="sm" />
+</div>
+
+```tsx
+<PythonIcon className="h-6 w-6" />
+```
+
+### Medium Size
+
+<div className="my-4">
+  <RuntimeIconsDemo size="md" />
+</div>
+
+```tsx
+<PythonIcon className="h-10 w-10" />
+```
+
+### Large Size
+
+<div className="my-4">
+  <RuntimeIconsDemo size="lg" />
+</div>
+
+```tsx
+<PythonIcon className="h-16 w-16" />
+```
+
+### With Colors
+
+All icons accept a `className` prop for styling, including colors:
+
+```tsx
+<PythonIcon className="h-8 w-8 text-blue-500" />
+<DenoIcon className="h-8 w-8 text-emerald-500" />
+<UvIcon className="h-8 w-8 text-fuchsia-500" />
+<CondaIcon className="h-8 w-8 text-green-500" />
+<PixiIcon className="h-8 w-8 text-yellow-500" />
+```
+
+## Props
+
+All icons share the same props interface:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | CSS classes for sizing and styling |
+
+## Icon Details
+
+| Icon | Source | Style |
+| --- | --- | --- |
+| `PythonIcon` | Tabler Icons | Stroke-based |
+| `DenoIcon` | Tabler Icons | Stroke-based |
+| `UvIcon` | UV branding | Fill-based |
+| `CondaIcon` | Conda repository | Fill + stroke |
+| `PixiIcon` | prefix.dev | Fill-based |

@@ -1,0 +1,117 @@
+---
+title: GlobalFindBar
+description: Floating search bar for notebook-wide find functionality with keyboard navigation
+icon: Search
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { RegistrySetup } from '@/components/docs/registry-setup';
+import { GlobalFindBarDemo } from '@/app/components/GlobalFindBarDemo';
+
+<div className="my-8">
+  <GlobalFindBarDemo />
+</div>
+
+A floating search bar component for notebook-wide find functionality. Supports keyboard navigation for efficient searching through cells.
+
+## Features
+
+- **Keyboard navigation**: Enter for next match, Shift+Enter for previous, Escape to close
+- **Match counter**: Shows current position and total matches
+- **Auto-focus**: Input field is focused and selected on mount
+- **Accessible**: Full ARIA labels and keyboard support
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add @nteract/global-find-bar
+    ```
+    <RegistrySetup />
+  </Tab>
+  <Tab value="Manual">
+    Copy from [nteract/elements](https://github.com/nteract/elements/blob/main/registry/cell/GlobalFindBar.tsx).
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { GlobalFindBar } from "@/components/cell/GlobalFindBar"
+
+function NotebookHeader() {
+  const [query, setQuery] = useState("")
+  const [matches, setMatches] = useState<Match[]>([])
+  const [currentMatch, setCurrentMatch] = useState(0)
+
+  return (
+    <GlobalFindBar
+      query={query}
+      matchCount={matches.length}
+      currentMatchIndex={currentMatch}
+      onQueryChange={setQuery}
+      onNextMatch={() => setCurrentMatch((i) => (i + 1) % matches.length)}
+      onPrevMatch={() => setCurrentMatch((i) => (i - 1 + matches.length) % matches.length)}
+      onClose={() => setShowFindBar(false)}
+    />
+  )
+}
+```
+
+## Integration with CodeMirror
+
+GlobalFindBar pairs well with the `searchHighlight` CodeMirror extension for highlighting matches within cells:
+
+```tsx
+import { GlobalFindBar } from "@/components/cell/GlobalFindBar"
+import { searchHighlight } from "@/components/editor/search-highlight"
+import { CodeMirrorEditor } from "@/components/editor/codemirror-editor"
+
+function SearchableNotebook() {
+  const [query, setQuery] = useState("")
+  const [activeOffset, setActiveOffset] = useState(-1)
+
+  return (
+    <>
+      <GlobalFindBar
+        query={query}
+        matchCount={matchCount}
+        currentMatchIndex={currentMatch}
+        onQueryChange={setQuery}
+        onNextMatch={handleNextMatch}
+        onPrevMatch={handlePrevMatch}
+        onClose={() => setQuery("")}
+      />
+
+      {cells.map((cell) => (
+        <CodeMirrorEditor
+          key={cell.id}
+          value={cell.source}
+          extensions={[searchHighlight(query, activeOffset)]}
+        />
+      ))}
+    </>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `query` | `string` | — | Current search query |
+| `matchCount` | `number` | — | Total number of matches found |
+| `currentMatchIndex` | `number` | — | Index of the currently active match (0-based) |
+| `onQueryChange` | `(query: string) => void` | — | Called when the search query changes |
+| `onNextMatch` | `() => void` | — | Called when user navigates to next match |
+| `onPrevMatch` | `() => void` | — | Called when user navigates to previous match |
+| `onClose` | `() => void` | — | Called when the find bar is closed |
+
+## Keyboard Shortcuts
+
+| Key | Action |
+| --- | --- |
+| `Enter` | Go to next match |
+| `Shift + Enter` | Go to previous match |
+| `Escape` | Close the find bar |
