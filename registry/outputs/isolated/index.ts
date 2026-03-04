@@ -1,6 +1,3 @@
-// Production components
-
-// Widget comm bridge for isolated frames
 export {
   CommBridgeManager,
   createCommBridgeManager,

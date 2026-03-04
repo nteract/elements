@@ -1,5 +1,3 @@
-"use client";
-
 import { Bot, ChevronDown, Code, Database, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
