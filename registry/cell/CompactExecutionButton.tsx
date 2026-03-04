@@ -38,7 +38,6 @@ export function CompactExecutionButton({
   return (
     <button
       type="button"
-      data-testid="execute-button"
       onClick={handleClick}
       className={cn(
         "group/exec inline-flex items-center font-mono text-sm tabular-nums",
@@ -47,6 +46,7 @@ export function CompactExecutionButton({
         className,
       )}
       title={isExecuting ? "Stop execution" : "Run cell"}
+      data-testid="execute-button"
     >
       <span className="opacity-60">[</span>
       <span className="relative inline-flex min-w-4 items-center justify-center">
