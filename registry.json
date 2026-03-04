@@ -445,6 +445,11 @@
           "target": "components/editor/ipython.ts"
         },
         {
+          "path": "registry/editor/search-highlight.ts",
+          "type": "registry:component",
+          "target": "components/editor/search-highlight.ts"
+        },
+        {
           "path": "registry/editor/index.ts",
           "type": "registry:component",
           "target": "components/editor/index.ts"
