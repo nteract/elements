@@ -1,3 +1,5 @@
+"use client";
+
 import {
   EditorView,
   type KeyBinding,

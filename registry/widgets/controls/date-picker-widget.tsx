@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * DatePicker widget - renders a date input field.
  *

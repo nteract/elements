@@ -1,3 +1,10 @@
+/**
+ * Built-in widget components for @jupyter-widgets/controls.
+ *
+ * This module registers all built-in widget components with the widget registry.
+ * Import this module to enable rendering of standard ipywidgets.
+ */
+
 import { registerWidget } from "../widget-registry";
 import { AccordionWidget } from "./accordion-widget";
 import { AudioWidget } from "./audio-widget";

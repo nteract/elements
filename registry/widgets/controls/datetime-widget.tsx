@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Datetime widget - renders a datetime-local input field.
  *
