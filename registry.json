@@ -1043,6 +1043,47 @@
         "@nteract/isolated-renderer"
       ],
       "files": []
+    },
+    {
+      "name": "global-find-bar",
+      "type": "registry:component",
+      "title": "Global Find Bar",
+      "description": "Floating search bar for notebook-wide find functionality. Supports keyboard navigation (Enter/Shift+Enter for next/prev, Escape to close). Works with search-highlight CodeMirror extension for in-cell highlighting.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/cell/GlobalFindBar.tsx",
+          "type": "registry:component",
+          "target": "components/cell/GlobalFindBar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "runtime-icons",
+      "type": "registry:component",
+      "title": "Runtime Icons",
+      "description": "SVG icons for runtime environments and package managers. Includes DenoIcon, PythonIcon, UvIcon, CondaIcon, and PixiIcon for notebook and onboarding UIs.",
+      "files": [
+        {
+          "path": "registry/icons/runtime-icons.tsx",
+          "type": "registry:component",
+          "target": "components/icons/runtime-icons.tsx"
+        }
+      ]
+    },
+    {
+      "name": "selection-card",
+      "type": "registry:component",
+      "title": "Selection Card",
+      "description": "A stylized selection card component for wizard and onboarding UIs. Includes SelectionCard with icon, title, description, and color-coded selection state, plus PageDots for step navigation and BRAND_COLORS preset for common tools.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/ui/selection-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/selection-card.tsx"
+        }
+      ]
     }
   ]
 }
