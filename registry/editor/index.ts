@@ -15,6 +15,7 @@ export {
   detectCellMagic,
   getCellMagicLanguage,
   ipythonHighlighting,
+  ipythonIndent,
   ipythonStyles,
   ipythonStylesDark,
 } from "./ipython";

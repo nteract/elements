@@ -12,6 +12,7 @@ import {
   detectCellMagic,
   getCellMagicLanguage,
   ipythonHighlighting,
+  ipythonIndent,
   ipythonStyles,
   ipythonStylesDark,
 } from "./ipython";
@@ -44,6 +45,7 @@ export function getLanguageExtension(language: SupportedLanguage): Extension {
       return [
         python(),
         pythonIndent,
+        ipythonIndent,
         ipythonHighlighting(),
         ipythonStyles,
         ipythonStylesDark,

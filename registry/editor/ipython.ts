@@ -1,3 +1,4 @@
+import { indentService } from "@codemirror/language";
 import { RangeSetBuilder } from "@codemirror/state";
 import type { DecorationSet, ViewUpdate } from "@codemirror/view";
 import { Decoration, EditorView, ViewPlugin } from "@codemirror/view";
@@ -28,6 +29,38 @@ const CELL_MAGIC_PATTERN = /^(%%[a-zA-Z_]\w*)/;
 const LINE_MAGIC_PATTERN = /^(%[a-zA-Z_]\w*)/;
 const SHELL_PATTERN = /^(!)/;
 const HELP_PATTERN = /(\?\??)$/;
+
+/**
+ * Custom indentation service for IPython.
+ *
+ * Prevents auto-indent after:
+ * - Line magics (%time, %matplotlib, etc.)
+ * - Shell commands (!pip, !ls, etc.)
+ * - Cell magic declarations (%%bash, %%html, etc.)
+ *
+ * These lines don't follow Python's indentation rules,
+ * so we reset to column 0 after them.
+ */
+export const ipythonIndent = indentService.of((context, pos) => {
+  // Get the previous line
+  const line = context.state.doc.lineAt(pos);
+  if (line.number <= 1) return null; // Let Python handle first line
+
+  const prevLine = context.state.doc.line(line.number - 1);
+  const prevText = prevLine.text.trim();
+
+  // After line magic, shell command, or cell magic - don't auto-indent
+  if (
+    LINE_MAGIC_PATTERN.test(prevText) ||
+    SHELL_PATTERN.test(prevText) ||
+    CELL_MAGIC_PATTERN.test(prevText)
+  ) {
+    return 0;
+  }
+
+  // Let Python's indentation handle everything else
+  return null;
+});
 
 /**
  * Mapping of cell magic names to language identifiers.
