@@ -9,6 +9,7 @@ import {
   CodeMirrorEditor,
   type CodeMirrorEditorRef,
 } from "@/registry/editor/codemirror-editor";
+import { searchHighlight } from "@/registry/editor/search-highlight";
 import {
   IsolatedFrame,
   type IsolatedFrameHandle,
@@ -64,6 +65,10 @@ interface MarkdownCellProps {
    */
   isLastCell?: boolean;
   /**
+   * Search query for highlighting matches in editor (edit mode) and rendered content (view mode)
+   */
+  searchQuery?: string;
+  /**
    * Additional class name for the container
    */
   className?: string;
@@ -114,6 +119,7 @@ export function MarkdownCell({
   onFocusNext,
   onInsertCellAfter,
   isLastCell = false,
+  searchQuery,
   className,
 }: MarkdownCellProps) {
   // Start in edit mode if cell is empty
@@ -252,6 +258,19 @@ export function MarkdownCell({
     [navigationKeyMap, cell.source],
   );
 
+  // Search highlighting for edit mode
+  const editorExtensions = useMemo(
+    () => searchHighlight(searchQuery ?? ""),
+    [searchQuery],
+  );
+
+  // Sync search to iframe when searchQuery changes (view mode)
+  useEffect(() => {
+    if (!editing && frameRef.current?.isReady) {
+      frameRef.current.search(searchQuery ?? "");
+    }
+  }, [searchQuery, editing]);
+
   // Focus editor when entering edit mode (after initial mount)
   const initialMountRef = useRef(true);
   useEffect(() => {
@@ -309,6 +328,7 @@ export function MarkdownCell({
             onValueChange={onUpdateSource}
             onBlur={handleBlur}
             keyMap={keyMap}
+            extensions={editorExtensions}
             placeholder="Enter markdown..."
             className="min-h-[2rem]"
             autoFocus={editing}

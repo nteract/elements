@@ -9,6 +9,7 @@ import {
   type CodeMirrorEditorRef,
 } from "@/registry/editor/codemirror-editor";
 import type { SupportedLanguage } from "@/registry/editor/languages";
+import { searchHighlight } from "@/registry/editor/search-highlight";
 import { CellContainer } from "./CellContainer";
 import { CompactExecutionButton } from "./CompactExecutionButton";
 import type { JupyterOutput } from "./OutputArea";
@@ -85,6 +86,18 @@ interface CodeCellProps {
    */
   isLastCell?: boolean;
   /**
+   * Search query for highlighting matches in editor and outputs
+   */
+  searchQuery?: string;
+  /**
+   * Character offset of the active search match in the editor (-1 for none)
+   */
+  searchActiveOffset?: number;
+  /**
+   * Callback when search match count changes (from outputs)
+   */
+  onSearchMatchCount?: (count: number) => void;
+  /**
    * Additional CodeMirror extensions
    */
   extensions?: Parameters<typeof CodeMirrorEditor>[0]["extensions"];
@@ -147,6 +160,9 @@ export function CodeCell({
   onInsertCellAfter,
   onFormat,
   isLastCell = false,
+  searchQuery,
+  searchActiveOffset = -1,
+  onSearchMatchCount,
   extensions,
   className,
 }: CodeCellProps) {
@@ -199,6 +215,15 @@ export function CodeCell({
     [navigationKeyMap],
   );
 
+  // Combine user extensions with search highlighting
+  const editorExtensions = useMemo(
+    () => [
+      ...(extensions ?? []),
+      ...searchHighlight(searchQuery ?? "", searchActiveOffset),
+    ],
+    [extensions, searchQuery, searchActiveOffset],
+  );
+
   const handleExecute = useCallback(() => {
     onExecute?.();
   }, [onExecute]);
@@ -240,14 +265,21 @@ export function CodeCell({
             language={language}
             onValueChange={onUpdateSource}
             keyMap={keyMap}
-            extensions={extensions}
+            extensions={editorExtensions}
             placeholder="Enter code..."
             className="min-h-[2rem]"
             autoFocus={isFocused}
           />
         </div>
       }
-      outputContent={<OutputArea outputs={cell.outputs} preloadIframe />}
+      outputContent={
+        <OutputArea
+          outputs={cell.outputs}
+          preloadIframe
+          searchQuery={searchQuery}
+          onSearchMatchCount={onSearchMatchCount}
+        />
+      }
       hideOutput={cell.outputs.length === 0}
     />
   );
