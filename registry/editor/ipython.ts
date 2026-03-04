@@ -56,14 +56,22 @@ class IPythonHighlighter {
         // Check for cell magic (%%magic)
         const cellMagicMatch = trimmedText.match(CELL_MAGIC_PATTERN);
         if (cellMagicMatch) {
-          builder.add(lineStart, lineStart + cellMagicMatch[1].length, cellMagicMark);
+          builder.add(
+            lineStart,
+            lineStart + cellMagicMatch[1].length,
+            cellMagicMark,
+          );
           continue; // Cell magics take precedence
         }
 
         // Check for line magic (%magic)
         const lineMagicMatch = trimmedText.match(LINE_MAGIC_PATTERN);
         if (lineMagicMatch) {
-          builder.add(lineStart, lineStart + lineMagicMatch[1].length, magicMark);
+          builder.add(
+            lineStart,
+            lineStart + lineMagicMatch[1].length,
+            magicMark,
+          );
           continue; // Line magics take the whole line
         }
 

@@ -7,7 +7,11 @@ import { sql } from "@codemirror/lang-sql";
 import { indentUnit } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
 
-import { ipythonHighlighting, ipythonStyles, ipythonStylesDark } from "./ipython";
+import {
+  ipythonHighlighting,
+  ipythonStyles,
+  ipythonStylesDark,
+} from "./ipython";
 
 /**
  * Supported languages for the CodeMirror editor
@@ -34,7 +38,13 @@ export function getLanguageExtension(language: SupportedLanguage): Extension {
     case "python":
       return [python(), pythonIndent];
     case "ipython":
-      return [python(), pythonIndent, ipythonHighlighting(), ipythonStyles, ipythonStylesDark];
+      return [
+        python(),
+        pythonIndent,
+        ipythonHighlighting(),
+        ipythonStyles,
+        ipythonStylesDark,
+      ];
     case "markdown":
       return markdown();
     case "sql":
