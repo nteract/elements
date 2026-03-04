@@ -8,8 +8,13 @@ import { Decoration, EditorView, ViewPlugin } from "@codemirror/view";
  * Highlights IPython-specific syntax on top of standard Python:
  * - Shell commands: !ls, !pip install
  * - Line magics: %time, %run script.py
- * - Cell magics: %%bash, %%javascript
+ * - Cell magics: %%bash, %%javascript (first line only)
  * - Help operators: object?, object??
+ *
+ * Note: For cell magics (%%), only the first line is decorated.
+ * The rest of the cell should use the appropriate language mode.
+ * Use detectCellMagic() and CELL_MAGIC_LANGUAGES to determine
+ * the correct language for cell magic content.
  */
 
 // Decoration marks for IPython syntax
@@ -23,6 +28,73 @@ const CELL_MAGIC_PATTERN = /^(%%[a-zA-Z_]\w*)/;
 const LINE_MAGIC_PATTERN = /^(%[a-zA-Z_]\w*)/;
 const SHELL_PATTERN = /^(!)/;
 const HELP_PATTERN = /(\?\??)$/;
+
+/**
+ * Mapping of cell magic names to language identifiers.
+ * Use with getLanguageExtension() from languages.ts
+ */
+export const CELL_MAGIC_LANGUAGES: Record<string, string> = {
+  // HTML/SVG
+  html: "html",
+  HTML: "html",
+  svg: "html",
+  SVG: "html",
+  // JavaScript
+  javascript: "javascript",
+  js: "javascript",
+  // TypeScript
+  typescript: "typescript",
+  ts: "typescript",
+  // SQL
+  sql: "sql",
+  SQL: "sql",
+  // Markdown
+  markdown: "markdown",
+  md: "markdown",
+  // JSON
+  json: "json",
+  // Shell (falls back to plain since we don't have shell lang)
+  bash: "plain",
+  sh: "plain",
+  // Python (stays as Python)
+  python: "python",
+  python3: "python",
+  // Others without specific support fall back to plain
+};
+
+/**
+ * Detect cell magic from content.
+ * Cell magics must be on the first line.
+ *
+ * @param content - The editor content
+ * @returns The magic name (without %%) if found, null otherwise
+ *
+ * @example
+ * detectCellMagic("%%html\n<div>Hello</div>") // "html"
+ * detectCellMagic("%time x = 1") // null (line magic, not cell magic)
+ * detectCellMagic("print('hello')") // null
+ */
+export function detectCellMagic(content: string): string | null {
+  const firstLine = content.split("\n")[0].trim();
+  const match = firstLine.match(/^%%([a-zA-Z_]\w*)/);
+  return match ? match[1] : null;
+}
+
+/**
+ * Get the language identifier for a cell magic.
+ *
+ * @param magic - The cell magic name (without %%)
+ * @returns The language identifier to use with getLanguageExtension(),
+ *          or "plain" for unsupported magics
+ *
+ * @example
+ * getCellMagicLanguage("html") // "html"
+ * getCellMagicLanguage("bash") // "plain" (no shell support)
+ * getCellMagicLanguage("unknown") // "plain"
+ */
+export function getCellMagicLanguage(magic: string): string {
+  return CELL_MAGIC_LANGUAGES[magic] ?? "plain";
+}
 
 class IPythonHighlighter {
   decorations: DecorationSet;
@@ -41,8 +113,11 @@ class IPythonHighlighter {
     const builder = new RangeSetBuilder<Decoration>();
     const doc = view.state.doc;
 
+    // Check if we're in cell magic mode (first line is %%)
+    const firstLineText = doc.line(1).text.trim();
+    const isInCellMagicMode = CELL_MAGIC_PATTERN.test(firstLineText);
+
     for (const { from, to } of view.visibleRanges) {
-      // Get line numbers for the visible range
       const startLine = doc.lineAt(from).number;
       const endLine = doc.lineAt(to).number;
 
@@ -53,18 +128,26 @@ class IPythonHighlighter {
         const leadingSpaces = lineText.length - trimmedText.length;
         const lineStart = line.from + leadingSpaces;
 
-        // Check for cell magic (%%magic)
-        const cellMagicMatch = trimmedText.match(CELL_MAGIC_PATTERN);
-        if (cellMagicMatch) {
-          builder.add(
-            lineStart,
-            lineStart + cellMagicMatch[1].length,
-            cellMagicMark,
-          );
-          continue; // Cell magics take precedence
+        // Cell magic on first line - decorate it
+        if (lineNum === 1) {
+          const cellMagicMatch = trimmedText.match(CELL_MAGIC_PATTERN);
+          if (cellMagicMatch) {
+            builder.add(
+              lineStart,
+              lineStart + cellMagicMatch[1].length,
+              cellMagicMark,
+            );
+            continue;
+          }
         }
 
-        // Check for line magic (%magic)
+        // If we're in cell magic mode, don't apply IPython decorations
+        // to subsequent lines (they belong to the cell magic's language)
+        if (isInCellMagicMode && lineNum > 1) {
+          continue;
+        }
+
+        // Line magic (%magic)
         const lineMagicMatch = trimmedText.match(LINE_MAGIC_PATTERN);
         if (lineMagicMatch) {
           builder.add(
@@ -72,18 +155,17 @@ class IPythonHighlighter {
             lineStart + lineMagicMatch[1].length,
             magicMark,
           );
-          continue; // Line magics take the whole line
+          continue;
         }
 
-        // Check for shell command (!command)
+        // Shell command (!command)
         const shellMatch = trimmedText.match(SHELL_PATTERN);
         if (shellMatch) {
-          // Highlight the entire shell command line
           builder.add(lineStart, line.to, shellMark);
           continue;
         }
 
-        // Check for help operator (object? or object??)
+        // Help operator (object? or object??)
         const helpMatch = lineText.match(HELP_PATTERN);
         if (helpMatch && helpMatch.index !== undefined) {
           const helpStart = line.from + helpMatch.index;
@@ -98,7 +180,11 @@ class IPythonHighlighter {
 }
 
 /**
- * CodeMirror extension that adds IPython syntax highlighting
+ * CodeMirror extension that adds IPython syntax highlighting.
+ *
+ * For cells with cell magics (%%html, %%bash, etc.), only the first
+ * line is decorated. Use detectCellMagic() and getLanguageExtension()
+ * to set the appropriate language for the cell content.
  */
 export function ipythonHighlighting() {
   return ViewPlugin.fromClass(IPythonHighlighter, {

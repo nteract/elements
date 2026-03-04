@@ -27,11 +27,7 @@ print(greet("nteract"))`,
 
 import pandas as pd
 df = pd.DataFrame({"a": [1, 2, 3]})
-df.head?
-
-%%bash
-echo "Hello from bash"
-ls -la`,
+df.head?`,
   markdown: `# Markdown Example
 
 This is a **bold** statement and this is *italic*.
