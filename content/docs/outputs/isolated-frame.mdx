@@ -195,6 +195,41 @@ Try editing the HTML below to see live updates via the `render()` method:
 
 This demo combines `CodeMirrorEditor` with `IsolatedFrame` to create a live HTML playground. Changes are debounced (300ms) and sent to the iframe via `frameRef.current.render()`.
 
+### Global Find (Search)
+
+Search within iframe content with highlighting and navigation:
+
+<div className="my-4 rounded border p-4">
+  <IsolatedFrameDemo variant="search" />
+</div>
+
+```tsx
+const frameRef = useRef<IsolatedFrameHandle>(null);
+const [matchCount, setMatchCount] = useState(0);
+
+// Search for text (case-insensitive)
+frameRef.current?.search("accuracy", false);
+
+// Navigate between matches
+frameRef.current?.searchNavigate(0); // first match
+frameRef.current?.searchNavigate(1); // second match
+
+// Clear search highlights
+frameRef.current?.search("");
+
+// Listen for search results
+<IsolatedFrame
+  ref={frameRef}
+  onMessage={(msg) => {
+    if (msg.type === "search_results") {
+      setMatchCount(msg.payload.count);
+    }
+  }}
+/>
+```
+
+Search matches are highlighted in yellow, and the active match (after `searchNavigate`) is highlighted in orange and scrolled into view.
+
 ## Architecture
 
 Communication between parent and iframe uses `postMessage`:
@@ -220,6 +255,8 @@ Communication between parent and iframe uses `postMessage`:
 - `theme` - Update dark/light mode
 - `eval` - Execute JavaScript (for bootstrapping)
 - `clear` - Clear all content
+- `search` - Search for text in content
+- `search_navigate` - Navigate to a specific search match
 - `comm_*` - Widget communication
 
 **Iframe → Parent:**
@@ -227,6 +264,7 @@ Communication between parent and iframe uses `postMessage`:
 - `resize` - Content height changed
 - `link_click` - User clicked a link
 - `error` - JavaScript error occurred
+- `search_results` - Number of matches found
 - `widget_*` - Widget state updates
 
 ## Props
@@ -258,6 +296,8 @@ interface IsolatedFrameHandle {
   eval: (code: string) => void;
   setTheme: (isDark: boolean) => void;
   clear: () => void;
+  search: (query: string, caseSensitive?: boolean) => void;
+  searchNavigate: (matchIndex: number) => void;
   isReady: boolean;
   isIframeReady: boolean;
 }
