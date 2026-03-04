@@ -345,7 +345,8 @@
         "@nteract/isolated-frame",
         "@nteract/widget-store",
         "@nteract/markdown-output",
-        "@nteract/error-boundary"
+        "@nteract/error-boundary",
+        "@nteract/highlight-text"
       ],
       "files": [
         {
@@ -945,6 +946,19 @@
           "path": "registry/lib/widget-error-fallback.tsx",
           "type": "registry:lib",
           "target": "lib/widget-error-fallback.tsx"
+        }
+      ]
+    },
+    {
+      "name": "highlight-text",
+      "type": "registry:lib",
+      "title": "Highlight Text",
+      "description": "DOM utility for highlighting search matches in text content with customizable styling.",
+      "files": [
+        {
+          "path": "registry/lib/highlight-text.ts",
+          "type": "registry:lib",
+          "target": "lib/highlight-text.ts"
         }
       ]
     },
