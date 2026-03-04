@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * anywidget ESM loader and AFM (AnyWidget Frontend Module) interface.
  *

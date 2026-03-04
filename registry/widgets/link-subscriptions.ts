@@ -1,20 +1,3 @@
-/**
- * Store-level link subscriptions for frontend-only property synchronization.
- *
- * Manages LinkModel (jslink) and DirectionalLinkModel (jsdlink) at the
- * store level so links work without React component mounting. This is
- * critical because link widgets are headless (_view_name: null) and won't
- * appear in any container widget's children.
- *
- * Usage:
- *   const cleanup = createLinkManager(store);
- *   // ... later, to tear down all links:
- *   cleanup();
- *
- * WidgetStoreProvider calls this automatically. For non-React integrations
- * (e.g. iframe isolation), call createLinkManager directly.
- */
-
 import { parseModelRef, type WidgetStore } from "./widget-store";
 
 /**

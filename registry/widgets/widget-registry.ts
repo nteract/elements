@@ -1,9 +1,3 @@
-/**
- * Registry mapping widget model names to React components.
- *
- * This maps _model_name from ipywidgets to our shadcn-backed implementations.
- */
-
 import type { ComponentType } from "react";
 
 export interface WidgetComponentProps {
