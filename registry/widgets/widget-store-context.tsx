@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * React context and hooks for the widget model store.
  *

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * IntsInput widget - multi-value integer tag input.
  *

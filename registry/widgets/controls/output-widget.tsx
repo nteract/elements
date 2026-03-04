@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Output widget - renders captured Jupyter outputs.
  *

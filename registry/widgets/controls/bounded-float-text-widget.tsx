@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * BoundedFloatText widget - renders a bounded numeric text input for floats.
  *

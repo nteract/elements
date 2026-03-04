@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Combobox widget - text input with autocomplete suggestions.
  *

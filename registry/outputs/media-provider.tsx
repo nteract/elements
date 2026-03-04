@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * React context provider for shared media rendering configuration.
  *

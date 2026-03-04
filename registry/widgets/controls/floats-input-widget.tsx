@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * FloatsInput widget - multi-value float tag input.
  *

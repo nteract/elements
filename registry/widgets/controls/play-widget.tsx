@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Play widget - animation control with play/pause/step.
  *

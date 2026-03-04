@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * IntText widget - renders a numeric text input for integers.
  *

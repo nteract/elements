@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Password widget - renders a masked text input field.
  *

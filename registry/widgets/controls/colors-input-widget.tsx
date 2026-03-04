@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * ColorsInput widget - multi-value color input.
  *
