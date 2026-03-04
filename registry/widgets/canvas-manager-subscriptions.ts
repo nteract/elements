@@ -1,3 +1,22 @@
+/**
+ * Store-level routing for ipycanvas CanvasManagerModel.
+ *
+ * CanvasManagerModel is a headless widget (_view_name: null) that receives
+ * ALL drawing commands from Python. This module subscribes to each manager's
+ * custom messages, parses switchCanvas targets, and re-emits to each target
+ * canvas's comm_id — isolating canvases from each other.
+ *
+ * Same pattern as link-subscriptions.ts for LinkModel/DirectionalLinkModel.
+ *
+ * Usage:
+ *   const cleanup = createCanvasManagerRouter(store);
+ *   // ... later, to tear down all routing:
+ *   cleanup();
+ *
+ * WidgetStoreProvider calls this automatically. For non-React integrations
+ * (e.g. iframe isolation), call createCanvasManagerRouter directly.
+ */
+
 import type { WidgetStore } from "./widget-store";
 
 // ipycanvas drawing command names indexed by protocol number.

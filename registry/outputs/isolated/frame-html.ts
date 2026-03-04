@@ -1,3 +1,14 @@
+/**
+ * HTML template generator for isolated output frames.
+ *
+ * Creates the minimal HTML document that runs inside the blob URL iframe.
+ * This document handles the message protocol and provides a render target
+ * for output content.
+ *
+ * Security: This code runs in an isolated origin (blob:) with sandbox
+ * restrictions, so it cannot access Tauri APIs or the parent DOM.
+ */
+
 export interface FrameHtmlOptions {
   /**
    * Whether to include dark mode styles by default.

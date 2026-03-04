@@ -1,3 +1,16 @@
+/**
+ * Message protocol types for parent ↔ iframe communication.
+ *
+ * This module defines the contract between the parent window and isolated output frames.
+ * All communication happens via postMessage with structured message types.
+ */
+
+// --- Message Types: Parent → Iframe ---
+
+/**
+ * Bootstrap the iframe with JavaScript code.
+ * Used to inject the ESM renderer bundle into the iframe.
+ */
 export interface EvalMessage {
   type: "eval";
   payload: {

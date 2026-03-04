@@ -1,3 +1,12 @@
+/**
+ * Pure React widget model store for Jupyter widgets.
+ *
+ * This replaces the Backbone.js-based model system from @jupyter-widgets/html-manager
+ * with a pure JavaScript store that integrates with React via useSyncExternalStore.
+ */
+
+// === Types ===
+
 export interface WidgetModel {
   /** comm_id from the Jupyter protocol */
   id: string;

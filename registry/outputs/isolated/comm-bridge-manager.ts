@@ -1,3 +1,17 @@
+/**
+ * Comm Bridge Manager - Parent Side
+ *
+ * This module manages the communication bridge between the parent window's
+ * widget system and an isolated iframe. It:
+ * - Buffers comm messages until iframe sends `widget_ready`
+ * - Syncs all existing widget models to iframe on ready
+ * - Forwards comm messages from kernel to iframe
+ * - Handles widget messages from iframe and updates parent store + kernel
+ *
+ * Security: The iframe cannot access Tauri APIs directly. All widget
+ * communication must go through this controlled postMessage bridge.
+ */
+
 import type { WidgetStore } from "@/registry/widgets/widget-store";
 import type {
   CommCloseMessage,
