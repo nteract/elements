@@ -90,6 +90,8 @@ function createMockFrame(): {
     eval: vi.fn(),
     setTheme: vi.fn(),
     clear: vi.fn(),
+    search: vi.fn(),
+    searchNavigate: vi.fn(),
     isReady: true,
     isIframeReady: true,
   };
