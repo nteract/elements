@@ -19,6 +19,19 @@ def greet(name: str) -> str:
     return f"Hello, {name}!"
 
 print(greet("nteract"))`,
+  ipython: `# IPython example with magics and shell commands
+%matplotlib inline
+%time x = sum(range(1000000))
+
+!pip install pandas
+
+import pandas as pd
+df = pd.DataFrame({"a": [1, 2, 3]})
+df.head?
+
+%%bash
+echo "Hello from bash"
+ls -la`,
   markdown: `# Markdown Example
 
 This is a **bold** statement and this is *italic*.
@@ -123,6 +136,7 @@ export function CodeMirrorEditorDemo({
           className="text-sm bg-background border border-border rounded px-2 py-1"
         >
           <option value="python">Python</option>
+          <option value="ipython">IPython</option>
           <option value="markdown">Markdown</option>
           <option value="sql">SQL</option>
           <option value="html">HTML</option>

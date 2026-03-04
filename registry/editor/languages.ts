@@ -4,13 +4,17 @@ import { json } from "@codemirror/lang-json";
 import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
+import { indentUnit } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
+
+import { ipythonHighlighting, ipythonStyles, ipythonStylesDark } from "./ipython";
 
 /**
  * Supported languages for the CodeMirror editor
  */
 export type SupportedLanguage =
   | "python"
+  | "ipython"
   | "markdown"
   | "sql"
   | "html"
@@ -22,10 +26,15 @@ export type SupportedLanguage =
 /**
  * Get the CodeMirror language extension for a given language
  */
+// PEP 8 specifies 4-space indentation for Python
+const pythonIndent = indentUnit.of("    ");
+
 export function getLanguageExtension(language: SupportedLanguage): Extension {
   switch (language) {
     case "python":
-      return python();
+      return [python(), pythonIndent];
+    case "ipython":
+      return [python(), pythonIndent, ipythonHighlighting(), ipythonStyles, ipythonStylesDark];
     case "markdown":
       return markdown();
     case "sql":
@@ -48,6 +57,7 @@ export function getLanguageExtension(language: SupportedLanguage): Extension {
  */
 export const languageDisplayNames: Record<SupportedLanguage, string> = {
   python: "Python",
+  ipython: "IPython",
   markdown: "Markdown",
   sql: "SQL",
   html: "HTML",
@@ -62,6 +72,7 @@ export const languageDisplayNames: Record<SupportedLanguage, string> = {
  */
 export const fileExtensionToLanguage: Record<string, SupportedLanguage> = {
   ".py": "python",
+  ".ipy": "ipython",
   ".md": "markdown",
   ".markdown": "markdown",
   ".sql": "sql",

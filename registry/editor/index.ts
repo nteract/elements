@@ -11,6 +11,11 @@ export {
   notebookEditorTheme,
 } from "./extensions";
 export {
+  ipythonHighlighting,
+  ipythonStyles,
+  ipythonStylesDark,
+} from "./ipython";
+export {
   detectLanguage,
   fileExtensionToLanguage,
   getLanguageExtension,
